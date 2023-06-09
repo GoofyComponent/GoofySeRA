@@ -1,9 +1,9 @@
 # GoofySeRA
 
-Before start
+First installation
 
 ```bash
-cp .env.example .env
+./dev.sh
 ```
 
 Start
