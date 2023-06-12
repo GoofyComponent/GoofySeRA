@@ -88,18 +88,21 @@ services:
     container_name: sera-front-nextjs
     build:
       context: ./sera-front
+      dockerfile: prod.Dockerfile
       target: runner
       args:
-        - port=${PORT_FRONT:-3003}
-    volumes:
-      - sera-front:/app
+        - port=${PORT_FRONT:-3305}
+        - ENV_VARIABLE=${ENV_VARIABLE:-production_server_only_variable}
+        - NEXT_PUBLIC_ENV_VARIABLE=${NEXT_PUBLIC_ENV_VARIABLE:-production_public_variable}
+    #volumes:
+    #- sera-front:/app
     networks:
       - monolith
-    command: npm run dev
+    #command: npm run dev
     ports:
-      - "3003:3000"
-    environment:
-      NODE_ENV: development
+      - "${PORT_FRONT:-3305}:3000"
+    #environment:
+    #NODE_ENV: development
 
 networks:
   sail:
