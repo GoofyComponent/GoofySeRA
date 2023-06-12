@@ -2,14 +2,23 @@
 
 if [ ! -f ./.env ]
 then
-    echo ".env file is not found, please copy from .env.example"
-    exit ;
+    cp .env.example .env
+    cp sera-back/.env.example sera-back/.env
+    chmod 755 sera-back/.env
+    chmod 755 .env
+    echo ".env file is not found, copying from .env.example, waiting for 5 seconds..."
+    sleep 5
+    if [ ! -f ./.env ]
+    then
+        echo "copying .env failed, please copy .env.example to .env manually"
+        exit ;
+    fi
 fi
 
 echo "--- composer install ---"
 docker run --rm \
     -u "$(id -u):$(id -g)" \
-    -v $(pwd):/opt \
+    -v $(pwd)/sera-back:/opt \
     -w /opt \
     laravelsail/php80-composer:latest \
     composer install --ignore-platform-reqs
