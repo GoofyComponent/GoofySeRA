@@ -21,6 +21,14 @@ printf "  - sera-back: %s\n" "$(pwd)/sera-back"
 printf "  - sera-front: %s\n" "$(pwd)/sera-front"
 printf "  - userid: %s\n" "$(id -u)"
 printf "  - groupid: %s\n" "$(id -g)"
+#Print a ls of the current directory
+printf "Directory:\n"
+ls -la
+#print a ls of all subdirectories
+printf "sera-back:\n"
+ls -la sera-back
+printf "sera-front:\n"
+ls -la sera-front
 
 echo "--- composer install ---"
 docker run --rm \
