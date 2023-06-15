@@ -1,0 +1,22 @@
+name: Deploy develop branch
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Compose
+        uses: docker/compose-cli@v1
+        with:
+          compose-file: docker-compose.yml
+
+      - name: Deploy using Docker Compose
+        run: docker-compose up -d
