@@ -29,6 +29,10 @@ printf "sera-back:\n"
 ls -la sera-back
 printf "sera-front:\n"
 ls -la sera-front
+#Find the path of the composer.json file
+printf "composer.json:\n"
+find . -name composer.json
+
 
 echo "--- composer install ---"
 docker run --rm \
