@@ -15,6 +15,13 @@ then
     fi
 fi
 
+
+printf "Paths:\n"
+printf "  - sera-back: %s\n" "$(pwd)/sera-back"
+printf "  - sera-front: %s\n" "$(pwd)/sera-front"
+printf "  - userid: %s\n" "$(id -u)"
+printf "  - groupid: %s\n" "$(id -g)"
+
 echo "--- composer install ---"
 docker run --rm \
     -u "$(id -u):$(id -g)" \
