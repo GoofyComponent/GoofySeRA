@@ -20,5 +20,6 @@ jobs:
             exit 1
           fi
 
-      - name: Deploy using Docker Compose
-        run: docker-compose up -d
+      - name: Execute composer & other Laravel installations
+        run: |
+          sh ./dev.sh
