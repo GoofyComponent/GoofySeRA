@@ -21,14 +21,17 @@ printf "  - sera-back: %s\n" "$(pwd)/sera-back"
 printf "  - sera-front: %s\n" "$(pwd)/sera-front"
 printf "  - userid: %s\n" "$(id -u)"
 printf "  - groupid: %s\n" "$(id -g)"
+
 #Print a ls of the current directory
 printf "Directory:\n"
 ls -la
+
 #print a ls of all subdirectories
 printf "sera-back:\n"
 ls -la sera-back
 printf "sera-front:\n"
 ls -la sera-front
+
 #Find the path of the composer.json file
 printf "composer.json:\n"
 find . -name composer.json
@@ -39,8 +42,16 @@ docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v sera-back:/opt \
     -w /opt \
+    -- entrypoint="ls -la" \
     laravelsail/php80-composer:latest \
     composer install --ignore-platform-reqs
+
+#Check if sail folder exists
+if [ ! -d ./sera-back/vendor/laravel/sail ]
+then
+    echo "sail folder not found, exiting..."
+    exit ;
+fi
 
 echo "--- launch docker container ---"
 ./sera-back/vendor/laravel/sail/bin/sail up -d --build --force-recreate
