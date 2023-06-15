@@ -13,10 +13,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Docker Compose
-        uses: docker/compose-cli@v1
-        with:
-          compose-file: docker-compose.yml
+      - name: Check if Docker is installed
+        run: |
+          if ! command -v docker &> /dev/null; then
+            echo "Docker is not installed. Please make sure Docker is installed on the system."
+            exit 1
+          fi
 
       - name: Deploy using Docker Compose
         run: docker-compose up -d
