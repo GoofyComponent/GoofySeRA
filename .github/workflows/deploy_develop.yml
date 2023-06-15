@@ -22,4 +22,4 @@ jobs:
 
       - name: Execute composer & other Laravel installations
         run: |
-          sh ./dev.sh
+          sh ./runner-dev.sh
