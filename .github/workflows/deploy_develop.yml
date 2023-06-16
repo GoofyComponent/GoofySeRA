@@ -55,7 +55,7 @@ jobs:
           -u "$(id -u):$(id -g)" \
           -v $(pwd)/sera-back:/opt \
           -w /opt \
-          laravelsail/php80-composer:latest \
+          laravelsail/php81-composer \
           composer install --ignore-platform-reqs
 
       - name: Check if sail folder exists
