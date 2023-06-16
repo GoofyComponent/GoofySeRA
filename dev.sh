@@ -36,6 +36,8 @@ ls -la sera-front
 printf "composer.json:\n"
 find . -name composer.json
 
+printf "$(readlink -f sera-back):/opt"
+
 
 echo "--- composer install ---"
 docker run \
@@ -44,9 +46,6 @@ docker run \
     -w /opt \
     laravelsail/php80-composer:latest \
     composer install --ignore-platform-reqs
-
-#Wait 2 minutes
-sleep 2m
 
 #Check if sail folder exists
 if [ ! -d ./sera-back/vendor/laravel/sail ]
