@@ -13,6 +13,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
+          repository: GoofyComponent/GoofySeRA
+          path: $(pwd)
           clean: false
 
       - name: Copy .env file if not exists
@@ -52,7 +54,6 @@ jobs:
           docker run --rm \
           -u "$(id -u):$(id -g)" \
           -v $(pwd)/sera-back:/opt \
-          -v $(pwd):/. \
           -w /opt \
           laravelsail/php80-composer:latest \
           composer install --ignore-platform-reqs
