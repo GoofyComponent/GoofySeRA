@@ -12,10 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          repository: GoofyComponent/GoofySeRA
-          path: $(pwd)
-          clean: false
 
       - name: Copy .env file if not exists
         run: |
