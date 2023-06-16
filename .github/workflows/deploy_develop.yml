@@ -10,8 +10,23 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check if the files are here
+        run: |
+          if [ ! -f "dev.sh" ]; then
+            echo "dev.sh is not found. Please make sure dev.sh is in the root of the project."
+            exit 1
+          fi
+          if [ ! -d "sera-back" ]; then
+            echo "Folder dont exists"
+            exit 1
+          fi
+          if [ ! -d "sera-front" ]; then
+            echo "Folder dont exists"
+            exit 1
+          fi
 
       - name: Check if Docker is installed
         run: |
