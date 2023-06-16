@@ -1,4 +1,4 @@
-name: Deploy develop branch
+name: Basic working deployment
 
 on:
   push:
