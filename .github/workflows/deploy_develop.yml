@@ -39,9 +39,15 @@ jobs:
             exit 1
           fi
 
-      - name: Save repository files to the runner directory
+      - name: Delete previous files & folders
         run: |
-          cp -r . .
+          rm -rf sera-back
+          rm -rf sera-front
+
+      - name: Copy the folders and files
+        run: |
+          cp -r sera-back/ .
+          cp -r sera-front/ .
 
       - name: Execute composer install
         run: |
