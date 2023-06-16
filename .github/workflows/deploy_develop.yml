@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          clean: false
 
       - name: Check if the files are here
         run: |
@@ -37,4 +39,5 @@ jobs:
 
       - name: Execute composer & other Laravel installations
         run: |
+          chmod +x ./dev.sh
           sh ./dev.sh
