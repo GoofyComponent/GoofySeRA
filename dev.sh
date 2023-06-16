@@ -15,48 +15,8 @@ then
     fi
 fi
 
-#Execute chmod 755 on all files
-chmod 755 -R .
-
-printf "Paths:\n"
-printf "  - sera-back: %s\n" "$(pwd)/sera-back"
-printf "  - sera-front: %s\n" "$(pwd)/sera-front"
-printf "  - userid: %s\n" "$(id -u)"
-printf "  - groupid: %s\n" "$(id -g)"
-
-#Print a ls of the current directory
-printf "Directory:\n"
-ls -la
-
-#print a ls of all subdirectories
-printf "sera-back:\n"
-ls -la sera-back
-printf "sera-front:\n"
-ls -la sera-front
-
-#Find the path of the composer.json file
-printf "composer.json:\n"
-find . -name composer.json
-
-
-echo "--- Vérifier le répertoire de travail du conteneur Docker ---"
-docker run \
-    -u "$(id -u):$(id -g)" \
-    -v $(pwd)/sera-back:/opt \
-    -w /opt \
-    laravelsail/php80-composer:latest \
-    pwd
-
-echo "--- Mounted directory contents ---"
-docker run \
-    -u "$(id -u):$(id -g)" \
-    -v $(pwd)/sera-back:/opt \
-    -w /opt \
-    laravelsail/php80-composer:latest \
-    ls -la
-
 echo "--- composer install ---"
-docker run \
+docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v $(pwd)/sera-back:/opt \
     -w /opt \
