@@ -10,11 +10,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Writes the .env file
-        run: |
-          echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
-          echo "${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}" > sera-back/.env
-
       - name: Stop the previous containers
         run: |
           docker stop $(docker ps -a -q --filter "name=sera")
@@ -22,15 +17,6 @@ jobs:
       - name: Remove the previous containers
         run: |
           docker rm $(docker ps -a -q --filter "name=sera")
-
-      - name: Remove the previous images
-        run: |
-          docker rmi $(docker images -q --filter "reference=sera*")
-
-      - name: Display current directory
-        run: |
-          pwd
-          ls -la
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -90,7 +76,7 @@ jobs:
 
       - name: Launch the containers
         run: |
-          ./sera-back/vendor/laravel/sail/bin/sail -f ./develop.docker-compose.yml up -d --build --force-recreate
+          ./sera-back/vendor/laravel/sail/bin/sail up -d --build --force-recreate
 
       - name: Wait till all containers has started
         run: |
