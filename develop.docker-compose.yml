@@ -1,7 +1,7 @@
 version: "3"
 services:
   laravel.test:
-    container_name: sera-back-laravel-test
+    container_name: develop-sera-back-laravel-test
     build:
       context: ./sera-back/vendor/laravel/sail/runtimes/8.2
       dockerfile: Dockerfile
@@ -29,7 +29,7 @@ services:
       - redis
       - soketi
   mariadb:
-    container_name: sera-back-mariadb
+    container_name: develop-sera-back-mariadb
     image: "mariadb:10"
     ports:
       - "${FORWARD_DB_PORT:-3306}:3306"
@@ -54,7 +54,7 @@ services:
       retries: 3
       timeout: 5s
   redis:
-    container_name: sera-back-redis
+    container_name: develop-sera-back-redis
     image: "redis:alpine"
     ports:
       - "${FORWARD_REDIS_PORT:-6379}:6379"
@@ -70,7 +70,7 @@ services:
       retries: 3
       timeout: 5s
   soketi:
-    container_name: sera-back-soketi
+    container_name: develop-sera-back-soketi
     image: "quay.io/soketi/soketi:latest-16-alpine"
     environment:
       SOKETI_DEBUG: "${SOKETI_DEBUG:-1}"
@@ -85,7 +85,7 @@ services:
       - sail
       - monolith
   nextjs:
-    container_name: sera-front-nextjs
+    container_name: develop-sera-front-nextjs
     build:
       context: ./sera-front
       dockerfile: prod.Dockerfile
