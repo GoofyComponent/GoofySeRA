@@ -10,24 +10,26 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           clean: false
 
-      - name: Check if the files are here
+      - name: Copy .env file if not exists
         run: |
-          if [ ! -f "dev.sh" ]; then
-            echo "dev.sh is not found. Please make sure dev.sh is in the root of the project."
-            exit 1
-          fi
-          if [ ! -d "sera-back" ]; then
-            echo "Folder dont exists"
-            exit 1
-          fi
-          if [ ! -d "sera-front" ]; then
-            echo "Folder dont exists"
-            exit 1
+          if [ ! -f ./.env ]
+          then
+              cp .env.example .env
+              cp sera-back/.env.example sera-back/.env
+              chmod 755 sera-back/.env
+              chmod 755 .env
+              echo ".env file is not found, copying from .env.example, waiting for 5 seconds..."
+              sleep 5
+              if [ ! -f ./.env ]
+              then
+                  echo "copying .env failed, please copy .env.example to .env manually"
+                  exit ;
+              fi
           fi
 
       - name: Check if Docker is installed
@@ -37,7 +39,36 @@ jobs:
             exit 1
           fi
 
-      - name: Execute composer & other Laravel installations
+      - name: Execute composer install
         run: |
-          chmod +x ./dev.sh
-          sh ./dev.sh
+          docker run --rm \
+          -u "$(id -u):$(id -g)" \
+          -v $(pwd)/sera-back:/opt \
+          -w /opt \
+          laravelsail/php80-composer:latest \
+          composer install --ignore-platform-reqs
+
+      - name: Check if sail folder exists
+        run: |
+          if [ ! -d ./sera-back/vendor/laravel/sail ]
+          then
+              echo "sail folder not found, exiting..."
+              exit ;
+          fi
+
+      - name: Launch the containers
+        run: |
+          ./sera-back/vendor/laravel/sail/bin/sail up -d --build --force-recreate
+
+      - name: Migrate the database
+        run: |
+          if [ "${1}" = "reset" ]
+          then
+              ./sera-back/vendor/laravel/sail/bin/sail artisan migrate:refresh --seed
+          else
+              ./sera-back/vendor/laravel/sail/bin/sail artisan migrate
+          fi
+
+      - name: Displaying that it's done
+        run: |
+          echo "Done"
