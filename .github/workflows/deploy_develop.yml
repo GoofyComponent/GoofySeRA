@@ -10,23 +10,42 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Writes the .env file
+      - name: Check if the previous containers exists
         run: |
-          echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
-          echo "${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}" > sera-back/.env
+          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
+          then
+              echo "Previous containers found, stopping and removing them..."
+          else
+              echo "No previous containers found, continuing..."
+          fi
 
       - name: Stop the previous containers
         run: |
-          docker stop $(docker ps -a -q --filter "name=sera")
+          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
+          then
+              docker stop $(docker ps -a -q --filter "name=sera")
+          fi
 
       - name: Remove the previous containers
         run: |
-          docker rm $(docker ps -a -q --filter "name=sera")
+          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
+          then
+              docker rm $(docker ps -a -q --filter "name=sera")
+          fi
 
       - name: Display current directory
         run: |
           pwd
           ls -la
+
+      - name: Deletes the files inside the current directory
+        run: |
+          rm -rf ./*
+
+      - name: Writes the .env file
+        run: |
+          echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
+          echo "${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}" > sera-back/.env
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,11 +58,12 @@ jobs:
         run: |
           if [ ! -f ./.env ]
           then
+              echo ".env file not found"
               cp .env.example .env
               cp sera-back/.env.example sera-back/.env
               chmod 755 sera-back/.env
               chmod 755 .env
-              echo ".env file is not found, copying from .env.example, waiting for 5 seconds..."
+              echo "Copying from .env.example, waiting for 5 seconds..."
               sleep 5
               if [ ! -f ./.env ]
               then
