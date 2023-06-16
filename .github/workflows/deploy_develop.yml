@@ -42,17 +42,17 @@ jobs:
         run: |
           rm -rf ./*
 
-      - name: Writes the .env file
-        run: |
-          echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
-          echo "${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}" > sera-back/.env
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           clean: false
           ref: develop
+
+      - name: Writes the .env file
+        run: |
+          echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
+          echo "${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}" > sera-back/.env
 
       - name: Copy .env file if not exists
         run: |
