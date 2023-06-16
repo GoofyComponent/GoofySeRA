@@ -38,7 +38,7 @@ find . -name composer.json
 
 
 echo "--- composer install ---"
-docker run --rm \
+docker run \
     -u "$(id -u):$(id -g)" \
     -v $(pwd)/sera-back:/opt \
     -w /opt \
