@@ -33,7 +33,7 @@ jobs:
               docker rm $(docker ps -a -q --filter "name=sera")
           fi
 
-      - name: Display current directory
+      - name: DEBUG - Display current directory
         run: |
           pwd
           ls -la
