@@ -39,6 +39,14 @@ jobs:
             exit 1
           fi
 
+      - name: DEBUG - Displaying the current directory && path
+        run: |
+          pwd
+          ls -la
+          find . -name composer.json
+          ls -la sera-back
+          ls -la sera-front
+
       - name: Execute composer install
         run: |
           docker run --rm \
