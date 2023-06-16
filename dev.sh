@@ -15,6 +15,8 @@ then
     fi
 fi
 
+#Execute chmod 755 on all files
+chmod 755 -R .
 
 printf "Paths:\n"
 printf "  - sera-back: %s\n" "$(pwd)/sera-back"
