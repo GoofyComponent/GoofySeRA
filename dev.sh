@@ -36,8 +36,17 @@ ls -la sera-front
 printf "composer.json:\n"
 find . -name composer.json
 
+
+echo "--- Vérifier le répertoire de travail du conteneur Docker ---"
+docker run \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd)/sera-back:/opt \
+    -w /opt \
+    laravelsail/php80-composer:latest \
+    pwd
+
 echo "--- Mounted directory contents ---"
-docker run --rm \
+docker run \
     -u "$(id -u):$(id -g)" \
     -v $(pwd)/sera-back:/opt \
     -w /opt \
@@ -45,7 +54,7 @@ docker run --rm \
     ls -la
 
 echo "--- composer install ---"
-docker run --rm \
+docker run \
     -u "$(id -u):$(id -g)" \
     -v $(pwd)/sera-back:/opt \
     -w /opt \
