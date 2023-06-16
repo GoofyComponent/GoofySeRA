@@ -39,6 +39,10 @@ jobs:
             exit 1
           fi
 
+      - name: Save repository files to the runner directory
+        run: |
+          cp -r . .
+
       - name: Execute composer install
         run: |
           docker run --rm \
