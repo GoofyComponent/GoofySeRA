@@ -16,7 +16,6 @@ jobs:
           fetch-depth: 0
           clean: false
           ref: develop
-          path: "./home/runner/_work/GoofySeRA"
 
       - name: Copy .env file if not exists
         run: |
