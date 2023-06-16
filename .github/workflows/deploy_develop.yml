@@ -39,16 +39,6 @@ jobs:
             exit 1
           fi
 
-      - name: Delete previous files & folders
-        run: |
-          rm -rf sera-back
-          rm -rf sera-front
-
-      - name: Copy the folders and files
-        run: |
-          cp -r sera-back/ .
-          cp -r sera-front/ .
-
       - name: Execute composer install
         run: |
           docker run --rm \
