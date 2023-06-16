@@ -45,6 +45,9 @@ docker run --rm \
     laravelsail/php80-composer:latest \
     composer install --ignore-platform-reqs
 
+#Wait 2 minutes
+sleep 2m
+
 #Check if sail folder exists
 if [ ! -d ./sera-back/vendor/laravel/sail ]
 then
