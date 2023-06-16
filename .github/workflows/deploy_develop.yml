@@ -23,10 +23,6 @@ jobs:
         run: |
           docker rm $(docker ps -a -q --filter "name=sera")
 
-      - name: Remove the previous images
-        run: |
-          docker rmi $(docker images -q --filter "reference=sera*")
-
       - name: Display current directory
         run: |
           pwd
