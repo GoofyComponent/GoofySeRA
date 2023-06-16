@@ -37,19 +37,21 @@ printf "composer.json:\n"
 find . -name composer.json
 
 
-#echo "--- composer install ---"
+echo "--- composer install ---"
 #docker run --rm \
-    #-u "$(id -u):$(id -g)" \
-    #-v $(pwd)/sera-back:/opt \
-    #-w /opt \
-    #laravelsail/php80-composer:latest \
-    #composer install --ignore-platform-reqs
+#    -u "$(id -u):$(id -g)" \
+#    -v $(pwd)/sera-back:/opt \
+#    -w /opt \
+#    laravelsail/php80-composer:latest \
+#    composer install --ignore-platform-reqs
 
 docker run --rm \
     -u "$(id -u):$(id -g)" \
-    -v sera-back:/opt \
-    -w /opt laravelsail/php80-composer:latest \
-    -c "ls -la && composer install --ignore-platform-reqs"
+    -v $(pwd)/sera-back:/opt \
+    -w /opt \
+    laravelsail/php80-composer:latest \
+    sh -c "ls -R && composer install --ignore-platform-reqs"
+
 
 #Check if sail folder exists
 if [ ! -d ./sera-back/vendor/laravel/sail ]
