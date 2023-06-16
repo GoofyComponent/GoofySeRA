@@ -36,10 +36,18 @@ ls -la sera-front
 printf "composer.json:\n"
 find . -name composer.json
 
-echo "--- composer install ---"
-docker run \
+echo "--- Mounted directory contents ---"
+docker run --rm \
     -u "$(id -u):$(id -g)" \
-    -v $(readlink -f sera-back):/opt \
+    -v $(pwd)/sera-back:/opt \
+    -w /opt \
+    laravelsail/php80-composer:latest \
+    ls -la
+
+echo "--- composer install ---"
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v $(pwd)/sera-back:/opt \
     -w /opt \
     laravelsail/php80-composer:latest \
     composer install --ignore-platform-reqs
