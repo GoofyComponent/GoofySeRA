@@ -37,13 +37,13 @@ printf "composer.json:\n"
 find . -name composer.json
 
 
-echo "--- composer install ---"
-docker run --rm \
-    -u "$(id -u):$(id -g)" \
-    -v sera-back:/opt \
-    -w /opt \
-    laravelsail/php80-composer:latest \
-    composer install --ignore-platform-reqs
+#echo "--- composer install ---"
+#docker run --rm \
+#    -u "$(id -u):$(id -g)" \
+#    -v sera-back:/opt \
+#    -w /opt \
+#    laravelsail/php80-composer:latest \
+#    composer install --ignore-platform-reqs
 
 docker run --rm \
     -u "$(id -u):$(id -g)" \
