@@ -10,6 +10,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Stop the previous containers
+        run: |
+          docker stop $(docker ps -a -q --filter "name=sera")
+
+      - name: Remove the previous containers
+        run: |
+          docker rm $(docker ps -a -q --filter "name=sera")
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -69,6 +77,10 @@ jobs:
       - name: Launch the containers
         run: |
           ./sera-back/vendor/laravel/sail/bin/sail up -d --build --force-recreate
+
+      - name: Wait till all containers has started
+        run: |
+          sleep 2m
 
       - name: Migrate the database
         run: |
