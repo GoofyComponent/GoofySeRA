@@ -20,7 +20,7 @@ docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v $(pwd)/sera-back:/opt \
     -w /opt \
-    laravelsail/php80-composer:latest \
+    laravelsail/php81-composer \
     composer install --ignore-platform-reqs
 
 #Check if sail folder exists
