@@ -16,7 +16,9 @@ export default function Home() {
           <AccordionTrigger>
             Est-ce que la librairie de composant est installée ?
           </AccordionTrigger>
-          <AccordionContent>Oui j'en ai bien l'impression !</AccordionContent>
+          <AccordionContent>
+            Oui j&apos;en ai bien l&apos;impression !
+          </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">
           <AccordionTrigger>Et les couleurs changées ?</AccordionTrigger>

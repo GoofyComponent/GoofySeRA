@@ -1,18 +1,18 @@
 import clsx from "clsx";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import Image from "next/image";
 
-import "@/assets/styles/globals.css";
+import logo from "@/assets/images/sera-logo.svg";
+
+export const metadata = {
+  title: "SeRA Login",
+  description: "Saline experience Royale Academy - Login",
+};
 
 const PLUS_JAKARTA_SANS = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-plus-jakarta-sans",
 });
-
-export const metadata = {
-  title: "SeRA - Ultimate creation experience",
-  description:
-    "Saline experience Royale Academy - Manage and create your content !",
-};
 
 export default function RootLayout({
   children,
@@ -27,6 +27,9 @@ export default function RootLayout({
           "h-screen w-full bg-sera-jet"
         )}
       >
+        <header className="my-auto ml-6 h-[10vh] py-6">
+          <Image src={logo} alt={"SeRA App"} />
+        </header>
         {children}
       </body>
     </html>
