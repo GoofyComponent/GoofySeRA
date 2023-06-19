@@ -3,6 +3,7 @@
 First installation
 
 ```bash
+chmod u+x dev.sh
 ./dev.sh
 ```
 
