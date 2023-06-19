@@ -1,4 +1,4 @@
-import "./globals.css";
+import "@/styles/globals.css";
 import { Plus_Jakarta_Sans } from "next/font/google";
 
 const PLUS_JAKARTA_SANS = Plus_Jakarta_Sans({

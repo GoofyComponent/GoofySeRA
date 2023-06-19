@@ -14,6 +14,10 @@ export default function Home() {
         </AccordionTrigger>
         <AccordionContent>Oui j'en ai bien l'impression !</AccordionContent>
       </AccordionItem>
+      <AccordionItem value="item-2">
+        <AccordionTrigger>Et les couleurs changées ?</AccordionTrigger>
+        <AccordionContent>Egalment !</AccordionContent>
+      </AccordionItem>
     </Accordion>
   );
 }
