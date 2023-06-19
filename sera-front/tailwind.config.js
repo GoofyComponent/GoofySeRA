@@ -17,6 +17,9 @@ module.exports = {
         "sera-periwinkle": "#E5D1FF",
         "sera-tertiary": "#000000",
       },
+      fontFamily: {
+        sans: ["var(--font-plus-jakarta-sans)"],
+      },
     },
   },
   plugins: [],
