@@ -42,7 +42,11 @@ export const LoginForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Email" {...field} />
+                <Input
+                  placeholder="Email"
+                  {...field}
+                  className={"border-sera-periwinkle outline-sera-periwinkle"}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -54,7 +58,11 @@ export const LoginForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Password" {...field} />
+                <Input
+                  placeholder="Password"
+                  {...field}
+                  className={"border-sera-periwinkle outline-sera-periwinkle"}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
