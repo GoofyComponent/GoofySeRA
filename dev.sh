@@ -20,8 +20,15 @@ docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v $(pwd)/sera-back:/opt \
     -w /opt \
-    laravelsail/php80-composer:latest \
+    laravelsail/php81-composer \
     composer install --ignore-platform-reqs
+
+#Check if sail folder exists
+if [ ! -d ./sera-back/vendor/laravel/sail ]
+then
+    echo "sail folder not found, exiting..."
+    exit ;
+fi
 
 echo "--- launch docker container ---"
 ./sera-back/vendor/laravel/sail/bin/sail up -d --build --force-recreate
