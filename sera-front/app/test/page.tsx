@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <>
-      <p>Hello ^^ !</p>
+      <p className="text-sera-periwinkle">Hello ^^ !</p>
     </>
   );
 }
