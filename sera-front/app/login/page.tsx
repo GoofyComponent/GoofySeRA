@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/LoginForm";
+import { LoginForm } from "@/components/app/login/LoginForm";
 export default function Home() {
   return (
     <main className="mt-auto flex h-[80vh] flex-col items-center justify-center">

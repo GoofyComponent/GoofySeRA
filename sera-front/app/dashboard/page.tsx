@@ -3,13 +3,13 @@
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-export default function Home() {
+export default function Dashboard() {
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname === "/") {
-      router.push("/login");
+    if (pathname === "/dashboard") {
+      router.push("/dashboard/home");
     }
   }, []);
 
