@@ -21,7 +21,7 @@ export default function SectionLayout({
   return (
     <>
       <header className="my-auto flex h-[10vh] justify-between p-6">
-        <div className="flex w-5/12 justify-start">
+        <div className="flex justify-start lg:w-5/12">
           <Image src={logo} alt={"SeRA App"} />
           <h3 className="mx-8 mb-0 mt-auto text-2xl text-sera-periwinkle">
             Welcome back, (user) !
@@ -41,7 +41,9 @@ export default function SectionLayout({
       </header>
       <div className="flex min-h-[90vh] justify-start overflow-auto bg-[#FBF5F3]">
         <Nav />
-        <main className="min-h-full w-[86%]">{children}</main>
+        <main className="max-h-[90vh] w-[86%] overflow-y-auto pb-4 scrollbar scrollbar-track-sera-jet/50 scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3">
+          {children}
+        </main>
       </div>
     </>
   );

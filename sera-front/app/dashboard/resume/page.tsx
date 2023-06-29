@@ -6,9 +6,10 @@ interface PageProps {
 
 export default function Section({ params }: PageProps) {
   const { section } = params;
+
   return (
     <>
-      <p>{section}</p>
+      <p>Resume</p>
     </>
   );
 }
