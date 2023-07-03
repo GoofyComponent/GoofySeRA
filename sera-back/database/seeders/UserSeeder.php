@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Create an user for each role in the roles config file
-        foreach (config('roles') as $role) {
+        foreach (config('roles') as $role => $value) {
             // if email already exists, skip
             if (\App\Models\User::where('email', $role . '@sera.com')->first()) {
                 continue;

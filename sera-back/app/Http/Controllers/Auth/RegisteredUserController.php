@@ -21,11 +21,11 @@ class RegisteredUserController extends Controller
     public function store(Request $request): Response
     {
         $request->validate([
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'role' => 'required|string|in:'.implode(',', config('roles')),
+            'role' => 'required|string|in:' . implode(',', array_keys(config('roles'))),
         ]);
 
         $user = User::create([
