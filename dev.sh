@@ -33,6 +33,12 @@ fi
 echo "--- launch docker container ---"
 ./sera-back/vendor/laravel/sail/bin/sail up -d --build --force-recreate
 
+echo "waiting for 10 seconds..."
+sleep 10
+
+echo "--- generate key ---"
+./sera-back/vendor/laravel/sail/bin/sail artisan key:generate
+
 echo "--- migrate database  ---"
 if [ "${1}" = "reset" ]
 then
