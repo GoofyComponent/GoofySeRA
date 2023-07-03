@@ -44,7 +44,7 @@ if [ "${1}" = "reset" ]
 then
     ./sera-back/vendor/laravel/sail/bin/sail artisan migrate:refresh --seed
 else
-    ./sera-back/vendor/laravel/sail/bin/sail artisan migrate
+    ./sera-back/vendor/laravel/sail/bin/sail artisan migrate --seed
 fi
 
 echo "--- done ---"
