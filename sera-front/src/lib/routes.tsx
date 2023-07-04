@@ -2,7 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 
 import App from "../pages/App";
 import { Login } from "../pages/Login";
+import { RecentProjects } from "@/components/app/home/RecentProjects";
 import { Test } from "../pages/Test";
+import { Projects } from "@/pages/Projects";
 
 export const router = createBrowserRouter([
   {
@@ -11,12 +13,16 @@ export const router = createBrowserRouter([
 
     children: [
       {
+        index: true,
+        element: <RecentProjects />,
+      },
+      {
         path: "tickets",
         element: <Test />,
       },
       {
         path: "projects",
-        element: <Test />,
+        element: <Projects />,
       },
     ],
   },
