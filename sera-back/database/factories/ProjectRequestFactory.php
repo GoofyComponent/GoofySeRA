@@ -31,6 +31,8 @@ class ProjectRequestFactory extends Factory
             'priority' => $this->faker->numberBetween(1, 3),
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(3),
+            'needs' => $this->faker->paragraph(3),
+            'status' => $this->faker->randomElement(['pending', 'accepted', 'refused']),
         ];
     }
 

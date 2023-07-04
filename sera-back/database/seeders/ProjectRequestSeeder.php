@@ -20,6 +20,7 @@ class ProjectRequestSeeder extends Seeder
             \App\Models\ProjectRequest::factory()->create([
                 'user_id' => $cursus_director->id,
                 'priority' => $i,
+                'status' => 'pending',
             ]);
         }
     }
