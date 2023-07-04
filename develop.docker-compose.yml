@@ -93,7 +93,6 @@ services:
       args:
         - port=${PORT_FRONT:-3305}
         - ENV_VARIABLE=${ENV_VARIABLE:-production_server_only_variable}
-        - NEXT_PUBLIC_ENV_VARIABLE=${NEXT_PUBLIC_ENV_VARIABLE:-production_public_variable}
     networks:
       - monolith
       - hosted
