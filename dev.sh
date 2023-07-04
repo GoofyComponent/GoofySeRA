@@ -42,7 +42,7 @@ echo "--- generate key ---"
 echo "--- migrate database  ---"
 if [ "${1}" = "reset" ]
 then
-    ./sera-back/vendor/laravel/sail/bin/sail artisan migrate:refresh --seed
+    ./sera-back/vendor/laravel/sail/bin/sail artisan migrate:fresh --seed
 else
     ./sera-back/vendor/laravel/sail/bin/sail artisan migrate --seed
 fi
