@@ -5,14 +5,28 @@
 return [
     "cursus_director" => [
         "projects-requests" => ["show", "index", "store", "update", "destroy"],
+        "users" => ["show", "index", "store", "update", "destroy"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
+        "users" => ["show", "index", "store", "update", "destroy"],
     ],
-    "professor" => [],
-    "video_team" => [],
-    "video_editor" => [],
-    "transcription_team" => [],
-    "traduction_team" => [],
-    "editorial_team" => [],
+    "professor" => [
+        "users" => ["show", "index"],
+    ],
+    "video_team" => [
+        "users" => ["show", "index"],
+    ],
+    "video_editor" => [
+        "users" => ["show", "index"],
+    ],
+    "transcription_team" => [
+        "users" => ["show", "index"],
+    ],
+    "traduction_team" => [
+        "users" => ["show", "index"],
+    ],
+    "editorial_team" => [
+        "users" => ["show", "index"],
+    ],
 ];
