@@ -18,12 +18,15 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "underline-offset-4 hover:underline text-primary",
+        title:
+          "bg-sera-periwinkle text-sera-jet hover:bg-sera-jet hover:text-sera-periwinkle rounded-full",
       },
       size: {
         default: "h-10 py-2 px-4",
         sm: "h-9 px-3 rounded-md",
         lg: "h-11 px-8 rounded-md",
         icon: "h-10 w-10",
+        title: "h-16 w-16 mr-6",
       },
     },
     defaultVariants: {
