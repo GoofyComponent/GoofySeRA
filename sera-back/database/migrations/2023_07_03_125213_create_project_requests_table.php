@@ -17,6 +17,7 @@ return new class extends Migration
             $table->tinyInteger('priority')->default(1);
             $table->string('title', 100)->nullable(false)->default('New Project Request');
             $table->text('description')->nullable(false)->default('Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.');
+            $table->text('needs')->nullable(false)->default('Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.');
             $table->softDeletes();
             $table->timestamps();
         });

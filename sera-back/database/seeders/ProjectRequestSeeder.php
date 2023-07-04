@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
-class Project_RequestSeeder extends Seeder
+class ProjectRequestSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,7 +17,7 @@ class Project_RequestSeeder extends Seeder
         $cursus_director = User::where('role', 'cursus_director')->first();
 
         for($i=1; $i<4; $i++){
-            \App\Models\Project_Request::factory()->create([
+            \App\Models\ProjectRequest::factory()->create([
                 'user_id' => $cursus_director->id,
                 'priority' => $i,
             ]);
