@@ -50,4 +50,13 @@ class User extends Authenticatable
         return $this->hasMany(ProjectRequest::class);
     }
 
+    public function team()
+    {
+        return $this->hasOne(Team::class);
+    }
+
+    public function projects()
+    {
+        return $this->hasManyThrough(Project::class, Team::class);
+    }
 }

@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 
-class Project_RequestFactory extends Factory
+class ProjectRequestFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = \App\Models\Project_Request::class;
+    protected $model = \App\Models\ProjectRequest::class;
 
     /**
      * Define the model's default state.
