@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project__requests', function (Blueprint $table) {
+        Schema::create('project_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->tinyInteger('priority')->default(1);
             $table->string('title', 100)->nullable(false)->default('New Project Request');
             $table->text('description')->nullable(false)->default('Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
