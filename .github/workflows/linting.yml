@@ -1,0 +1,12 @@
+name: Linting
+
+on: workflow_call
+
+jobs:
+  lint:
+    runs-on: self-hosted
+
+    steps:
+      - name: Execute linting
+        run: |
+          npm run lint
