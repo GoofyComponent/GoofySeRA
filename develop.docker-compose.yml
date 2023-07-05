@@ -25,6 +25,7 @@ services:
     networks:
       - sail
       - monolith
+      - hosted
     depends_on:
       - mariadb
       - redis
