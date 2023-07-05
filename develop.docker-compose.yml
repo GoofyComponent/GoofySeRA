@@ -85,15 +85,14 @@ services:
       - sail
       - monolith
   nextjs:
-    container_name: develop-sera-front-nextjs
+    container_name: develop-sera-front
     build:
       context: ./sera-front
       dockerfile: prod.Dockerfile
       target: runner
       args:
-        - port=${PORT_FRONT:-3305}
+        - port=${PORT_FRONT:-80}
         - ENV_VARIABLE=${ENV_VARIABLE:-production_server_only_variable}
-        - NEXT_PUBLIC_ENV_VARIABLE=${NEXT_PUBLIC_ENV_VARIABLE:-production_public_variable}
     networks:
       - monolith
       - hosted

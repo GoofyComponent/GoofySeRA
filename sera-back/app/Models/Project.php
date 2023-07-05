@@ -2,16 +2,23 @@
 
 namespace App\Models;
 
-use App\Models\Project_Request as ModelsProject_Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Project_Request extends Model
+class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    public function user()
+    public function projectRequest()
     {
-        return $this->belongsTo(Project_Request::class);
+        return $this->belongsTo(ProjectRequest::class);
     }
+
+    public function team()
+    {
+        return $this->hasOne(Team::class);
+    }
+
+
 }
