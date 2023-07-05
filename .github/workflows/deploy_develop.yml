@@ -4,44 +4,16 @@ on:
   push:
     branches:
       - develop
+      - SERA-58
 
 jobs:
+  cleaning:
+    uses: ./.github/workflows/rebuild-containers.yml
+
   deploy:
     runs-on: self-hosted
 
     steps:
-      - name: Check if the previous containers exists
-        run: |
-          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
-          then
-              echo "Previous containers found, stopping and removing them..."
-          else
-              echo "No previous containers found, continuing..."
-          fi
-
-      - name: Stop the previous containers
-        run: |
-          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
-          then
-              docker stop $(docker ps -a -q --filter "name=sera")
-          fi
-
-      - name: Remove the previous containers
-        run: |
-          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
-          then
-              docker rm $(docker ps -a -q --filter "name=sera")
-          fi
-
-      - name: DEBUG - Display current directory
-        run: |
-          pwd
-          ls -la
-
-      - name: Deletes the files inside the current directory
-        run: |
-          rm -rf ./*
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -79,14 +51,6 @@ jobs:
             exit 1
           fi
 
-      - name: DEBUG - Displaying the current directory && path
-        run: |
-          pwd
-          ls -la
-          find . -name composer.json
-          ls -la sera-back
-          ls -la sera-front
-
       - name: Execute composer install
         run: |
           docker run --rm \
@@ -106,20 +70,24 @@ jobs:
 
       - name: Launch the containers
         run: |
-          ./sera-back/vendor/laravel/sail/bin/sail -f ./develop.docker-compose.yml up -d --build --force-recreate
+          ./sera-back/vendor/laravel/sail/bin/sail -f ./develop.docker-compose.yml up -d --build
 
       - name: Wait till all containers has started
         run: |
-          sleep 2m
+          sleep 45
 
-      - name: Migrate the database
+      - name: Configure laravel
         run: |
-          if [ "${1}" = "reset" ]
-          then
-              ./sera-back/vendor/laravel/sail/bin/sail artisan migrate:refresh --seed
-          else
-              ./sera-back/vendor/laravel/sail/bin/sail artisan migrate
-          fi
+          ./sera-back/vendor/bin/sail artisan config:cache
+          ./sera-back/vendor/bin/sail artisan route:cache
+          ./sera-back/vendor/bin/sail artisan view:cache
+          ./sera-back/vendor/bin/sail artisan cache:clear
+          ./sera-back/vendor/bin/sail artisan key:generate
+
+      - name: Run migrations
+        run: |
+          sleep 10
+          ./sera-back/vendor/bin/sail artisan migrate:fresh --seed
 
       - name: Displaying that it's done
         run: |

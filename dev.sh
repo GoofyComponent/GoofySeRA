@@ -33,8 +33,6 @@ fi
 echo "--- launch docker container ---"
 ./sera-back/vendor/bin/sail up -d --build
 
-
-
 ./sera-back/vendor/bin/sail artisan config:cache
 ./sera-back/vendor/bin/sail artisan route:cache
 ./sera-back/vendor/bin/sail artisan view:cache
@@ -43,8 +41,6 @@ echo "--- launch docker container ---"
 
 echo "--- wait for 10 seconds ---"
 sleep 10
-
-echo "--- generate key ---"
 
 echo "--- migrate database  ---"
 ./sera-back/vendor/bin/sail artisan migrate:fresh --seed
