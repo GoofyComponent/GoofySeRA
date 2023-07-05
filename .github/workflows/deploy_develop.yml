@@ -79,7 +79,8 @@ jobs:
 
       - name: Permissions steps
         run: |
-          sudo chmod -R 777 .
+          sudo chmod -R 777 ./sera-back/storage
+          sudo chmod -R 777 ./sera-back/artisan
 
       - name: Configure laravel
         run: |
