@@ -78,7 +78,9 @@ jobs:
           sleep 45
 
       - name: Permissions steps
-        run: chmod -R u+rwx .
+        run: |
+          sudo chmod -R u+rwx .
+          sudo chmod o+w ./storage/ -R
 
       - name: Configure laravel
         run: |
