@@ -79,7 +79,7 @@ jobs:
 
       - name: Permissions steps
         run: |
-          sudo chmod o+w .sera-back/storage/ -R
+          sudo chmod o+w ./sera-back/storage/ -R
           sudo chmod -R u+rwx .
           sudo chmod o+w . -R
 
