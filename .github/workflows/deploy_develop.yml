@@ -75,13 +75,11 @@ jobs:
 
       - name: Wait till all containers has started
         run: |
-          sleep 30
+          sleep 1m
 
       - name: Permissions steps
         run: |
-          sudo chmod o+w ./sera-back/storage/ -R
-          sudo chmod -R u+rwx .
-          sudo chmod o+w . -R
+          sudo chmod -R 777 ./sera-back/storage
 
       - name: Configure laravel
         run: |
