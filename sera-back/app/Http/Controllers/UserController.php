@@ -42,11 +42,11 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'role' => 'required|string|in:' . implode(',', array_keys(config('roles'))),
+            'email' => ['string', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['confirmed', Rules\Password::defaults()],
+            'firstname' => 'string|max:255',
+            'lastname' => 'string|max:255',
+            'role' => 'string|in:' . implode(',', array_keys(config('roles'))),
         ]);
 
         $user = User::find($id);
@@ -55,13 +55,14 @@ class UserController extends Controller
             return response()->json(['error' => 'User not found.'], 404);
         }
 
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->firstname = $request->firstname;
-        $user->lastname = $request->lastname;
-        $user->role = $request->role;
+        $user->fill($request->all());
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
 
         $user->save();
+
+        return response()->json($user, 200);
     }
 
     /**
@@ -76,5 +77,7 @@ class UserController extends Controller
         }
 
         $user->delete();
+
+        return response()->json(['message' => 'User deleted.']);
     }
 }
