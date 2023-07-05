@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -86,16 +87,18 @@ export const LoginForm = () => {
             </FormItem>
           )}
         />
-        {loginRequest.isLoading ? (
-          <p>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</p>
-        ) : (
-          <Button
-            type="submit"
-            className="mx-auto w-1/2 border-2 bg-sera-periwinkle text-xl font-semibold text-sera-jet hover:border-sera-periwinkle hover:bg-sera-jet hover:text-sera-periwinkle"
-          >
-            Login
-          </Button>
-        )}
+
+        <Button
+          type="submit"
+          className="mx-auto w-1/2 border-2 bg-sera-periwinkle text-xl font-semibold text-sera-jet hover:border-sera-periwinkle hover:bg-sera-jet hover:text-sera-periwinkle"
+          disabled={loginRequest.isLoading}
+        >
+          {loginRequest.isLoading ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            "Login"
+          )}
+        </Button>
       </form>
     </Form>
   );
