@@ -22,4 +22,10 @@ class ProjectRequest extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function project()
+    {
+        return $this->hasOne(Project::class);
+    }
+
 }

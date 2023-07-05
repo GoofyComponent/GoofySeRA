@@ -4,7 +4,7 @@ if [ ! -f ./.env ]
 then
     cp .env.example .env
     cp sera-back/.env.example sera-back/.env
-    chmod 755 sera-back/.env
+    chmod 755 ./sera-back/.env
     chmod 755 .env
     echo ".env file is not found, copying from .env.example, waiting for 5 seconds..."
     sleep 5
@@ -31,21 +31,24 @@ then
 fi
 
 echo "--- launch docker container ---"
-./sera-back/vendor/laravel/sail/bin/sail up -d --build --force-recreate
+./sera-back/vendor/bin/sail up -d --build
 
-echo "waiting for 10 seconds..."
+
+
+./sera-back/vendor/bin/sail artisan config:cache
+./sera-back/vendor/bin/sail artisan route:cache
+./sera-back/vendor/bin/sail artisan view:cache
+./sera-back/vendor/bin/sail artisan cache:clear
+./sera-back/vendor/bin/sail artisan key:generate
+
+echo "--- wait for 10 seconds ---"
 sleep 10
 
 echo "--- generate key ---"
-./sera-back/vendor/laravel/sail/bin/sail artisan key:generate
 
 echo "--- migrate database  ---"
-if [ "${1}" = "reset" ]
-then
-    ./sera-back/vendor/laravel/sail/bin/sail artisan migrate:fresh --seed
-else
-    ./sera-back/vendor/laravel/sail/bin/sail artisan migrate --seed
-fi
+./sera-back/vendor/bin/sail artisan migrate:fresh --seed
+
 
 echo "--- done ---"
 echo "visit http://localhost"
