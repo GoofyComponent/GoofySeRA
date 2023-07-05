@@ -75,10 +75,11 @@ jobs:
 
       - name: Wait till all containers has started
         run: |
-          sleep 45
+          sleep 30
 
       - name: Permissions steps
         run: |
+          sudo chmod o+w .sera-back/storage/ -R
           sudo chmod -R u+rwx .
           sudo chmod o+w . -R
 
