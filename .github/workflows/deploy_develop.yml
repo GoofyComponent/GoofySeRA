@@ -12,6 +12,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
+    needs: cleaning
 
     steps:
       - name: Checkout
