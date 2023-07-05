@@ -28,6 +28,8 @@ class ProjectRequestController extends Controller
             'priority' => 'required|integer',
             'title' => 'required|string|max:100',
             'description' => 'required|string',
+            'needs' => 'required|string',
+            'status' => 'required|string'
         ]);
 
         $user = $request->user();
@@ -37,6 +39,8 @@ class ProjectRequestController extends Controller
         $projectRequest->priority = $validatedData['priority'];
         $projectRequest->title = $validatedData['title'];
         $projectRequest->description = $validatedData['description'];
+        $projectRequest->needs = $validatedData['needs'];
+        $projectRequest->status = $validatedData['status'];
         $projectRequest->save();
 
         return response()->json($projectRequest, 201);
@@ -68,14 +72,14 @@ class ProjectRequestController extends Controller
         }
 
         $validatedData = $request->validate([
-            'priority' => 'required|integer',
-            'title' => 'required|string|max:100',
-            'description' => 'required|string',
+            'priority' => 'integer',
+            'title' => 'string|max:100',
+            'description' => 'string',
+            'needs' => 'string',
+            'status' => 'string|in:pending,accepted,rejected'
         ]);
 
-        $projectRequest->priority = $validatedData['priority'];
-        $projectRequest->title = $validatedData['title'];
-        $projectRequest->description = $validatedData['description'];
+        $projectRequest->fill($validatedData);
         $projectRequest->save();
 
         return response()->json($projectRequest);
