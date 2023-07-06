@@ -16,7 +16,6 @@ class RoleHelper
         $roles = config('roles');
         $routeName = $request->route()->getName();
         list($resource, $action) = explode(".", $routeName);
-
         $userRole = $request->user()->role;
 
         if (!isset($roles[$userRole][$resource]) || !in_array($action, $roles[$userRole][$resource])) {

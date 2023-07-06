@@ -11,7 +11,7 @@ return [
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
         "users" => ["show", "index", "store", "update", "destroy"],
-        "projects" => ["show", "index", "store", "update", "destroy"],
+        "projects" => ["show", "index", "store", "update", "destroy","steps0-1"],
     ],
     "professor" => [
         "users" => ["show", "index"],
