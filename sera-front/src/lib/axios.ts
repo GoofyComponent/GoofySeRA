@@ -30,6 +30,7 @@ axios.interceptors.request.use(
     console.log(config.headers["X-XSRF-TOKEN"]);
     console.log(cookies.get("XSRF-TOKEN"));
     console.log(cookies.getAll());
+    console.log(document.cookie);
 
     return config;
   },
