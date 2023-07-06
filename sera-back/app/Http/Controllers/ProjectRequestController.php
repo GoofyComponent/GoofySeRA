@@ -13,9 +13,27 @@ class ProjectRequestController extends Controller
     public function index()
     {
         try {
-            return ProjectRequest::all();
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Project requests not found.'], 404);
+            $projectRequestsQuery = ProjectRequest::query();
+            $statusArrayConfig = ['pending', 'accepted', 'rejected'];
+
+            // Search by status (optional)
+            if (request()->filled('status')) {
+                $status = request()->input('status');
+                if (!in_array($status, $statusArrayConfig)) {
+                    return response()->json(['error' => 'Invalid status'], 400);
+                }
+                $projectRequestsQuery->where('status', $status);
+            }
+
+            // Search by priority (optional)
+            if (request()->filled('priority')) {
+                $priority = request()->input('priority');
+                $projectRequestsQuery->where('priority', $priority);
+            }
+
+            return response()->json($projectRequestsQuery->get());
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Failed to retrieve project requests'], 500);
         }
     }
 
