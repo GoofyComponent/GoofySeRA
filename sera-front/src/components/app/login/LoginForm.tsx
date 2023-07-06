@@ -30,7 +30,7 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const loginRequest = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: { email: string; password: string }) => {
       const formData = new FormData();
       formData.append("email", data.email);
       formData.append("password", data.password);
