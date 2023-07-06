@@ -8,7 +8,10 @@ import { LoginForm } from "../components/app/login/LoginForm";
 
 export const Login = () => {
   const navigate = useNavigate();
-  const isLogged = useSelector((state: any) => state.app.isPreviouslyLoggedIn);
+  const isLogged = useSelector(
+    (state: { app: { isPreviouslyLoggedIn: boolean } }) =>
+      state.app.isPreviouslyLoggedIn
+  );
 
   useEffect(() => {
     if (isLogged) {
