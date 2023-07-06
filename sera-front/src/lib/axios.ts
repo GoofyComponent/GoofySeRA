@@ -15,6 +15,7 @@ export const axios = Axios.create({
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     "Content-Type": "application/json",
+    "X-XSRF-TOKEN": cookies.get("XSRF-TOKEN"),
   },
 });
 
