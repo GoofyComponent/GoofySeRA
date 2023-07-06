@@ -13,14 +13,31 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            return User::where('id', '!=', auth()->user()->id)->get();
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Users not found.'], 404);
+            $usersQuery = User::query();
+
+            // Search by role (optional)
+            if ($request->filled('role')) {
+                $role = $request->input('role');
+                if (!in_array($role, array_keys(config('roles')))) {
+                    return response()->json(['error' => 'Invalid role'], 400);
+                }
+                $usersQuery->where('role', $role);
+            }
+
+            // Exclude the authenticated user
+            $usersQuery->whereNotIn('id', [$request->user()->id]);
+            $users = $usersQuery->get();
+
+            return response()->json($users);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => 'Failed to retrieve users'], 500);
         }
     }
+
+
 
     /**
      * Display the specified resource.
@@ -79,5 +96,11 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['message' => 'User deleted.']);
+    }
+
+
+    public function getRoles(Request $request)
+    {
+        return response()->json(array_keys(config('roles')));
     }
 }
