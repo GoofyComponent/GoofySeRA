@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +30,8 @@ export const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [typedError, setTypedError] = useState<string>("");
+
   const loginRequest = useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
       const formData = new FormData();
@@ -45,6 +48,10 @@ export const LoginForm = () => {
           dispatch(registerLogin());
           navigate(`/dashboard`);
         });
+    },
+    onError: (error: any) => {
+      console.log(error);
+      setTypedError(error.response?.data.message);
     },
   });
 
@@ -103,9 +110,7 @@ export const LoginForm = () => {
         />
 
         {loginRequest.isError && (
-          <FormMessage className="text-red-500">
-            {loginRequest.error?.response?.data?.message}
-          </FormMessage>
+          <FormMessage className="text-red-500">{typedError}</FormMessage>
         )}
 
         <Button
