@@ -1,3 +1,5 @@
+import { reset } from "@/helpers/slices/AppSlice";
+import store from "@/helpers/store";
 import Axios from "axios";
 import Cookies from "universal-cookie";
 
@@ -17,7 +19,7 @@ export const axios = Axios.create({
 
 axios.interceptors.request.use(
   async function (config) {
-    if (!isValidXSRFToken()) {
+    if (!hasXSRFToken()) {
       await requestCSRFToken();
     }
 
@@ -28,13 +30,29 @@ axios.interceptors.request.use(
   }
 );
 
-function isValidXSRFToken() {
+axios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  async function (error) {
+    const originalRequest = error.config;
+
+    if (error.response.status === 419 && !originalRequest._retry) {
+      store.dispatch(reset());
+      originalRequest._retry = true;
+      await requestCSRFToken();
+      return axios(originalRequest);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export function hasXSRFToken() {
   const xsrfToken = cookies.get("XSRF-TOKEN");
-  console.log(!!xsrfToken);
   return !!xsrfToken;
 }
 
-// Fonction pour demander un nouveau jeton CSRF
 async function requestCSRFToken() {
   return await Axios.get(
     `${import.meta.env.VITE_BACKEND_URL}/sanctum/csrf-cookie`

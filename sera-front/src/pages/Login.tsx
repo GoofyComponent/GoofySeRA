@@ -1,8 +1,21 @@
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import logo from "@/assets/images/sera-logo.svg";
 
 import { LoginForm } from "../components/app/login/LoginForm";
 
 export const Login = () => {
+  const navigate = useNavigate();
+  const isLogged = useSelector((state: any) => state.app.isPreviouslyLoggedIn);
+
+  useEffect(() => {
+    if (isLogged) {
+      navigate("/dashboard");
+    }
+  }, [isLogged]);
+
   return (
     <>
       <header className="my-auto ml-6 h-[10vh] py-6">
