@@ -1,12 +1,29 @@
 name: Linting
 
-on: workflow_call
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - develop
+  workflow_call:
 
 jobs:
   lint:
     runs-on: self-hosted
 
     steps:
-      - name: Execute linting
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          clean: false
+          ref: ${{ github.event.inputs.ref }}
+
+      - name: Autofix linting errors
+        run: |
+          npm run lint -- --fix
+
+      - name: Verify linting
         run: |
           npm run lint
