@@ -97,4 +97,10 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted.']);
     }
+
+
+    public function getRoles(Request $request)
+    {
+        return response()->json(array_keys(config('roles')));
+    }
 }
