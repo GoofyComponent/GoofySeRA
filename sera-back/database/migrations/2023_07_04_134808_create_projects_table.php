@@ -16,10 +16,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_request_id')->constrained('project_requests');
             $table->string('title');
-            $table->string('description');
+            $table->longText('description');
             $table->string('status');
-            $table->string('start_date');
-            $table->string('end_date');
+            $table->string('start_date')->nullable();
+            $table->string('end_date')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

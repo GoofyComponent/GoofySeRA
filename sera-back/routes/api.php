@@ -25,7 +25,8 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::resource('projects-requests', 'App\Http\Controllers\ProjectRequestController');
     Route::resource('users', 'App\Http\Controllers\UserController')->except(['store']);
     Route::post('users', 'App\Http\Controllers\Auth\RegisteredUserController@store')->name('users.store');
-
     Route::resource('projects', 'App\Http\Controllers\ProjectController');
+
+    Route::put('projects/{projectRequestId}/steps/0-1', 'App\Http\Controllers\StepController@StepZeroToOne')->name('projects.steps0-1');
 
 });
