@@ -23,6 +23,9 @@ jobs:
       - name: Move to front directory
         run: cd ./sera-front
 
+      - name: Show directory
+        run: ls -al
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
