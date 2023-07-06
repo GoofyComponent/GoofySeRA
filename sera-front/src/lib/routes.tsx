@@ -2,11 +2,11 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import store from "@/helpers/store";
 import Profile from "@/pages/Profile";
+import { LoaderJet } from "@/pages/skeletons/LoaderJet";
 
 import App from "../pages/App";
 import { Login } from "../pages/Login";
 import { Test } from "../pages/Test";
-import { LoaderJet } from "@/pages/skeletons/LoaderJet";
 
 const isLogged = store.getState().app.isPreviouslyLoggedIn;
 
