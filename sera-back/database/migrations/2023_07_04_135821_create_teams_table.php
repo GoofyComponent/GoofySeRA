@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        /*example of one role column :
+            video_team = [0,3,8] ou le numéro correspond à l'id de l'utilisateur
+        */
         Schema::create('teams', function (Blueprint $table) {
             $roles = array_keys(config('roles'));
             $table->id();
