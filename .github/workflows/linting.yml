@@ -20,6 +20,9 @@ jobs:
           clean: false
           ref: ${{ github.event.inputs.ref }}
 
+      - name: Move to front directory
+        run: cd ./sera-front
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
