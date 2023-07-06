@@ -36,6 +36,7 @@
     "tailwindcss-animate": "^1.0.6",
     "universal-cookie": "^4.0.4",
     "vite-plugin-favicons-inject": "^2.2.0",
+    "vite-plugin-html-config": "^1.0.11",
     "zod": "^3.21.4"
   },
   "devDependencies": {

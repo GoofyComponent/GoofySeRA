@@ -1,10 +1,14 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
+import store from "@/helpers/store";
 import Profile from "@/pages/Profile";
 
 import App from "../pages/App";
 import { Login } from "../pages/Login";
 import { Test } from "../pages/Test";
+import { LoaderJet } from "@/pages/skeletons/LoaderJet";
+
+const isLogged = store.getState().app.isPreviouslyLoggedIn;
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +42,7 @@ export const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "*",
-    element: <div>404</div>,
+    path: "/",
+    element: <Navigate to="/login" replace />,
   },
 ]);

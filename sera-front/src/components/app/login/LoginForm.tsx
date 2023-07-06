@@ -2,6 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { registerLogin } from "@/helpers/slices/AppSlice";
 import { axios } from "@/lib/axios";
 
 const FormSchema = z.object({
@@ -23,16 +26,25 @@ const FormSchema = z.object({
 });
 
 export const LoginForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const loginRequest = useMutation({
     mutationFn: async (data: any) => {
       const formData = new FormData();
       formData.append("email", data.email);
       formData.append("password", data.password);
-      return await axios.post("/login", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      return await axios
+        .post("/login", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          dispatch(registerLogin());
+          navigate(`/dashboard`);
+        });
     },
   });
 
@@ -62,6 +74,7 @@ export const LoginForm = () => {
             <FormItem>
               <FormControl>
                 <Input
+                  type="email"
                   placeholder="Email"
                   {...field}
                   className={"border-sera-periwinkle outline-sera-periwinkle"}
@@ -78,6 +91,7 @@ export const LoginForm = () => {
             <FormItem>
               <FormControl>
                 <Input
+                  type="password"
                   placeholder="Password"
                   {...field}
                   className={"border-sera-periwinkle outline-sera-periwinkle"}
@@ -87,6 +101,12 @@ export const LoginForm = () => {
             </FormItem>
           )}
         />
+
+        {loginRequest.isError && (
+          <FormMessage className="text-red-500">
+            {loginRequest.error?.response?.data?.message}
+          </FormMessage>
+        )}
 
         <Button
           type="submit"

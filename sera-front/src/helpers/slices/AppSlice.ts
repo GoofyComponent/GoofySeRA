@@ -1,15 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  isPreviouslyLoggedIn: false,
+};
+
 export const AppSlice = createSlice({
   name: "app",
-  initialState: {},
+  initialState,
   reducers: {
-    custom: (state, action) => {
-      return { state, action };
+    registerLogin: (state) => {
+      state.isPreviouslyLoggedIn = true;
+    },
+    reset: () => {
+      return initialState;
     },
   },
 });
 
-export const { custom } = AppSlice.actions;
+export const { registerLogin, reset } = AppSlice.actions;
 
 export default AppSlice.reducer;
