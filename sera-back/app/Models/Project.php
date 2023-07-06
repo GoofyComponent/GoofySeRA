@@ -19,6 +19,4 @@ class Project extends Model
     {
         return $this->hasOne(Team::class);
     }
-
-
 }
