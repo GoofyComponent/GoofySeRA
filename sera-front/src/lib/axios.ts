@@ -1,7 +1,8 @@
-import { reset } from "@/helpers/slices/AppSlice";
-import store from "@/helpers/store";
 import Axios from "axios";
 import Cookies from "universal-cookie";
+
+import { reset } from "@/helpers/slices/AppSlice";
+import store from "@/helpers/store";
 
 Axios.defaults.withCredentials = true;
 
