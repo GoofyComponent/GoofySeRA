@@ -103,4 +103,9 @@ class UserController extends Controller
     {
         return response()->json(array_keys(config('roles')));
     }
+
+    public function getAuthenticatedUser(Request $request)
+    {
+        return response()->json($request->user());
+    }
 }
