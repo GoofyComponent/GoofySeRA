@@ -6,7 +6,7 @@ export const Nav = () => {
   const pathname = useLocation();
 
   return (
-    <nav className="h-[90vh] w-[14%] border-r-2 border-[#D3D4D5]">
+    <nav className="hidden h-[90vh] w-[14%] border-r-2 border-[#D3D4D5] md:block">
       <ul className="flex h-full flex-col justify-start py-4">
         <Link
           to="/dashboard/tickets"

@@ -30,7 +30,7 @@ function App() {
       </header>
       <div className="flex min-h-[90vh] justify-start overflow-auto bg-[#FBF5F3]">
         <Nav />
-        <main className="max-h-[90vh] w-[86%] overflow-y-auto pb-4 scrollbar scrollbar-track-sera-jet/50 scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3">
+        <main className="max-h-[90vh] w-full overflow-y-auto pb-4 scrollbar scrollbar-track-sera-jet/50 scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3 md:w-[86%]">
           <Outlet />
         </main>
       </div>
