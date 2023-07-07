@@ -391,7 +391,7 @@ const projects: Project[] = [
   },
 ];
 
-export const RecentProjects = ({ skeleton = false }) => {
+const RecentProjects = ({ skeleton = false }) => {
   return (
     <div className="m-10 rounded-lg bg-[#F2F1F6] p-10 pt-2">
       <h2 className="mb-2 text-4xl font-bold">Recent Projects</h2>
@@ -421,3 +421,5 @@ export const RecentProjects = ({ skeleton = false }) => {
     </div>
   );
 };
+
+export { RecentProjects };
