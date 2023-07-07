@@ -90,6 +90,7 @@ jobs:
           ./sera-back/vendor/bin/sail artisan view:cache
           ./sera-back/vendor/bin/sail artisan cache:clear
           ./sera-back/vendor/bin/sail artisan key:generate
+          ./sera-back/vendor/bin/sail artisan optimize:clear
 
       - name: Run migrations
         run: |
