@@ -4,6 +4,8 @@ import Cookies from "universal-cookie";
 import { reset } from "@/helpers/slices/AppSlice";
 import store from "@/helpers/store";
 
+import { router } from "./routes";
+
 Axios.defaults.withCredentials = true;
 
 const cookies = new Cookies();
@@ -46,6 +48,13 @@ axios.interceptors.response.use(
       originalRequest._retry = true;
       await requestCSRFToken();
       return axios(originalRequest);
+    }
+
+    if (error.response.status === 401) {
+      store.dispatch(reset());
+      cookies.remove("XSRF-TOKEN");
+      cookies.remove("laravel_session");
+      router.navigate("/login");
     }
 
     return Promise.reject(error);
