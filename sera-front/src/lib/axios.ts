@@ -27,11 +27,6 @@ axios.interceptors.request.use(
 
     config.headers["X-XSRF-TOKEN"] = cookies.get("XSRF-TOKEN");
 
-    console.log(config.headers["X-XSRF-TOKEN"]);
-    console.log(cookies.get("XSRF-TOKEN"));
-    console.log(cookies.getAll());
-    console.log(document.cookie);
-
     return config;
   },
   function (error) {
