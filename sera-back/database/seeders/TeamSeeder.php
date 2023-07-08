@@ -32,7 +32,6 @@ class TeamSeeder extends Seeder
                 }
 
                 \App\Models\UserTeam::factory()->create([
-                    'role' => $role,
                     'user_id' => $user->id,
                     'team_id' => $team->id,
                 ]);

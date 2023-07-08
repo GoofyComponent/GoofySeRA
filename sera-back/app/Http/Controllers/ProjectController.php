@@ -39,7 +39,6 @@ class ProjectController extends Controller
         $project->project_request_id = $validated['project_request_id'];
         $project->title = $validated['title'];
         $project->description = $validated['description'];
-        $project->status = 'pending';
         $project->save();
 
         $team = new Team();
@@ -54,7 +53,7 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        $project = Project::find($id)->with('Team')->first();
+        $project = Project::where('id', $id)->with('Team.users')->first();
         if ($project === null) {
             throw new \Exception('Project not found.');
         }

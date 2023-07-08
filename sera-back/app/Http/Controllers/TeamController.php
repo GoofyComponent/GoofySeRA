@@ -10,9 +10,10 @@ class TeamController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $teams = Team::all();
+        // with users
+        $teams = Team::all()->load('users');
 
         if ($teams === null) {
             throw new \Exception('No teams found.');
@@ -27,7 +28,7 @@ class TeamController extends Controller
      */
     public function show($projectId)
     {
-        $team = Team::where('project_id', $projectId)->first();
+        $team = Team::where('project_id', $projectId)->with('users')->first();
 
         if ($team === null) {
             throw new \Exception('Team not found.');
@@ -41,38 +42,32 @@ class TeamController extends Controller
      */
     public function update(Request $request,$projectId)
     {
-        $roles = array_keys(config('roles'));
-        // for each role validate with an array for request validation
-        // a role is like that : "cursus_director" => [0,3,7]
-
-        foreach ($roles as $role) {
-            $validated = $request->validate([
-                $role => 'array',
-            ]);
-        }
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
 
         $team = Team::where('project_id', $projectId)->first();
 
         if ($team === null) {
-            throw new \Exception('Team not found.');
+            $team = new Team();
+            $team->project_id = $projectId;
+            $team->save();
         }
 
-        foreach ($roles as $role) {
-            if (!isset($validated[$role])) {
-                continue;
-            }
-            $team->$role = $validated[$role];
+        // we check if the user is already in the team
+        if ($team->hasUser($validated['user_id'])) {
+            return response()->json(['error' => 'User already in team.'], 400);
         }
 
-        $team->save();
+        $team->addUser($validated['user_id'], $team->id);
+
+        $team->refresh();
 
         return response()->json($team, 201);
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($projectId)
+    public function remove($projectId,$userId)
     {
         $team = Team::where('project_id', $projectId)->first();
 
@@ -80,8 +75,16 @@ class TeamController extends Controller
             throw new \Exception('Team not found.');
         }
 
-        $team->delete();
+        // we check if the user is already in the team
+        if (!$team->hasUser($userId)) {
+            return response()->json(['error' => 'User not in team.'], 400);
+        }
 
-        return response()->json(null, 204);
+        $team->removeUser($userId);
+
+        $team->refresh();
+
+        return response()->json($team, 201);
     }
+
 }
