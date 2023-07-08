@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Team;
 use App\Models\Project;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Js;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
 {
@@ -14,7 +15,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::all();
+        $projects = Project::all()->with('Team');
 
         if ($projects === null) {
             throw new \Exception('No projects found.');
@@ -41,6 +42,10 @@ class ProjectController extends Controller
         $project->status = 'pending';
         $project->save();
 
+        $team = new Team();
+        $team->project_id = $project->id;
+        $team->save();
+
         return response()->json($project, 201);
     }
 
@@ -49,8 +54,7 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        $project = Project::find($id);
-
+        $project = Project::find($id)->with('Team')->first();
         if ($project === null) {
             throw new \Exception('Project not found.');
         }

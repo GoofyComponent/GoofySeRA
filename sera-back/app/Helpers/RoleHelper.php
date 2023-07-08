@@ -19,7 +19,7 @@ class RoleHelper
         $userRole = $request->user()->role;
 
         if (!isset($roles[$userRole][$resource]) || !in_array($action, $roles[$userRole][$resource])) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized to access this resource'], 403);
         }
 
         return null;
