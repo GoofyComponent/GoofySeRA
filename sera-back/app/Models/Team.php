@@ -16,6 +16,25 @@ class Team extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('role');
+        return $this->hasManyThrough(User::class, UserTeam::class, 'team_id', 'id', 'id', 'user_id');
+    }
+
+    public function addUser($userId, $teamId)
+    {
+        $userTeam = new UserTeam();
+        $userTeam->user_id = $userId;
+        $userTeam->team_id = $teamId;
+        $userTeam->save();
+    }
+
+    public function removeUser($userId)
+    {
+        $userTeam = UserTeam::where('user_id', $userId)->where('team_id', $this->id)->first();
+        $userTeam->delete();
+    }
+
+    public function hasUser($userId)
+    {
+        return UserTeam::where('user_id', $userId)->where('team_id', $this->id)->exists();
     }
 }

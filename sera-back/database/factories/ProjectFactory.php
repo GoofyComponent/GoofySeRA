@@ -23,7 +23,7 @@ class ProjectFactory extends Factory
             'project_request_id' => $projectRequest->id,
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(3),
-            'status' => 'pending',
+            'status' => 'ongoing',
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
             'end_date' => Carbon::now()->addDays(2)->format('Y-m-d'),
         ];

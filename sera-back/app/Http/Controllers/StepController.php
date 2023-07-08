@@ -13,7 +13,6 @@ class StepController extends Controller
     {
 
         $validatedData = $request->validate([
-            'status' => 'required|string|in:accepted,rejected',
             'title' => 'required|string',
             'description' => 'required|string',
         ]);
@@ -32,11 +31,11 @@ class StepController extends Controller
         $projectRequest->status = 'accepted';
 
         $projectController = new ProjectController();
-
         $project = $projectController->store(new Request([
-            'project_request_id' => $projectRequestId,
+            'project_request_id' => $projectRequest->id,
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
+            'status' => 'ongoing',
         ]));
 
         $projectRequest->save();

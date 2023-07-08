@@ -26,5 +26,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
     Route::put('projects/{projectRequestId}/steps/0-1', 'App\Http\Controllers\StepController@StepZeroToOne')->name('projects.steps0-1');
 
-
+    Route::post('teams/{projectId}/add', 'App\Http\Controllers\TeamController@update')->name('teams.add');
+    Route::post('teams/{projectId}/remove/{userId}', 'App\Http\Controllers\TeamController@remove')->name('teams.remove');
+    Route::resource('teams', 'App\Http\Controllers\TeamController')->except(['update','store','destroy']);
 });
