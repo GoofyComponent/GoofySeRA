@@ -16,6 +16,6 @@ class Team extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('role');
+        return $this->hasManyThrough(User::class, UserTeam::class);
     }
 }

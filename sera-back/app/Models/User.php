@@ -52,7 +52,7 @@ class User extends Authenticatable
 
     public function team()
     {
-        return $this->hasOne(Team::class);
+        return $this->hasOneThrough(Team::class, UserTeam::class);
     }
 
     public function projects()

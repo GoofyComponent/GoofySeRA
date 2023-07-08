@@ -14,10 +14,10 @@ return new class extends Migration
 
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_request_id')->constrained('project_requests');
+            $table->foreignId('project_request_id')->constrained('project_requests')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title');
             $table->longText('description');
-            $table->string('status');
+            $table->enum('status', ['ongoing', 'completed', 'cancelled'])->default('ongoing');
             $table->string('start_date')->nullable();
             $table->string('end_date')->nullable();
             $table->softDeletes();

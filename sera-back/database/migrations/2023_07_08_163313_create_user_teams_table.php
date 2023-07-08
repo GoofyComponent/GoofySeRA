@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-
-        Schema::create('teams', function (Blueprint $table) {
+        Schema::create('user_teams', function (Blueprint $table) {
+            $roles = array_keys(config('roles'));
             $table->id();
-            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->enum('role', $roles)->nullable(false);
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('user_teams');
     }
 };
