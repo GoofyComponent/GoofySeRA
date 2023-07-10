@@ -107,9 +107,9 @@ class UserController extends Controller
     public function getAuthenticatedUser(Request $request)
     {
 
-        if (!$request->user()) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        // if (!$request->user()) {
+        //     return response()->json(['error' => 'Unauthorized'], 401);
+        // }
 
         return response()->json($request->user());
     }
