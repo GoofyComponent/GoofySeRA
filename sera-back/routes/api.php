@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('me', 'App\Http\Controllers\UserController@getAuthenticatedUser')->name('me');
+// Route::middleware(['auth:sanctum'])->get('me', 'App\Http\Controllers\UserController@getAuthenticatedUser')->name('me');
+
+Route::get('me', 'App\Http\Controllers\UserController@getAuthenticatedUser')->name('me');
 
 Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function () {
 
