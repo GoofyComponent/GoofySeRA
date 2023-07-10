@@ -1,19 +1,33 @@
+import { useQuery } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
+import { useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 
 import logo from "@/assets/images/sera-logo.svg";
+import { updateInfos } from "@/helpers/slices/UserSlice";
+import { axios } from "@/lib/axios";
 
 import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 
 function App() {
+  const dispatch = useDispatch();
+
+  const info = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const userInfos = await axios.get("/api/me");
+      dispatch(updateInfos(userInfos.data));
+      return userInfos.data;
+    },
+  });
   return (
     <>
       <header className="my-auto flex h-[10vh] justify-between p-6">
         <div className="flex justify-start lg:w-5/12">
           <img src={logo} alt={"SeRA App"} />
           <h3 className="mx-8 mb-0 mt-auto text-2xl text-sera-periwinkle">
-            Welcome back, (user) !
+            Welcome back{info.isLoading ? "" : `, ${info.data.firstname}`}!
           </h3>
         </div>
         <div className="my-auto flex justify-end">
@@ -23,7 +37,11 @@ function App() {
           <Avatar className="ml-2">
             <AvatarImage src="" />
             <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
-              USR
+              {info.isLoading
+                ? ""
+                : `${info.data.firstname[0].toUpperCase() as string}.${
+                    info.data.lastname[0].toUpperCase() as string
+                  }`}
             </AvatarFallback>
           </Avatar>
         </div>

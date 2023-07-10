@@ -18,8 +18,10 @@ export const Nav = () => {
             "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
           )}
         >
-          <Ticket size={32} className="my-auto" />
-          <p className="my-auto text-2xl font-semibold">Tickets</p>
+          <Ticket size={32} className="my-auto " />
+          <p className="my-auto hidden text-2xl font-semibold lg:block">
+            Tickets
+          </p>
         </Link>
         <Link
           to="/dashboard/projects"
@@ -31,8 +33,10 @@ export const Nav = () => {
             "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
           )}
         >
-          <BookOpen size={32} className="my-auto" />
-          <p className="my-auto text-2xl font-semibold">Projects</p>
+          <BookOpen size={32} className="my-auto " />
+          <p className="my-auto hidden text-2xl font-semibold lg:block">
+            Projects
+          </p>
         </Link>
       </ul>
     </nav>
