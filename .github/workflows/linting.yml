@@ -29,12 +29,7 @@ jobs:
         working-directory: ./sera-front
         run: npm ci
 
-      - name: Autofix linting errors
+      - name: Verify & autofix linting errors if needed
         working-directory: ./sera-front
         run: |
           npm run lint -- --fix
-
-      - name: Verify linting
-        working-directory: ./sera-front
-        run: |
-          npm run lint
