@@ -25,19 +25,16 @@ jobs:
         with:
           node-version: 14
 
-      - name: Move to front directory
-        run: cd ./sera-front
-
-      - name: Show directory
-        run: ls -al
-
       - name: Install dependencies
+        working-directory: GoofySeRA/GoofySeRA/sera-front
         run: npm ci
 
       - name: Autofix linting errors
+        working-directory: GoofySeRA/GoofySeRA/sera-front
         run: |
           npm run lint -- --fix
 
       - name: Verify linting
+        working-directory: GoofySeRA/GoofySeRA/sera-front
         run: |
           npm run lint
