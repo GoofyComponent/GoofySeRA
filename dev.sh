@@ -31,7 +31,7 @@ then
 fi
 
 echo "--- launch docker container ---"
-./sera-back/vendor/bin/sail up -d --build
+./sera-back/vendor/bin/sail up -d --build --force-recreate
 
 ./sera-back/vendor/bin/sail artisan key:generate
 
