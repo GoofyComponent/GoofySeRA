@@ -2,26 +2,15 @@ version: "3"
 services:
   laravel.test:
     container_name: develop-sera-back-laravel-test
-    user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
-    build:
-      context: ./sera-back/vendor/laravel/sail/runtimes/8.2
-      dockerfile: Dockerfile
+    volumes:
+      - ./sera-back:/var/www/html
+    build: 
+      context: ./sera-back
+      dockerfile: ./docker/prod.Dockerfile
       args:
         WWWGROUP: "${WWWGROUP:-1000}"
-    image: sail-8.2/app
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    #ports:
-    #- "${APP_PORT:-80}:80"
-    #- "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
-    environment:
-      WWWUSER: "${WWWUSER:-1000}"
-      LARAVEL_SAIL: 1
-      XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
-      XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
-      IGNITION_LOCAL_SITES_PATH: "${PWD}"
-    volumes:
-      - "./sera-back:/var/www/html"
+
+    user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
     networks:
       - sail
       - monolith
@@ -30,6 +19,7 @@ services:
       - mariadb
       - redis
       - soketi
+
   mariadb:
     container_name: develop-sera-back-mariadb
     image: "mariadb:10"
@@ -117,3 +107,4 @@ volumes:
     driver: local
   sail-redis:
     driver: local
+ 
