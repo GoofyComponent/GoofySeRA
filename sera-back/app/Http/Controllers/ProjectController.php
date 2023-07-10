@@ -15,7 +15,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::all()->with('Team');
+        $projects = Project::all()->load('Team.users');
 
         if ($projects === null) {
             throw new \Exception('No projects found.');
