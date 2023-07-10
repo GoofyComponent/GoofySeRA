@@ -4,7 +4,9 @@ if [ ! -f ./.env ]
 then
     cp .env.example .env
     cp sera-back/.env.example sera-back/.env
+    cp sera-front/.env.example sera-front/.env
     chmod 755 ./sera-back/.env
+    chmod 755 ./sera-front/.env
     chmod 755 .env
     echo ".env file is not found, copying from .env.example, waiting for 5 seconds..."
     sleep 5
