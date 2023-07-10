@@ -10,7 +10,7 @@ on:
 
 jobs:
   lint:
-    runs-on: self-hosted
+    runs-on: lint
 
     steps:
       - name: Checkout
