@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.1-apache
 ARG WWWGROUP
 
 WORKDIR /var/www/html
@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     vim 
+
 RUN docker-php-ext-install pdo pdo_pgsql pgsql zip mbstring exif pcntl bcmath gd 
 RUN  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer install --no-dev --optimize-autoloader --no-interaction \
