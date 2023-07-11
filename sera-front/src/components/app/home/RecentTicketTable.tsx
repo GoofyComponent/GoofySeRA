@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import {
   Table,
   TableBody,
@@ -6,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Link } from "react-router-dom";
 
 interface Ticket {
   name: string;
@@ -100,7 +101,7 @@ const tickets: Ticket[] = [
   },
 ];
 
-export const RecentTicketTable = ({}) => {
+export const RecentTicketTable = () => {
   return (
     <div className="m-10 rounded-lg bg-[#F2F1F6] pt-2">
       <h2 className="mb-2 px-4 text-4xl font-bold">Ticket</h2>

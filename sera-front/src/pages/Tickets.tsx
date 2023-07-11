@@ -1,12 +1,5 @@
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import {
   AlertDialog,
@@ -18,10 +11,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-export const Tickets = ({}) => {
+export const Tickets = () => {
   interface Ticket {
     name: string;
     date: string;

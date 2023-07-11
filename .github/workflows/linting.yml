@@ -32,4 +32,4 @@ jobs:
       - name: Verify & autofix linting errors if needed
         working-directory: ./sera-front
         run: |
-          npm run lint -- --fix
+          npm run lint-autofix
