@@ -68,7 +68,7 @@ jobs:
 
       - name: Wait till all containers has started
         run: |
-          sleep 15
+          sleep 30
 
       - name: Permissions steps
         run: |
