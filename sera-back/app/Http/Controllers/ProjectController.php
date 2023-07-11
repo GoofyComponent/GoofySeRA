@@ -13,9 +13,11 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::all()->load('Team.users');
+        $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
+        $projects = Project::with('Team.users')->paginate($maxPerPage);
+        // $projects = Project::all()->load('Team.users');
 
         if ($projects === null) {
             throw new \Exception('No projects found.');
@@ -64,7 +66,7 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id) : JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         $validated = $request->validate([
             'title' => 'string',
