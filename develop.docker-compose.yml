@@ -9,7 +9,6 @@ services:
       dockerfile: ./docker/prod.Dockerfile
       args:
         WWWGROUP: "${WWWGROUP:-1000}"
-
     user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
     networks:
       - sail
@@ -23,7 +22,6 @@ services:
   mariadb:
     container_name: develop-sera-back-mariadb
     image: "mariadb:10"
-    user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
     ports:
       - "${FORWARD_DB_PORT:-3306}:3306"
     environment:
@@ -49,7 +47,6 @@ services:
   redis:
     container_name: develop-sera-back-redis
     image: "redis:alpine"
-    user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
     ports:
       - "${FORWARD_REDIS_PORT:-6379}:6379"
     volumes:
@@ -66,7 +63,6 @@ services:
   soketi:
     container_name: develop-sera-back-soketi
     image: "quay.io/soketi/soketi:latest-16-alpine"
-    user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
     environment:
       SOKETI_DEBUG: "${SOKETI_DEBUG:-1}"
       SOKETI_METRICS_SERVER_PORT: "9601"
@@ -81,7 +77,6 @@ services:
       - monolith
   nextjs:
     container_name: develop-sera-front
-    user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
     build:
       context: ./sera-front
       dockerfile: prod.Dockerfile
