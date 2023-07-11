@@ -62,17 +62,9 @@ jobs:
           laravelsail/php81-composer \
           composer install --ignore-platform-reqs
 
-      - name: Check if sail folder exists
-        run: |
-          if [ ! -d ./sera-back/vendor/laravel/sail ]
-          then
-              echo "sail folder not found, exiting..."
-              exit ;
-          fi
-
       - name: Launch the containers
         run: |
-          ./sera-back/vendor/laravel/sail/bin/sail -f ./develop.docker-compose.yml up -d --build
+          docker compose -f ./develop.docker-compose.yml up -d --build
 
       - name: Wait till all containers has started
         run: |
@@ -85,19 +77,19 @@ jobs:
 
       - name: Configure laravel
         run: |
-          ./sera-back/vendor/bin/sail artisan cache:clear
-          ./sera-back/vendor/bin/sail artisan config:clear
-          ./sera-back/vendor/bin/sail artisan route:clear
-          ./sera-back/vendor/bin/sail artisan key:generate
-          ./sera-back/vendor/bin/sail artisan config:cache
-          ./sera-back/vendor/bin/sail artisan route:cache
-          ./sera-back/vendor/bin/sail artisan view:cache
-          ./sera-back/vendor/bin/sail artisan optimize
+          docker exec develop-sera-back-laravel-test php artisan cache:clear 
+          docker exec develop-sera-back-laravel-test php artisan config:clear
+          docker exec develop-sera-back-laravel-test php artisan route:clear
+          docker exec develop-sera-back-laravel-test php artisan key:generate
+          docker exec develop-sera-back-laravel-test php artisan config:cache
+          docker exec develop-sera-back-laravel-test php artisan route:cache
+          docker exec develop-sera-back-laravel-test php artisan view:cache
+          docker exec develop-sera-back-laravel-test php artisan optimize
 
       - name: Run migrations
         run: |
           sleep 10
-          ./sera-back/vendor/bin/sail artisan migrate:fresh --seed
+          ./sera-back/vendor/bin/sail artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
         run: |
