@@ -48,5 +48,6 @@ module.exports = {
         aspects: ["invalidHref", "preferButton"],
       },
     ],
+    "@typescript-eslint/no-unused-vars": ["error"],
   },
 };

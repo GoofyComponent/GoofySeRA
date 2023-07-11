@@ -14,7 +14,6 @@ import { axios } from "@/lib/axios";
 
 import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { Separator } from "@radix-ui/react-separator";
 
 function App() {
   const dispatch = useDispatch();
