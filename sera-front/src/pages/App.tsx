@@ -1,14 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 import logo from "@/assets/images/sera-logo.svg";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { updateInfos } from "@/helpers/slices/UserSlice";
 import { axios } from "@/lib/axios";
 
 import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { Separator } from "@radix-ui/react-separator";
 
 function App() {
   const dispatch = useDispatch();
@@ -34,16 +40,35 @@ function App() {
           <div className="relative my-auto mr-2 flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-sera-periwinkle">
             <Bell className="m-auto text-[#916AF6]" />
           </div>
-          <Avatar className="ml-2">
-            <AvatarImage src="" />
-            <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
-              {info.isLoading
-                ? ""
-                : `${info.data.firstname[0].toUpperCase() as string}.${
-                    info.data.lastname[0].toUpperCase() as string
-                  }`}
-            </AvatarFallback>
-          </Avatar>
+          <Popover>
+            <PopoverTrigger>
+              <Avatar className="ml-2">
+                <AvatarImage src="" />
+                <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
+                  {info.isLoading
+                    ? "USR"
+                    : `${info.data.firstname[0].toUpperCase() as string}.${
+                        info.data.lastname[0].toUpperCase() as string
+                      }`}
+                </AvatarFallback>
+              </Avatar>
+            </PopoverTrigger>
+            <PopoverContent className="flex flex-col text-lg font-medium text-sera-jet">
+              <Link
+                to="/dashboard/profile"
+                className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
+              >
+                Profile
+              </Link>
+
+              {/*               <Separator className="my-2" /><Link
+                to="/dashboard/settings"
+                className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
+              >
+                Settings
+              </Link> */}
+            </PopoverContent>
+          </Popover>
         </div>
       </header>
       <div className="flex min-h-[90vh] justify-start overflow-auto bg-[#FBF5F3]">
