@@ -27,14 +27,22 @@ Route::get('headers', function (Request $request) {
 Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function () {
 
     Route::resource('projects-requests', 'App\Http\Controllers\ProjectRequestController');
+
     Route::resource('users', 'App\Http\Controllers\UserController')->except(['store']);
     Route::post('users', 'App\Http\Controllers\Auth\RegisteredUserController@store')->name('users.store');
-    Route::get('roles', 'App\Http\Controllers\UserController@getRoles')->name('users.roles');
-    Route::resource('projects', 'App\Http\Controllers\ProjectController');
 
+    Route::get('roles', 'App\Http\Controllers\UserController@getRoles')->name('users.roles');
+
+    Route::resource('projects', 'App\Http\Controllers\ProjectController');
     Route::put('projects/{projectRequestId}/steps/0-1', 'App\Http\Controllers\StepController@StepZeroToOne')->name('projects.steps0-1');
+
+
+
 
     Route::post('teams/{projectId}/add', 'App\Http\Controllers\TeamController@update')->name('teams.add');
     Route::post('teams/{projectId}/remove/{userId}', 'App\Http\Controllers\TeamController@remove')->name('teams.remove');
     Route::resource('teams', 'App\Http\Controllers\TeamController')->except(['update','store','destroy']);
+
+
+    Route::resource('rooms', 'App\Http\Controllers\RoomController');
 });
