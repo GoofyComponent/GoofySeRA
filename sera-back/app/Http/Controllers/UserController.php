@@ -30,13 +30,17 @@ class UserController extends Controller
 
             // Exclude the authenticated user
             $usersQuery->whereNotIn('id', [$request->user()->id]);
-            $users = $usersQuery->get();
+
+            // Pagination
+            $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
+            $users = $usersQuery->paginate($maxPerPage);
 
             return response()->json($users);
         } catch (\Exception $exception) {
             return response()->json(['error' => 'Failed to retrieve users'], 500);
         }
     }
+
 
 
 
