@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const UserSlice = createSlice({
-  name: "app",
+  name: "user",
   initialState,
   reducers: {
     updateInfos: (state, action) => {

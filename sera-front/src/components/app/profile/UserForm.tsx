@@ -1,7 +1,6 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -14,23 +13,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { phoneRegex } from "@/lib/utils";
 
 const FormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Your name must be at least 2 characters.",
+  lastname: z.string().min(2, {
+    message: "Your lastname must be at least 2 characters.",
+  }),
+  firstname: z.string().min(2, {
+    message: "Your firstname must be at least 2 characters.",
   }),
   email: z.string().email({ message: "Invalid email address" }),
-  phone: z.string().regex(phoneRegex, "Invalid phone number"),
 });
 
 export const UserForm = () => {
+  const oldUserData = useSelector((state: any) => state.user.infos);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      lastname: oldUserData.lastname,
+      firstname: oldUserData.firstname,
+      email: oldUserData.email,
     },
   });
 
@@ -47,10 +49,23 @@ export const UserForm = () => {
       >
         <FormField
           control={form.control}
-          name="name"
+          name="lastname"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Name</FormLabel>
+              <FormLabel className="text-lg">Lastname</FormLabel>
+              <FormControl>
+                <Input {...field} className="border border-sera-jet text-lg" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="firstname"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-lg">Firstname</FormLabel>
               <FormControl>
                 <Input {...field} className="border border-sera-jet text-lg" />
               </FormControl>
@@ -64,19 +79,6 @@ export const UserForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-lg">Email</FormLabel>
-              <FormControl>
-                <Input {...field} className="border border-sera-jet text-lg" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-lg">Phone number</FormLabel>
               <FormControl>
                 <Input {...field} className="border border-sera-jet text-lg" />
               </FormControl>
