@@ -33,13 +33,8 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.
 
 # RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
-RUN chown -R www-data:www-data /var/www/html/storage
+RUN chown -R www-data:www-data /var/www/html
 RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html
-
-# user is 1000 1000 php docker for all the files. Change the user to www-data
-RUN chown -R www-data:www-data /var/www/html/storage
-RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html
-
 
 RUN php artisan key:generate
 RUN php artisan cache:clear
