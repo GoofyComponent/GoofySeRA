@@ -1,5 +1,6 @@
-import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+
+import { Card } from "@/components/ui/card";
 
 interface Project {
   projectUrl: string;
@@ -401,6 +402,7 @@ const RecentProjects = ({ skeleton = false }) => {
           .reverse()
           .map((project) => (
             <Card
+              key={project.projectUrl}
               skeleton={skeleton}
               projectUrl={project.projectUrl}
               title={project.title}

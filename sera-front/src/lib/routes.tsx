@@ -1,9 +1,10 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import Profile from "@/pages/Profile";
-import { Tickets } from "@/pages/Tickets";
-import { Projects } from "@/pages/Projects";
 import { Home } from "@/pages/Home";
+import Profile from "@/pages/Profile";
+import { Projects } from "@/pages/Projects";
+import { Tickets } from "@/pages/Tickets";
+
 import App from "../pages/App";
 import { Login } from "../pages/Login";
 import { Test } from "../pages/Test";
