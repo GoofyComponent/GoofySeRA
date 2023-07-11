@@ -10,7 +10,7 @@ class ProjectRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
             $projectRequestsQuery = ProjectRequest::query();
@@ -31,7 +31,9 @@ class ProjectRequestController extends Controller
                 $projectRequestsQuery->where('priority', $priority);
             }
 
-            return response()->json($projectRequestsQuery->get());
+            $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
+
+            return response()->json($projectRequestsQuery->paginate($maxPerPage));
         } catch (\Exception $exception) {
             return response()->json(['error' => 'Failed to retrieve project requests'], 500);
         }

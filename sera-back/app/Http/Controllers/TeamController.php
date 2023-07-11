@@ -12,8 +12,9 @@ class TeamController extends Controller
      */
     public function index(Request $request)
     {
-        // with users
-        $teams = Team::all()->load('users');
+        $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
+
+        $teams = Team::with('users')->paginate($maxPerPage);
 
         if ($teams === null) {
             throw new \Exception('No teams found.');
@@ -40,7 +41,7 @@ class TeamController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$projectId)
+    public function update(Request $request, $projectId)
     {
         $validated = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
@@ -64,10 +65,9 @@ class TeamController extends Controller
         $team->refresh();
 
         return response()->json($team, 201);
-
     }
 
-    public function remove($projectId,$userId)
+    public function remove($projectId, $userId)
     {
         $team = Team::where('project_id', $projectId)->first();
 
@@ -86,5 +86,4 @@ class TeamController extends Controller
 
         return response()->json($team, 201);
     }
-
 }

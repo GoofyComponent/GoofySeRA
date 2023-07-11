@@ -10,9 +10,11 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rooms = Room::all();
+        $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
+
+        $rooms = Room::paginate($maxPerPage);
 
         if ($rooms === null) {
             return response()->json(['error' => 'No rooms found.'], 400);
