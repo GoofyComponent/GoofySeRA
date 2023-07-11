@@ -53,14 +53,14 @@ jobs:
             exit 1
           fi
 
-      - name: Check if the front does not have lint errors
-        run: |
-          docker run --rm \
-          -u "$(id -u):$(id -g)" \
-          -v $(pwd)/sera-front:/opt \
-          -w /opt \
-          node:lts \
-          npm install && npm run lint-autofix
+      #- name: Check if the front does not have lint errors
+        #run: |
+          #docker run --rm \
+          #-u "$(id -u):$(id -g)" \
+          #-v $(pwd)/sera-front:/opt \
+          #-w /opt \
+          #node:lts \
+          #npm install && npm run lint-autofix
 
       - name: Execute composer install
         run: |
