@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     vim 
 
-RUN docker-php-ext-install pdo pdo_pgsql pgsql zip mbstring exif pcntl bcmath gd 
+RUN docker-php-ext-install pdo zip mbstring exif pcntl bcmath gd pdo_mysql mysqli
 RUN  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer install --no-dev --optimize-autoloader --no-interaction \
     && chown -R www-data:www-data /var/www/html \
@@ -36,9 +36,5 @@ RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN chown -R www-data:www-data /var/www/html
 RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html
 
-RUN php artisan key:generate
-RUN php artisan cache:clear
-RUN php artisan config:clear
-RUN php artisan config:cache
 
 CMD ["apache2-foreground"]
