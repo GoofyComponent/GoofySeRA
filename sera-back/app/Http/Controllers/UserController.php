@@ -69,6 +69,7 @@ class UserController extends Controller
             'firstname' => 'string|max:255',
             'lastname' => 'string|max:255',
             'role' => 'string|in:' . implode(',', array_keys(config('roles'))),
+            'file' => 'file|mimes:png,jpg,jpeg|max:2048'
         ]);
 
         $user = User::find($id);

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('firstname')->nullable(false);
             $table->string('lastname')->nullable(false);
             $table->string('role')->nullable(false);
+            $table->string('avatar_filename')->nullable(true);
             $table->rememberToken();
             $table->timestamps();
         });
