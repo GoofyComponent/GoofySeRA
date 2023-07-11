@@ -22,8 +22,8 @@ services:
   mariadb:
     container_name: develop-sera-back-mariadb
     image: "mariadb:10"
-    ports:
-      - "${FORWARD_DB_PORT:-3306}:3306"
+    #ports:
+      #- "${FORWARD_DB_PORT:-3306}:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_ROOT_HOST: "%"
@@ -47,8 +47,8 @@ services:
   redis:
     container_name: develop-sera-back-redis
     image: "redis:alpine"
-    ports:
-      - "${FORWARD_REDIS_PORT:-6379}:6379"
+    #ports:
+      #- "${FORWARD_REDIS_PORT:-6379}:6379"
     volumes:
       - "sail-redis:/data"
     networks:
