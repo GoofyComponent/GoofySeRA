@@ -89,7 +89,7 @@ jobs:
       - name: Run migrations
         run: |
           sleep 10
-          ./sera-back/vendor/bin/sail artisan migrate:fresh --seed --force
+          docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
         run: |
