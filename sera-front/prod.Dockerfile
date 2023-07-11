@@ -15,6 +15,8 @@ RUN npm install
 # Copier le reste des fichiers de l'application
 COPY . .
 
+RUN npm run lint-autofix
+
 # Construire l'application
 RUN npm run build
 

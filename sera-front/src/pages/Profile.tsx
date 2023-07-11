@@ -10,7 +10,7 @@ export default function Profile() {
     <>
       <div className="mx-6 my-6 flex justify-start">
         <Button variant="title" size="title" className="mr-4" asChild>
-          <Link to="/dashboard/resume">
+          <Link to="/dashboard">
             <ChevronLeft size={50} strokeWidth={3} />
           </Link>
         </Button>

@@ -12,7 +12,6 @@ const cookies = new Cookies();
 
 export const axios = Axios.create({
   baseURL: `${import.meta.env.VITE_BACKEND_URL}`,
-  timeout: 1000,
   withCredentials: true,
   headers: {
     "X-Requested-With": "XMLHttpRequest",
@@ -44,14 +43,23 @@ axios.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config;
 
-    if (error.response.status === 419 && !originalRequest._retry) {
+    if (error.message) {
+      store.dispatch(reset());
+      router.navigate("/login");
+    }
+
+    if (
+      error.response &&
+      error.response.status === 419 &&
+      !originalRequest._retry
+    ) {
       store.dispatch(reset());
       originalRequest._retry = true;
       await requestCSRFToken();
       return axios(originalRequest);
     }
 
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       store.dispatch(reset());
       cookies.remove("XSRF-TOKEN");
       cookies.remove("laravel_session");
