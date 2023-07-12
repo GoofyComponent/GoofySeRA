@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
+
 class Room extends Model
 {
     use HasFactory;
@@ -17,6 +18,9 @@ class Room extends Model
     {
         return $this->hasMany(RoomReservation::class);
     }
+
+
+
 
     public function canBeReserved($date, $startTime, $endTime)
     {
@@ -40,6 +44,9 @@ class Room extends Model
 
         return true;
     }
+
+
+
 
     public function reserve($date, $startTime, $endTime, $title, $projectId)
     {
