@@ -14,7 +14,7 @@ class RoomController extends Controller
     {
         $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
 
-        $rooms = Room::paginate($maxPerPage);
+        $rooms = Room::paginate($maxPerPage)->load('reservations');
 
         if ($rooms === null) {
             return response()->json(['error' => 'No rooms found.'], 400);
@@ -44,7 +44,7 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        $room = Room::find($id);
+        $room = Room::find($id)->load('reservations');
 
         if ($room === null) {
             return response()->json(['error' => 'Room not found.'], 400);
