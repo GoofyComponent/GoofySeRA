@@ -19,4 +19,9 @@ class Project extends Model
     {
         return $this->hasOne(Team::class);
     }
+
+    public function reservations()
+    {
+        return $this->hasMany(RoomReservation::class);
+    }
 }

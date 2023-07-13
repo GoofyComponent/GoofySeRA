@@ -19,9 +19,6 @@ class Room extends Model
         return $this->hasMany(RoomReservation::class);
     }
 
-
-
-
     public function canBeReserved($date, $startTime, $endTime)
     {
         $reservations = $this->reservations()->where('date', $date)->get();
@@ -44,9 +41,6 @@ class Room extends Model
 
         return true;
     }
-
-
-
 
     public function reserve($date, $startTime, $endTime, $title, $projectId)
     {
