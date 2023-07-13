@@ -33,7 +33,7 @@ class ProjectRequestController extends Controller
 
             $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
 
-            return response()->json($projectRequestsQuery->paginate($maxPerPage));
+            return response()->json($projectRequestsQuery->paginate($maxPerPage)->load('user'));
         } catch (\Exception $exception) {
             return response()->json(['error' => 'Failed to retrieve project requests'], 500);
         }
@@ -71,7 +71,7 @@ class ProjectRequestController extends Controller
      */
     public function show($id)
     {
-        $projectRequest = ProjectRequest::find($id);
+        $projectRequest = ProjectRequest::find($id)->load('user');
 
         if ($projectRequest === null) {
             return response()->json(['error' => 'Project request not found.'], 404);
