@@ -14,7 +14,6 @@ const Card = ({
   title,
   projectState,
   shortDesc,
-  bgImage,
   projectUrl = "",
 }: CardsProps) => {
   if (projectState === "Done") {
@@ -25,12 +24,36 @@ const Card = ({
     titleBgColor = "bg-amber-300";
   }
 
+  function generateRandomColor() {
+    // Génère une valeur aléatoire entre 0 et 255 pour chaque composante (rouge, vert, bleu)
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+
+    // Retourne la couleur au format RGB
+    return `rgb(${r},${g},${b})`;
+  }
+
+  function generateGradient() {
+    const color1 = generateRandomColor();
+    const color2 = generateRandomColor();
+
+    // Crée le style de dégradé linéaire avec les deux couleurs générées
+    const gradient = `linear-gradient(to right, ${color1}, ${color2})`;
+
+    return gradient;
+  }
+
+  const cardStyle = {
+    background: generateGradient(),
+  };
+
   if (skeleton) return <></>;
 
   return (
     <a href={`project/${projectUrl}`}>
       <div
-        style={{ backgroundImage: `url(${bgImage})` }}
+        style={cardStyle}
         className=" h-[150px]  overflow-hidden text-ellipsis rounded-lg border-2 bg-cover bg-center p-3 text-white duration-300 ease-in-out hover:scale-105 "
       >
         <div className="flex items-center justify-between text-xl">
