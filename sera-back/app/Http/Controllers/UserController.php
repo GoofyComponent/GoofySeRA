@@ -43,7 +43,6 @@ class UserController extends Controller
 
 
 
-
     /**
      * Display the specified resource.
      */
@@ -69,7 +68,6 @@ class UserController extends Controller
             'firstname' => 'string|max:255',
             'lastname' => 'string|max:255',
             'role' => 'string|in:' . implode(',', array_keys(config('roles'))),
-            'file' => 'file|mimes:png,jpg,jpeg|max:2048'
         ]);
 
         $user = User::find($id);
@@ -104,7 +102,6 @@ class UserController extends Controller
         return response()->json(['message' => 'User deleted.']);
     }
 
-
     public function getRoles(Request $request)
     {
         return response()->json(array_keys(config('roles')));
@@ -118,5 +115,31 @@ class UserController extends Controller
         // }
 
         return response()->json(Auth::user());
+    }
+
+    public function uploadImage(Request $request,$id)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Recuperation de l'utilisateur
+        $user = User::find($id);
+
+        // Recuperation du fichier
+        $file = $request->file('image');
+
+        // Enregistrement du fichier dans le dossier storage/app/public/images
+        $filename = $user->id .'.' . time() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('public/images', $filename);
+
+        // Enregistrement du nom du fichier dans la base de donnees
+        $user->avatar_filename = $filename;
+
+        // sauvegarde de l'utilisateur
+        $user->update(['avatar_filename' => $filename]);
+
+        // Retour de la reponse avec le user
+        return response()->json($user, 200);
     }
 }
