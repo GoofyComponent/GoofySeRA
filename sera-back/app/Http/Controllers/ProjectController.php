@@ -7,6 +7,7 @@ use App\Models\Project;
 use Illuminate\Support\Js;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Helpers\ColorHelper;
 
 class ProjectController extends Controller
 {
@@ -31,16 +32,23 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        // color need to be an HEX color
         $validated = $request->validate([
             'project_request_id' => 'required|integer|exists:project_requests,id',
             'title' => 'required|string',
             'description' => 'required|string',
+            'color' => 'string|regex:/^#[a-f0-9]{6}$/i',
         ]);
 
         $project = new Project();
         $project->project_request_id = $validated['project_request_id'];
         $project->title = $validated['title'];
         $project->description = $validated['description'];
+        if ($request->has('color')) {
+            $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor($validated['color']));
+        }else{
+            $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor());
+        }
         $project->save();
 
         $team = new Team();
@@ -74,6 +82,8 @@ class ProjectController extends Controller
             'start_date' => 'date',
             'end_date' => 'date',
             'status' => 'string|in:pending,ongoing,finished',
+            // color is an hex color or the string 'random'
+            'color' => 'string',
         ]);
 
         $project = Project::find($id);
@@ -83,6 +93,16 @@ class ProjectController extends Controller
         }
 
         $project->fill($validated);
+
+        // if color is set to random, generate a random color else it need to be an hex color (regex)
+        if ($request->has('color')) {
+            if ($validated['color'] === 'random') {
+                $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor());
+            } else {
+                $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor($validated['color']));
+            }
+        }
+
         $project->save();
 
         return response()->json($project);
