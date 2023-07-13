@@ -35,12 +35,19 @@ class UserController extends Controller
             $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
             $users = $usersQuery->paginate($maxPerPage);
 
+            // for each user, add a link to the avatar image if it not null
+            $users->getCollection()->transform(function ($user) {
+                if ($user->avatar_filename !== null) {
+                    $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
+                }
+                return $user;
+            });
+
             return response()->json($users);
         } catch (\Exception $exception) {
             return response()->json(['error' => 'Failed to retrieve users'], 500);
         }
     }
-
 
 
 
@@ -53,6 +60,10 @@ class UserController extends Controller
 
         if ($user === null) {
             return response()->json(['error' => 'User not found.'], 404);
+        }
+
+        if ($user->avatar_filename !== null) {
+            $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
         }
 
         return response()->json($user);
@@ -103,7 +114,6 @@ class UserController extends Controller
         return response()->json(['message' => 'User deleted.']);
     }
 
-
     public function getRoles(Request $request)
     {
         return response()->json(array_keys(config('roles')));
@@ -111,11 +121,32 @@ class UserController extends Controller
 
     public function getAuthenticatedUser(Request $request)
     {
-
-        // if (!$request->user()) {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
-
         return response()->json(Auth::user());
+    }
+
+    public function uploadImage(Request $request,$id)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Recuperation de l'utilisateur
+        $user = User::find($id);
+
+        // Recuperation du fichier
+        $file = $request->file('image');
+
+        // Enregistrement du fichier dans le dossier storage/app/public/images
+        $filename = $user->id .'.' . time() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('public/images', $filename);
+
+        // Enregistrement du nom du fichier dans la base de donnees
+        $user->avatar_filename = $filename;
+
+        // sauvegarde de l'utilisateur
+        $user->update(['avatar_filename' => $filename]);
+
+        // Retour de la reponse avec le user
+        return response()->json($user, 200);
     }
 }

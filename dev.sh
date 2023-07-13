@@ -41,6 +41,9 @@ echo "--- launch docker container ---"
 ./sera-back/vendor/bin/sail artisan config:clear
 ./sera-back/vendor/bin/sail artisan route:clear
 
+#Storage link
+./sera-back/vendor/bin/sail artisan storage:link
+
 echo "--- wait for 10 seconds ---"
 sleep 10
 
