@@ -54,13 +54,13 @@ jobs:
           fi
 
       #- name: Check if the front does not have lint errors
-        #run: |
-          #docker run --rm \
-          #-u "$(id -u):$(id -g)" \
-          #-v $(pwd)/sera-front:/opt \
-          #-w /opt \
-          #node:lts \
-          #npm install && npm run lint-autofix
+      #run: |
+      #docker run --rm \
+      #-u "$(id -u):$(id -g)" \
+      #-v $(pwd)/sera-front:/opt \
+      #-w /opt \
+      #node:lts \
+      #npm install && npm run lint-autofix
 
       - name: Execute composer install
         run: |
@@ -94,6 +94,7 @@ jobs:
           docker exec develop-sera-back-laravel-test php artisan route:cache
           docker exec develop-sera-back-laravel-test php artisan view:cache
           docker exec develop-sera-back-laravel-test php artisan optimize
+          docker exec develop-sera-back-laravel-test php artisan storage:link
 
       - name: Run migrations
         run: |
