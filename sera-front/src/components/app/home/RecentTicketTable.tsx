@@ -104,7 +104,14 @@ const tickets: Ticket[] = [
 export const RecentTicketTable = () => {
   return (
     <div className="m-10 rounded-lg bg-[#F2F1F6] pt-2">
-      <h2 className="mb-2 px-4 text-4xl font-bold">Ticket</h2>
+      <div className="flex justify-between">
+        <h2 className="mb-2 px-4 text-4xl font-bold">Ticket</h2>
+        <Link to="/dashboard/tickets" className="my-auto mr-4">
+          <p className="text-xl font-semibold text-sera-jet underline">
+            View all
+          </p>
+        </Link>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>

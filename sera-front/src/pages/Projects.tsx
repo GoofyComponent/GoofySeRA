@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Card } from "@/components/ui/card";
 
 export const Projects = () => {
@@ -443,22 +445,104 @@ export const Projects = () => {
     },
   ];
 
+  const [projectTrie, setProjectTrie] = useState("");
+
+  //gere le changement de valeur du select
+  const handleOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setProjectTrie(e.target.value);
+  };
+
+  const renderProjectTrie = () => {
+    let result;
+    switch (projectTrie) {
+      // si option in-progress est selectionné, on range les projest dans l'ordre suivant: in progress, draft, done
+      case "in-progress":
+        result = projects.sort((a, b) => {
+          if (a.projectState === "in Progress") {
+            return -1;
+          } else if (a.projectState === "Draft" && b.projectState === "Done") {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+        break;
+      // si option in-progress est selectionné, on range les projest dans l'ordre suivant: done , in progress, draft, done
+      case "done":
+        result = projects.sort((a, b) => {
+          if (a.projectState === "Done") {
+            return -1;
+          } else if (
+            a.projectState === "in Progress" &&
+            b.projectState === "Draft"
+          ) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+        break;
+      // si option in-progress est selectionné, on range les projest dans l'ordre suivant: in progress, draft, done
+      case "draft":
+        result = projects.sort((a, b) => {
+          if (a.projectState === "Draft") {
+            return -1;
+          } else if (
+            a.projectState === "in Progress" &&
+            b.projectState === "Done"
+          ) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
+        break;
+      default:
+        result = projects;
+        break;
+    }
+    return result;
+  };
+  const sortedProjects = renderProjectTrie();
+
   return (
-    <div className="m-10 pt-2">
-      <h2 className="mb-16 text-4xl font-bold">Recent Projects</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {projects.reverse().map((project) => (
-          <Card
-            key={project.projectUrl}
-            skeleton={project.skeleton}
-            projectUrl={project.projectUrl}
-            title={project.title}
-            projectState={project.projectState}
-            shortDesc={project.shortDesc}
-            bgImage={project.bgImage}
-          />
-        ))}
+    <>
+      <div className="m-10 pt-2">
+        <div className="flex justify-between align-middle">
+          <h2 className="mb-16 text-4xl font-bold">Recent Projects</h2>
+          <select
+            className="mr-10 h-9 rounded-lg border bg-transparent px-12 py-1 text-base font-semibold outline-0"
+            value={projectTrie}
+            onChange={handleOnChange}
+          >
+            <option value="" disabled selected hidden>
+              trier par ...
+            </option>
+            <option className="text-base" value="in-progress">
+              In progress
+            </option>
+            <option className="text-base" value="done">
+              Done
+            </option>
+            <option className="text-base" value="draft">
+              Draft
+            </option>
+          </select>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {sortedProjects.map((project) => (
+            <Card
+              key={project.projectUrl}
+              skeleton={project.skeleton}
+              projectUrl={project.projectUrl}
+              title={project.title}
+              projectState={project.projectState}
+              shortDesc={project.shortDesc}
+              bgImage={project.bgImage}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
