@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ['ongoing', 'completed', 'cancelled'])->default('ongoing');
             $table->string('start_date')->nullable();
             $table->string('end_date')->nullable();
+            $table->string('color')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
