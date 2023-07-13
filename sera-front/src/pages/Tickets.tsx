@@ -1,20 +1,7 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-<<<<<<< HEAD
-=======
 import clsx from "clsx";
 import { ChevronsUpDown } from "lucide-react";
-// import { useDialogState } from "reakit/Dialog";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
->>>>>>> 85b9075 (ajout des systemes de trie)
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 // import { AlertDialog } from "@/components/ui/alert-dialog";
 import {
@@ -27,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-<<<<<<< HEAD
+// import { useDialogState } from "reakit/Dialog";
 import {
   Table,
   TableBody,
@@ -38,17 +25,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Tickets = () => {
-  interface Ticket {
-    name: string;
-    date: string;
-    owner: string;
-    priority: string;
-    id: number;
-    TicketUrl: string;
-  }
-=======
-
 interface Ticket {
   name: string;
   date: string;
@@ -57,7 +33,6 @@ interface Ticket {
   id: number;
   TicketUrl: string;
 }
->>>>>>> 85b9075 (ajout des systemes de trie)
 
 export const Tickets = () => {
   const tickets: Ticket[] = [
@@ -258,8 +233,9 @@ export const Tickets = () => {
                 Name
               </TableHead>
               <TableHead className="text-xl font-semibold text-black ">
-                <span
+                <span // eslint-disable-line jsx-a11y/no-static-element-interactions
                   onClick={handleSortByDate}
+                  onKeyDown={handleSortByDate}
                   className="mx-auto flex w-fit cursor-pointer touch-none items-center justify-center rounded-lg border px-8 py-1"
                 >
                   Date
@@ -270,9 +246,10 @@ export const Tickets = () => {
                 Owner
               </TableHead>
               <TableHead className="text-center text-xl font-semibold text-black">
-                <span
+                <span // eslint-disable-line jsx-a11y/no-static-element-interactions
                   className="mx-auto flex w-fit cursor-pointer items-center justify-center rounded-lg border px-8 py-1"
                   onClick={handleSortByPriority}
+                  onKeyDown={handleSortByPriority}
                 >
                   Priority
                   <ChevronsUpDown className="my-auto ml-2" size={24} />

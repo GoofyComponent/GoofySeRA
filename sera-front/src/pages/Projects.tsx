@@ -1,5 +1,6 @@
-import { Card } from "@/components/ui/card";
 import { useState } from "react";
+
+import { Card } from "@/components/ui/card";
 
 export const Projects = () => {
   interface Project {
