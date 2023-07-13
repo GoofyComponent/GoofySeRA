@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             ProjectRequestSeeder::class,
             ProjectSeeder::class,
             TeamSeeder::class,
+            RoomSeeder::class,
         ]);
     }
 }
