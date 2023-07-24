@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\ProjectRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Helpers\ColorHelper;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Project>
@@ -26,6 +27,7 @@ class ProjectFactory extends Factory
             'status' => 'ongoing',
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
             'end_date' => Carbon::now()->addDays(2)->format('Y-m-d'),
+            'color' => ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor()),
         ];
     }
 }

@@ -9,16 +9,17 @@ use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 class StepController extends Controller
 {
 
-    public function StepZeroToOne(Request $request, $projectRequestId)
+    public function InitProject(Request $request)
     {
 
         $validatedData = $request->validate([
             'title' => 'required|string',
             'description' => 'required|string',
+            'project_request_id' => 'required|integer',
         ]);
 
 
-        $projectRequest = ProjectRequest::find($projectRequestId);
+        $projectRequest = ProjectRequest::find($validatedData['project_request_id']);
 
         if ($projectRequest === null) {
             return response()->json(['error' => 'Project request not found.'], 404);

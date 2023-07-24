@@ -26,6 +26,7 @@ class UserFactory extends Factory
             'firstname' => fake()->firstName(),
             'lastname' => fake()->lastName(),
             'role' => $roles[array_rand($roles)],
+            'avatar_filename' => fake()->boolean(50) ? 'lulu' : null,
         ];
     }
 
