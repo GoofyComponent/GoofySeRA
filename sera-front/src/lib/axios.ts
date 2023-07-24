@@ -44,8 +44,8 @@ axios.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.message) {
-      store.dispatch(reset());
-      router.navigate("/login");
+      // store.dispatch(reset());
+      // router.navigate("/login");
     }
 
     if (
