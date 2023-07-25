@@ -1,9 +1,17 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { ChevronsUpDown } from "lucide-react";
+import { Check, /* Edit, */ Trash } from "lucide-react";
+/* import { ChevronsUpDown } from "lucide-react";*/
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React from "react";
+import {
+  Link,
+  useMatch,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
-// import { AlertDialog } from "@/components/ui/alert-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,292 +22,372 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-// import { useDialogState } from "reakit/Dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Pagination } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { axios } from "@/lib/axios";
+import { TicketsEntity } from "@/lib/types";
+import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
 
-interface Ticket {
-  name: string;
-  date: string;
-  owner: string;
-  priority: string;
-  id: number;
-  TicketUrl: string;
-}
+import { BigLoader } from "./skeletons/BigLoader";
 
 export const Tickets = () => {
-  const tickets: Ticket[] = [
-    {
-      name: "Projet A",
-      date: "2023-07-01",
-      owner: "John Doe",
-      priority: "High",
-      id: 1,
-      TicketUrl: "https://example.com/random-meme-1",
-    },
-    {
-      name: "Projet B",
-      date: "2023-06-28",
-      owner: "Jane Smith",
-      priority: "Medium",
-      id: 2,
-      TicketUrl: "https://example.com/random-meme-2",
-    },
-    {
-      name: "Projet C",
-      date: "2023-07-05",
-      owner: "Robert Johnson",
-      priority: "Low",
-      id: 3,
-      TicketUrl: "https://example.com/random-meme-3",
-    },
-    {
-      name: "Projet D",
-      date: "2023-06-30",
-      owner: "Emily Brown",
-      priority: "Medium",
-      id: 4,
-      TicketUrl: "https://example.com/random-meme-4",
-    },
-    {
-      name: "Projet E",
-      date: "2023-07-02",
-      owner: "Michael Wilson",
-      priority: "High",
-      id: 5,
-      TicketUrl: "https://example.com/random-meme-5",
-    },
-    {
-      name: "Projet F",
-      date: "2023-07-03",
-      owner: "Sophia Davis",
-      priority: "Low",
-      id: 6,
-      TicketUrl: "https://example.com/random-meme-6",
-    },
-    {
-      name: "Projet G",
-      date: "2023-06-29",
-      owner: "Daniel Taylor",
-      priority: "Medium",
-      id: 7,
-      TicketUrl: "https://example.com/random-meme-7",
-    },
-    {
-      name: "Projet H",
-      date: "2023-07-04",
-      owner: "Olivia Johnson",
-      priority: "High",
-      id: 8,
-      TicketUrl: "https://example.com/random-meme-8",
-    },
-    {
-      name: "Projet I",
-      date: "2023-07-01",
-      owner: "Liam Anderson",
-      priority: "Low",
-      id: 9,
-      TicketUrl: "https://example.com/random-meme-9",
-    },
-    {
-      name: "Projet J",
-      date: "2023-06-27",
-      owner: "Emma Lee",
-      priority: "Medium",
-      id: 10,
-      TicketUrl: "https://example.com/random-meme-10",
-    },
-  ];
+  const ticketStatus = "pending";
+
+  const navigate = useNavigate();
 
   const { TicketId } = useParams<{ TicketId: string }>();
-  const [open, setOpen] = useState(false);
+  const [searchParams] = useSearchParams();
 
-  // gere l'ouverture de la modal en fonction de l'id du ticket dans l'url
+  const isDelete = useMatch("/dashboard/tickets/:TicketId/delete");
+  const isValidate = useMatch("/dashboard/tickets/:TicketId/validate");
+
+  const [open, setOpen] = useState(false);
+  const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [addTicketData, setAddTicketData] = useState({
+    title: "",
+    description: "",
+    priority: "",
+    status: "",
+  });
+
+  const {
+    data: ticketsData,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["tickets", { page }],
+    queryFn: async () => {
+      const tickets = await axios.get(
+        `api/projects-requests?page=${page}&status=${ticketStatus}`
+      );
+
+      console.log("tickets.data", tickets.data);
+
+      return tickets.data;
+    },
+  });
+
+  const deleteTicket = useMutation({
+    mutationFn: async (TicketId: string) => {
+      const tickets = await axios.delete(`api/projects-requests/${TicketId}`);
+      return tickets;
+    },
+    onSuccess: () => {
+      refetch();
+      navigate(`/dashboard/tickets`);
+    },
+    onError: () => {
+      navigate(`/dashboard/tickets/${TicketId}?action=delete`);
+    },
+  });
+
+  const validateTicket = useMutation({
+    mutationFn: async (formData: any) => {
+      const tickets = await axios.post("/api/projects/init", formData);
+      console.log("formData", formData);
+      console.log("tickets", tickets);
+
+      return tickets;
+    },
+    onSuccess: (data) => {
+      console.log("data", data);
+      const dataCleaned = data.data.original;
+      console.log("datasuccess", data);
+      navigate(`/dashboard/project/${dataCleaned.id}`);
+    },
+    onError: () => {
+      navigate(`/dashboard/tickets/${TicketId}?action=validate`);
+    },
+  });
+
+  const addTicket = useMutation({
+    mutationFn: async (formData: any) => {
+      const ticket = await axios.post("api/projects-requests", formData);
+      return ticket;
+    },
+    onSuccess: () => {
+      refetch();
+      setAddTicketData({
+        title: "",
+        description: "",
+        priority: "",
+        status: "",
+      });
+
+      setTicketDialogOpen(false);
+    },
+    onError: () => {
+      return console.log("error");
+    },
+  });
+
+  const onSubmitAddTicketForm = async (data: {
+    title: string;
+    description: string;
+    priority: string;
+    status: string;
+  }) => {
+    console.log("dataEntered", data);
+
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("priority", data.priority);
+    formData.append("status", data.status);
+    //Neeed is mandatory for the backend
+    formData.append("needs", "1");
+
+    addTicket.mutate(formData);
+    return;
+  };
+
   useEffect(() => {
-    if (TicketId) {
+    console.log("isValidate", isValidate);
+    console.log("isDelete", isDelete);
+
+    if (!ticketsData) {
+      navigate("/dashboard/tickets");
+    }
+
+    if (searchParams.get("action") && TicketId) {
       setOpen(true);
       console.log(TicketId, open);
     } else {
       setOpen(false);
       console.log(TicketId, open);
     }
-  }, [TicketId]);
 
-  //si option Recent alors on affiche les tickets par ordre de date
-  const [ticketsTrie, setTicketsTrie] = useState("recent");
-
-  // gere le trie des tickets par date ou par priorité
-  const handleSortByPriority = () => {
-    if (ticketsTrie === "priorityhight") {
-      setTicketsTrie("prioritylow");
-    } else if (ticketsTrie === "prioritylow") {
-      setTicketsTrie("priorityhight");
-    } else {
-      setTicketsTrie("priorityhight");
+    if (isDelete && TicketId) {
+      const deleteAction = deleteTicket.mutate(TicketId);
+      console.log(deleteAction);
     }
-  };
 
-  // gere le trie des tickets par date ou par priorité
-  const handleSortByDate = () => {
-    if (ticketsTrie === "recent") {
-      setTicketsTrie("old");
-    } else if (ticketsTrie === "old") {
-      setTicketsTrie("recent");
-    } else {
-      setTicketsTrie("recent");
+    if (isValidate && TicketId) {
+      const currentTicket = ticketsData.data.filter(
+        (ticket: TicketsEntity) => ticket.id === Number(TicketId)
+      );
+
+      const formData = new FormData();
+      formData.append("project_request_id", TicketId);
+      formData.append("title", currentTicket[0].title);
+      formData.append("description", currentTicket[0].description);
+
+      const validateAction = validateTicket.mutate(formData);
+      console.log(validateAction);
     }
-  };
+  }, [TicketId, isDelete, isValidate]);
 
-  const renderTicketsTrie = () => {
-    let result;
-    // si option recent alors on affiche les tickets par ordre de date (recent,old)
-    ticketsTrie === "recent"
-      ? (result = tickets.sort((a, b) => {
-          return new Date(a.date).getTime() - new Date(b.date).getTime();
-        }))
-      : // si option old alors on affiche les tickets par ordre de date (old,recent)
-      ticketsTrie === "old"
-      ? (result = tickets.sort((a, b) => {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        }))
-      : // si option priorityhight alors on affiche les tickets par ordre de priorité (High, Medium, Low)
-      ticketsTrie === "priorityhight"
-      ? (result = tickets.sort((a, b) => {
-          if (a.priority === "High" && b.priority === "Medium") {
-            return -1;
-          }
-          if (a.priority === "High" && b.priority === "Low") {
-            return -1;
-          }
-          if (a.priority === "Medium" && b.priority === "High") {
-            return 1;
-          }
-          if (a.priority === "Medium" && b.priority === "Low") {
-            return -1;
-          }
-          if (a.priority === "Low" && b.priority === "High") {
-            return 1;
-          }
-          if (a.priority === "Low" && b.priority === "Medium") {
-            return 1;
-          }
-          return 0;
-        }))
-      : // si option prioritylow alors on affiche les tickets par ordre de priorité ( Low,Medium,High)
-      ticketsTrie === "prioritylow"
-      ? (result = tickets.sort((a, b) => {
-          if (a.priority === "High" && b.priority === "Medium") {
-            return 1;
-          }
-          if (a.priority === "High" && b.priority === "Low") {
-            return 1;
-          }
-          if (a.priority === "Medium" && b.priority === "High") {
-            return -1;
-          }
-          if (a.priority === "Medium" && b.priority === "Low") {
-            return 1;
-          }
-          if (a.priority === "Low" && b.priority === "High") {
-            return -1;
-          }
-          if (a.priority === "Low" && b.priority === "Medium") {
-            return -1;
-          }
-          return 0;
-        }))
-      : (result = tickets);
-    return result;
-  };
-  // on stocke les tickets triés dans une constante
-  const sortedTickets = renderTicketsTrie();
+  if (isLoading || isError || !ticketsData.data)
+    return <BigLoader loaderSize={42} bgColor="white" textColor="sera-jet" />;
 
   return (
     <>
-      <div className="pt-2">
-        <h2 className="mb-2 px-4 text-4xl font-bold">Ticket</h2>
-        <Table>
-          <TableCaption>List des tickets Recent</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px] text-xl font-semibold text-black">
-                Name
-              </TableHead>
-              <TableHead className="text-xl font-semibold text-black ">
-                <span // eslint-disable-line jsx-a11y/no-static-element-interactions
-                  onClick={handleSortByDate}
-                  onKeyDown={handleSortByDate}
-                  className="mx-auto flex w-fit cursor-pointer touch-none items-center justify-center rounded-lg border px-8 py-1"
+      <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
+        <h2>Ticket</h2>
+        <Dialog
+          onOpenChange={() => {
+            setTicketDialogOpen(!ticketDialogOpen);
+          }}
+          open={ticketDialogOpen}
+        >
+          <Button
+            onClick={() => setTicketDialogOpen(true)}
+            className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+          >
+            Add a ticket
+          </Button>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create a new ticket ?</DialogTitle>
+            </DialogHeader>
+            <div>
+              <div className="flex flex-col">
+                <Label htmlFor="name">Title</Label>
+                <Input
+                  type="text"
+                  id="title"
+                  value={addTicketData.title}
+                  className="col-span-3"
+                  onChange={(e) =>
+                    setAddTicketData({
+                      ...addTicketData,
+                      title: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="name">Description</Label>
+                <Input
+                  type="textarea"
+                  id="description"
+                  value={addTicketData.description}
+                  className="col-span-3"
+                  onChange={(e) =>
+                    setAddTicketData({
+                      ...addTicketData,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <div>
+                  <Label htmlFor="name">Priority</Label>
+                  <Input
+                    type="number"
+                    id="priority"
+                    value={addTicketData.priority}
+                    className="col-span-3"
+                    onChange={(e) =>
+                      setAddTicketData({
+                        ...addTicketData,
+                        priority: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  onValueChange={(value) =>
+                    setAddTicketData({
+                      ...addTicketData,
+                      status: value,
+                    })
+                  }
+                  value={addTicketData.status}
                 >
-                  Date
-                  <ChevronsUpDown className="my-auto ml-2" size={24} />
-                </span>
-              </TableHead>
-              <TableHead className="hidden text-xl font-semibold text-black sm:block">
-                Owner
-              </TableHead>
-              <TableHead className="text-center text-xl font-semibold text-black">
-                <span // eslint-disable-line jsx-a11y/no-static-element-interactions
-                  className="mx-auto flex w-fit cursor-pointer items-center justify-center rounded-lg border px-8 py-1"
-                  onClick={handleSortByPriority}
-                  onKeyDown={handleSortByPriority}
-                >
-                  Priority
-                  <ChevronsUpDown className="my-auto ml-2" size={24} />
-                </span>
-              </TableHead>
-              <TableHead className="text-right text-xl font-semibold text-black">
-                Action
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedTickets.map((ticket) => (
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="accepted">Accepted</SelectItem>
+                    <SelectItem value="refused">Refused</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                type="submit"
+                className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                onClick={() => onSubmitAddTicketForm(addTicketData)}
+              >
+                Create ticket
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-sera-periwinkle/25">
+            <TableHead className="w-72 truncate text-xl font-semibold text-black">
+              Name
+            </TableHead>
+            <TableHead className="text-xl font-semibold text-black ">
+              Date
+              {/* <ChevronsUpDown className="my-auto ml-2" size={24} /> */}
+            </TableHead>
+            <TableHead className="my-auto text-xl font-semibold text-black">
+              Owner
+            </TableHead>
+            <TableHead className="text-xl font-semibold text-black">
+              Priority
+              {/* <ChevronsUpDown className="my-auto ml-2" size={24} /> */}
+            </TableHead>
+            <TableHead className="text-right text-xl font-semibold text-black">
+              Action
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {ticketsData.data.map((ticket: TicketsEntity) => {
+            if (ticket.status === "accepted" || ticket.status === "refused")
+              return;
+            return (
               <TableRow
                 key={ticket.id}
-                className="odd:bg-[#EFEBF8] even:bg-[#F2F1F6]"
+                className="odd:bg-sera-periwinkle/25 even:bg-sera-periwinkle/50 hover:odd:bg-sera-periwinkle/25 hover:even:bg-sera-periwinkle/50"
               >
                 <TableCell className="text-base text-black">
-                  <Link
-                    to={`/dashboard/tickets/${ticket.id}`}
-                    className="underline"
-                  >
-                    {ticket.name}
-                  </Link>
+                  {ticket.title}
                 </TableCell>
                 <TableCell className="text-base text-black">
-                  {ticket.date}
+                  {formatDate(ticket.created_at)}
                 </TableCell>
                 <TableCell className="hidden text-base text-black sm:block">
-                  {ticket.owner}
+                  {ticket.user_id}
                 </TableCell>
                 <TableCell className="text-center">
-                  <span
+                  <div
                     className={clsx(
-                      `rounded-lg px-4 py-1 text-base text-black`,
-                      ticket.priority === "High" && "bg-red-500",
-                      ticket.priority === "Medium" && "bg-yellow-200",
-                      ticket.priority === "Low" && "bg-lime-200 "
+                      `w-28 rounded-lg px-4 py-1 text-center text-base text-black`,
+                      capitalizeFirstLetter(ticket.priority) === "High" &&
+                        "bg-red-500",
+                      capitalizeFirstLetter(ticket.priority) === "Medium" &&
+                        "bg-yellow-200",
+                      capitalizeFirstLetter(ticket.priority) === "Low" &&
+                        "bg-lime-200"
                     )}
                   >
-                    {ticket.priority}
-                  </span>
+                    {ticket.priority.charAt(0).toUpperCase() +
+                      ticket.priority.slice(1)}
+                  </div>
                 </TableCell>
-                <TableCell className="text-right text-base">
-                  {ticket.id}
+                <TableCell className="flex justify-end">
+                  <Link to={`/dashboard/tickets/${ticket.id}?action=validate`}>
+                    <Check className="mr-2 hover:cursor-pointer hover:text-sera-jet" />
+                  </Link>
+                  {/* <Link to={`/dashboard/tickets/${ticket.id}?action=validate`}>
+                    <Edit className="mr-2 hover:cursor-pointer hover:text-sera-jet" />
+                  </Link> */}
+                  <Link to={`/dashboard/tickets/${ticket.id}?action=delete`}>
+                    <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
+                  </Link>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            );
+          })}
+        </TableBody>
+      </Table>
+      <Pagination
+        totalPages={ticketsData.last_page}
+        currentPage={ticketsData.current_page}
+        setNextPage={setPage}
+      />
       <AlertDialog
         open={open}
         onOpenChange={(isOpen) => {
@@ -307,20 +395,42 @@ export const Tickets = () => {
           setOpen(false);
         }}
       >
-        <AlertDialogContent className=" max-w-5xl border-[#D3D4D5]">
+        <AlertDialogContent className="max-w-5xl border-[#D3D4D5]">
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {/* Get the selected ticket name */}
+              {searchParams.get("action") === "validate" && "Validate - "}
+              {searchParams.get("action") === "delete" && "Delete - "}
+              {ticketsData.data.map((ticket: TicketsEntity) => (
+                <React.Fragment key={ticket.id}>
+                  {ticket.id === Number(TicketId) && ticket.title}
+                </React.Fragment>
+              ))}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              {searchParams.get("action") === "validate" &&
+                "Are you sure you want to validate this ticket ?"}
+              {searchParams.get("action") === "delete" &&
+                "Are you sure you want to delete this ticket ?"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <Link to="/dashboard/tickets">
               <AlertDialogCancel>Cancel</AlertDialogCancel>
             </Link>
-            <AlertDialogAction>Validate</AlertDialogAction>
-            <AlertDialogAction>Delete</AlertDialogAction>
+            <Link
+              to={
+                searchParams.get("action") === "validate"
+                  ? `/dashboard/tickets/${TicketId}/validate`
+                  : `/dashboard/tickets/${TicketId}/delete`
+              }
+            >
+              <AlertDialogAction>
+                {searchParams.get("action") === "validate"
+                  ? "Validate"
+                  : "Delete"}
+              </AlertDialogAction>
+            </Link>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
