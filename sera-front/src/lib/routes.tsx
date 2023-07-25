@@ -25,6 +25,16 @@ export const router = createBrowserRouter([
           {
             path: ":TicketId",
             element: <Tickets />,
+            children: [
+              {
+                path: "validate",
+                element: <Tickets />,
+              },
+              {
+                path: "delete",
+                element: <Tickets />,
+              },
+            ],
           },
         ],
       },
@@ -33,14 +43,20 @@ export const router = createBrowserRouter([
         element: <Projects />,
       },
       {
+        path: "project",
+        children: [
+          {
+            path: ":ProjectId",
+            index: true,
+            element: <Projects />,
+          },
+        ],
+      },
+      {
         path: "profile",
         element: <Profile />,
       },
     ],
-  },
-  {
-    path: "/test",
-    element: <Test />,
   },
   {
     path: "/login",
@@ -49,5 +65,10 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigate to="/login" replace />,
+  },
+  {
+    //Its only a page for development, to test some stuff
+    path: "/test",
+    element: <Test />,
   },
 ]);
