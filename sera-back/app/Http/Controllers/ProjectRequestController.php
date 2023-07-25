@@ -31,9 +31,13 @@ class ProjectRequestController extends Controller
                 $projectRequestsQuery->where('priority', $priority);
             }
 
+            $projectRequestsQuery->with('user');
+
             $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
 
-            return response()->json($projectRequestsQuery->paginate($maxPerPage)->load('user'));
+            $projectRequests = $projectRequestsQuery->paginate($maxPerPage);
+
+            return $projectRequests;
         } catch (\Exception $exception) {
             return response()->json(['error' => 'Failed to retrieve project requests'], 500);
         }
