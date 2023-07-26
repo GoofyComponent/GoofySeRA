@@ -48,7 +48,9 @@ function App() {
     <>
       <header className="my-auto flex h-[10vh] justify-between p-6">
         <div className="flex justify-start lg:w-5/12">
-          <img src={logo} alt={"SeRA App"} />
+          <Link to={"/dashboard"}>
+            <img src={logo} alt={"SeRA App"} />
+          </Link>
           <h3 className="mx-8 mb-0 mt-auto text-2xl text-sera-periwinkle">
             Welcome back{info.isLoading ? "" : `, ${info.data.firstname}`}!
           </h3>
