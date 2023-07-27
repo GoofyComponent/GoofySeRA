@@ -91,7 +91,7 @@ class ProjectController extends Controller
             'description' => 'string',
             'start_date' => 'date',
             'end_date' => 'date',
-            'status' => 'string|in:pending,ongoing,finished',
+            'status' => 'string|in:ongoing,completed,cancelled',
             // color is an hex color or the string 'random'
             'color' => 'string',
         ]);
