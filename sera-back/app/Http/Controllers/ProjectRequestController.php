@@ -15,17 +15,6 @@ class ProjectRequestController extends Controller
         try {
             $projectRequestsQuery = ProjectRequest::query();
             $statusArrayConfig = ['pending', 'accepted', 'rejected'];
-
-
-            //Get the limit parameter from the query string
-            $limit = $request->input('limit', null);
-
-            //If limit is specified, return a limited number of results
-            if ($limit) {
-                $projectRequests = $projectRequestsQuery->limit($limit)->get();
-                return $projectRequests;
-            }
-
             // Search by status (optional)
             if (request()->filled('status')) {
                 $status = request()->input('status');
@@ -41,6 +30,14 @@ class ProjectRequestController extends Controller
                 $projectRequestsQuery->where('priority', $priority);
             }
 
+            // Sort by updated_at (optional)
+            $sort = $request->input('sort', 'asc'); // Default to asc if not specified
+            // Validate if the sort parameter is 'asc' or 'desc'
+            if ($sort !== 'asc' && $sort !== 'desc') {
+                return response()->json(['error' => 'Invalid sort parameter. Only "asc" or "desc" allowed.'], 400);
+            }
+            $projectRequestsQuery->orderBy('updated_at', $sort);
+
             $projectRequestsQuery->with('user');
 
             $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
@@ -52,6 +49,7 @@ class ProjectRequestController extends Controller
             return response()->json(['error' => 'Failed to retrieve project requests'], 500);
         }
     }
+
 
     /**
      * Store a newly created resource in storage.
