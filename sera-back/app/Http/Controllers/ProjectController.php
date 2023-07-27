@@ -34,6 +34,10 @@ class ProjectController extends Controller
             throw new \Exception('No projects found.');
         }
 
+        foreach ($projects as $project) {
+            $project->colors = json_decode($project->colors, true);
+        }
+
         return $projects;
     }
 
@@ -47,18 +51,13 @@ class ProjectController extends Controller
             'project_request_id' => 'required|integer|exists:project_requests,id',
             'title' => 'required|string',
             'description' => 'required|string',
-            'color' => 'string|regex:/^#[a-f0-9]{6}$/i',
         ]);
 
         $project = new Project();
         $project->project_request_id = $validated['project_request_id'];
         $project->title = $validated['title'];
         $project->description = $validated['description'];
-        if ($request->has('color')) {
-            $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor($validated['color']));
-        }else{
-            $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor());
-        }
+        $project->colors = json_encode(ColorHelper::prettyHexadecimal(150));
         $project->save();
 
         $team = new Team();
@@ -78,6 +77,8 @@ class ProjectController extends Controller
             throw new \Exception('Project not found.');
         }
 
+        $project->colors = json_decode($project->colors, true);
+
         return $project;
     }
 
@@ -92,8 +93,7 @@ class ProjectController extends Controller
             'start_date' => 'date',
             'end_date' => 'date',
             'status' => 'string|in:ongoing,completed,cancelled',
-            // color is an hex color or the string 'random'
-            'color' => 'string',
+            'change_color' => 'boolean',
         ]);
 
         $project = Project::find($id);
@@ -104,13 +104,8 @@ class ProjectController extends Controller
 
         $project->fill($validated);
 
-        // if color is set to random, generate a random color else it need to be an hex color (regex)
-        if ($request->has('color')) {
-            if ($validated['color'] === 'random') {
-                $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor());
-            } else {
-                $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor($validated['color']));
-            }
+        if ($request->has('change_color') && $request->input('change_color')) {
+            $project->colors = json_encode(ColorHelper::prettyHexadecimal(150));
         }
 
         $project->save();

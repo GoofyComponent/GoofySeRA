@@ -138,7 +138,8 @@ class ColorHelper
 
     //Hexadecimal generator
 
-    public static function randRGB(){
+    public static function randRGB()
+    {
         $red = rand(0, 255);
         $green = rand(0, 255);
         $blue = rand(0, 255);
@@ -146,7 +147,8 @@ class ColorHelper
         return [$red, $green, $blue];
     }
 
-    public static function convertRGBToHexa($rvb){
+    public static function convertRGBToHexa($rvb)
+    {
         return sprintf("#%02x%02x%02x", $rvb[0], $rvb[1], $rvb[2]);
     }
 
