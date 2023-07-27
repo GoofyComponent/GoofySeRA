@@ -19,12 +19,13 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
+        $statusArray = ["ongoing","completed","cancelled"];
         $projectRequest = ProjectRequest::factory()->create();
         return [
             'project_request_id' => $projectRequest->id,
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(3),
-            'status' => 'ongoing',
+            'status' => $this->faker->randomElement($statusArray),
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
             'end_date' => Carbon::now()->addDays(2)->format('Y-m-d'),
             'color' => ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor()),
