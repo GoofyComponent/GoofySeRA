@@ -31,6 +31,7 @@ const Card = ({
   const color1 = colors[0];
   const color2 = colors[1];
 
+
   if (skeleton) return <></>;
 
   return (
