@@ -12,16 +12,31 @@ class TeamController extends Controller
      */
     public function index(Request $request)
     {
+        // Validate the request parameters
+        $validated = $request->validate([
+            'maxPerPage' => 'integer',
+            'sort' => 'string|in:asc,desc',
+        ]);
+
         $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
 
-        $teams = Team::with('users')->paginate($maxPerPage);
+        // Sort by updated_at (optional)
+        $sort = $request->input('sort', 'asc'); // Default to asc if not specified
+        // Validate if the sort parameter is 'asc' or 'desc'
+        if ($sort !== 'asc' && $sort !== 'desc') {
+            return response()->json(['error' => 'Invalid sort parameter. Only "asc" or "desc" allowed.'], 400);
+        }
 
-        if ($teams === null) {
-            throw new \Exception('No teams found.');
+        // Retrieve teams with users
+        $teams = Team::with('users')->orderBy('updated_at', $sort)->paginate($maxPerPage);
+
+        if ($teams->isEmpty()) {
+            return response()->json(['error' => 'No teams found.'], 404);
         }
 
         return $teams;
     }
+
 
 
     /**

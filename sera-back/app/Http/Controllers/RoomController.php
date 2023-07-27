@@ -12,16 +12,31 @@ class RoomController extends Controller
      */
     public function index(Request $request)
     {
+        // Validate the request parameters
+        $validated = $request->validate([
+            'maxPerPage' => 'integer',
+            'sort' => 'string|in:asc,desc',
+        ]);
+
         $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
 
-        $rooms = Room::paginate($maxPerPage)->load('reservations');
+        // Sort by updated_at (optional)
+        $sort = $request->input('sort', 'asc'); // Default to asc if not specified
+        // Validate if the sort parameter is 'asc' or 'desc'
+        if ($sort !== 'asc' && $sort !== 'desc') {
+            return response()->json(['error' => 'Invalid sort parameter. Only "asc" or "desc" allowed.'], 400);
+        }
 
-        if ($rooms === null) {
-            return response()->json(['error' => 'No rooms found.'], 400);
+        // Retrieve rooms with reservations
+        $rooms = Room::orderBy('updated_at', $sort)->paginate($maxPerPage)->load('reservations');
+
+        if ($rooms->isEmpty()) {
+            return response()->json(['error' => 'No rooms found.'], 404);
         }
 
         return $rooms;
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -94,7 +109,8 @@ class RoomController extends Controller
     /**
      * Reserve a room for a project.
      */
-    public function reserve(Request $request, $id){
+    public function reserve(Request $request, $id)
+    {
         $validated = $request->validate([
             'project_id' => 'required|integer',
             'date' => 'required|date', // ex: 2021-05-20
