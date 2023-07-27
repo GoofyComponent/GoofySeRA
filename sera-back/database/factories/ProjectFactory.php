@@ -19,7 +19,7 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $statusArray = ["pending","ongoing","finished"];
+        $statusArray = ["ongoing","completed","cancelled"];
         $projectRequest = ProjectRequest::factory()->create();
         return [
             'project_request_id' => $projectRequest->id,
