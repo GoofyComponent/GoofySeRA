@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 
 import logo from "@/assets/images/sera-logo.svg";
@@ -9,6 +10,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ToastAction } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
+import { setAppError } from "@/helpers/slices/AppSlice";
 import { updateInfos } from "@/helpers/slices/UserSlice";
 import { axios } from "@/lib/axios";
 
@@ -16,7 +21,20 @@ import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 
 function App() {
+  const errorState = useSelector((state: any) => state.app.appError);
   const dispatch = useDispatch();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (!errorState) return;
+    toast({
+      title: errorState.title,
+      description: errorState.description,
+      action: <ToastAction altText="Undo">Undo</ToastAction>,
+    });
+
+    dispatch(setAppError(null));
+  }, [errorState]);
 
   const info = useQuery({
     queryKey: ["user"],
@@ -30,7 +48,9 @@ function App() {
     <>
       <header className="my-auto flex h-[10vh] justify-between p-6">
         <div className="flex justify-start lg:w-5/12">
-          <img src={logo} alt={"SeRA App"} />
+          <Link to={"/dashboard"}>
+            <img src={logo} alt={"SeRA App"} />
+          </Link>
           <h3 className="mx-8 mb-0 mt-auto text-2xl text-sera-periwinkle">
             Welcome back{info.isLoading ? "" : `, ${info.data.firstname}`}!
           </h3>
@@ -66,6 +86,38 @@ function App() {
               >
                 Settings
               </Link> */}
+              <Link
+                to="/logout"
+                className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
+              >
+                Logout
+              </Link>
+
+              <button
+                className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
+                onClick={() => {
+                  dispatch(
+                    setAppError({
+                      title: "An error occured",
+                      description:
+                        "We are unable to log you out for the moment. Please try again later.",
+                    })
+                  );
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    dispatch(
+                      setAppError({
+                        title: "An error occured",
+                        description:
+                          "We are unable to log you out for the moment. Please try again later.",
+                      })
+                    );
+                  }
+                }}
+              >
+                TriggerToast
+              </button>
             </PopoverContent>
           </Popover>
         </div>
@@ -74,6 +126,7 @@ function App() {
         <Nav />
         <main className="max-h-[90vh] w-[86%] overflow-y-auto pb-4 scrollbar scrollbar-track-sera-jet/50 scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3">
           <Outlet />
+          <Toaster />
         </main>
       </div>
     </>

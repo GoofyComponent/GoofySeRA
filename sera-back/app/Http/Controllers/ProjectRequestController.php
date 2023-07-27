@@ -16,6 +16,16 @@ class ProjectRequestController extends Controller
             $projectRequestsQuery = ProjectRequest::query();
             $statusArrayConfig = ['pending', 'accepted', 'rejected'];
 
+
+            //Get the limit parameter from the query string
+            $limit = $request->input('limit', null);
+
+            //If limit is specified, return a limited number of results
+            if ($limit) {
+                $projectRequests = $projectRequestsQuery->limit($limit)->get();
+                return $projectRequests;
+            }
+
             // Search by status (optional)
             if (request()->filled('status')) {
                 $status = request()->input('status');

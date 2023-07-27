@@ -16,6 +16,16 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
+
+        //Get the limit parameter from the query string
+        $limit = $request->input('limit', null);
+
+        //If limit is specified, return a limited number of results
+        if ($limit) {
+            $projects = Project::limit($limit)->get();
+            return $projects;
+        }
+
         $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
         $projects = Project::with('Team.users')->paginate($maxPerPage);
         // $projects = Project::all()->load('Team.users');
@@ -81,7 +91,7 @@ class ProjectController extends Controller
             'description' => 'string',
             'start_date' => 'date',
             'end_date' => 'date',
-            'status' => 'string|in:pending,ongoing,finished',
+            'status' => 'string|in:ongoing,completed,cancelled',
             // color is an hex color or the string 'random'
             'color' => 'string',
         ]);

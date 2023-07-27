@@ -1,12 +1,16 @@
 import { useEffect } from "react";
-
-import { axios } from "@/lib/axios";
+import { useNavigate } from "react-router-dom";
 
 export const Test = () => {
-  useEffect(() => {
-    const projets = axios.get("/api/projects");
+  const navigate = useNavigate();
 
-    console.log(projets);
+  useEffect(() => {
+    const error = {
+      title: "An error occured",
+      description:
+        "We are unable to log you out for the moment. Please try again later.",
+    };
+    navigate(`?error-toast=${JSON.stringify(error)}`);
   }, []);
 
   return (

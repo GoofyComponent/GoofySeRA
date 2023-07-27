@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { Home } from "@/pages/Home";
+import { Logout } from "@/pages/Logout";
 import Profile from "@/pages/Profile";
 import { Projects } from "@/pages/Projects";
 import { Tickets } from "@/pages/Tickets";
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
         element: <Profile />,
       },
     ],
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
   },
   {
     path: "/login",
