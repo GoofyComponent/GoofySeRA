@@ -36,7 +36,6 @@ function App() {
     dispatch(setAppError(null));
   }, [errorState]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const info = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
@@ -54,8 +53,7 @@ function App() {
             <img src={logo} alt={"SeRA App"} />
           </Link>
           <h3 className="mx-8 mb-0 mt-auto text-2xl text-sera-periwinkle">
-            {/* Welcome back{info.isLoading ? "" : `, ${info.data.firstname}`}! */}
-            Welcome back luca !
+            Welcome back{info.isLoading ? "" : `, ${info.data.firstname}`}!
           </h3>
         </div>
         <div className="my-auto flex justify-end">
@@ -67,11 +65,11 @@ function App() {
               <Avatar className="ml-2">
                 <AvatarImage src="" />
                 <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
-                  {/* {info.isLoading
+                  {info.isLoading
                     ? "USR"
                     : `${info.data.firstname[0].toUpperCase() as string}.${
                         info.data.lastname[0].toUpperCase() as string
-                      }`} */}
+                      }`}
                 </AvatarFallback>
               </Avatar>
             </PopoverTrigger>

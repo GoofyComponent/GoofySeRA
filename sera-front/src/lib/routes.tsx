@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
           {
             path: ":ProjectId",
             index: true,
-            element: <Projects />,
+            element: <Project />,
           },
         ],
       },
