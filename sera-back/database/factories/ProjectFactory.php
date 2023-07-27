@@ -19,8 +19,7 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $getColor = ColorHelper::prettyHexadecimal(150);
-        $statusArray = ["ongoing","completed","cancelled"];
+        $statusArray = ["ongoing", "completed", "cancelled"];
         $projectRequest = ProjectRequest::factory()->create();
         return [
             'project_request_id' => $projectRequest->id,
@@ -29,8 +28,7 @@ class ProjectFactory extends Factory
             'status' => $this->faker->randomElement($statusArray),
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
             'end_date' => Carbon::now()->addDays(2)->format('Y-m-d'),
-            'color' => $getColor[0],
-            'color_2'=> $getColor[1],
+            'colors' => json_encode(ColorHelper::prettyHexadecimal(150)),
         ];
     }
 }
