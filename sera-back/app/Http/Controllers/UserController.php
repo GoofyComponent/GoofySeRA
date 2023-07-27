@@ -16,38 +16,49 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $usersQuery = User::query();
+        // Validate the request parameters
+        $validated = $request->validate([
+            'maxPerPage' => 'integer',
+            'sort' => 'string|in:asc,desc',
+        ]);
 
-            // Search by role (optional)
-            if ($request->filled('role')) {
-                $role = $request->input('role');
-                if (!in_array($role, array_keys(config('roles')))) {
-                    return response()->json(['error' => 'Invalid role'], 400);
-                }
-                $usersQuery->where('role', $role);
+        $usersQuery = User::query();
+
+        // Search by role (optional)
+        if ($request->filled('role')) {
+            $role = $request->input('role');
+            if (!in_array($role, array_keys(config('roles')))) {
+                return response()->json(['error' => 'Invalid role'], 400);
             }
-
-            // Exclude the authenticated user
-            $usersQuery->whereNotIn('id', [$request->user()->id]);
-
-            // Pagination
-            $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
-            $users = $usersQuery->paginate($maxPerPage);
-
-            // for each user, add a link to the avatar image if it not null
-            $users->getCollection()->transform(function ($user) {
-                if ($user->avatar_filename !== null) {
-                    $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
-                }
-                return $user;
-            });
-
-            return response()->json($users);
-        } catch (\Exception $exception) {
-            return response()->json(['error' => 'Failed to retrieve users'], 500);
+            $usersQuery->where('role', $role);
         }
+
+        // Exclude the authenticated user
+        $usersQuery->whereNotIn('id', [$request->user()->id]);
+
+        // Sort by updated_at (optional)
+        $sort = $request->input('sort', 'asc'); // Default to asc if not specified
+        // Validate if the sort parameter is 'asc' or 'desc'
+        if ($sort !== 'asc' && $sort !== 'desc') {
+            return response()->json(['error' => 'Invalid sort parameter. Only "asc" or "desc" allowed.'], 400);
+        }
+        $usersQuery->orderBy('updated_at', $sort);
+
+        // Pagination
+        $maxPerPage = $validated['maxPerPage'] ?? 10; // Default to 10 if not specified
+        $users = $usersQuery->paginate($maxPerPage);
+
+        // For each user, add a link to the avatar image if it's not null
+        $users->getCollection()->transform(function ($user) {
+            if ($user->avatar_filename !== null) {
+                $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
+            }
+            return $user;
+        });
+
+        return response()->json($users);
     }
+
 
 
 
@@ -124,7 +135,7 @@ class UserController extends Controller
         return response()->json(Auth::user());
     }
 
-    public function uploadImage(Request $request,$id)
+    public function uploadImage(Request $request, $id)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -137,7 +148,7 @@ class UserController extends Controller
         $file = $request->file('image');
 
         // Enregistrement du fichier dans le dossier storage/app/public/images
-        $filename = $user->id .'.' . time() . '.' . $file->getClientOriginalExtension();
+        $filename = $user->id . '.' . time() . '.' . $file->getClientOriginalExtension();
         $file->storeAs('public/images', $filename);
 
         // Enregistrement du nom du fichier dans la base de donnees

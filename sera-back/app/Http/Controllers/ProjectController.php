@@ -17,21 +17,30 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
 
-        //Get the limit parameter from the query string
-        $limit = $request->input('limit', null);
+        $request->validate([
+            'maxPerPage' => 'integer',
+            'sort' => 'string|in:asc,desc',
+        ]);
 
-        //If limit is specified, return a limited number of results
-        if ($limit) {
-            $projects = Project::limit($limit)->get();
-            return $projects;
+        $maxPerPage = $request->input('maxPerPage', 10);
+        $sort = $request->input('sort', 'asc');
+
+        if ($sort !== 'asc' && $sort !== 'desc') {
+            throw new \Exception('Invalid sort parameter. Only "asc" or "desc" allowed.');
         }
 
-        $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
-        $projects = Project::with('Team.users')->paginate($maxPerPage);
-        // $projects = Project::all()->load('Team.users');
+        $query = Project::with('Team.users');
+
+        $query->orderBy('updated_at', $sort);
+
+        $projects = $query->paginate($maxPerPage);
 
         if ($projects === null) {
             throw new \Exception('No projects found.');
+        }
+
+        foreach ($projects as $project) {
+            $project->colors = json_decode($project->colors, true);
         }
 
         return $projects;
@@ -47,18 +56,13 @@ class ProjectController extends Controller
             'project_request_id' => 'required|integer|exists:project_requests,id',
             'title' => 'required|string',
             'description' => 'required|string',
-            'color' => 'string|regex:/^#[a-f0-9]{6}$/i',
         ]);
 
         $project = new Project();
         $project->project_request_id = $validated['project_request_id'];
         $project->title = $validated['title'];
         $project->description = $validated['description'];
-        if ($request->has('color')) {
-            $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor($validated['color']));
-        }else{
-            $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor());
-        }
+        $project->colors = json_encode(ColorHelper::prettyHexadecimal(150));
         $project->save();
 
         $team = new Team();
@@ -78,6 +82,8 @@ class ProjectController extends Controller
             throw new \Exception('Project not found.');
         }
 
+        $project->colors = json_decode($project->colors, true);
+
         return $project;
     }
 
@@ -92,8 +98,7 @@ class ProjectController extends Controller
             'start_date' => 'date',
             'end_date' => 'date',
             'status' => 'string|in:ongoing,completed,cancelled',
-            // color is an hex color or the string 'random'
-            'color' => 'string',
+            'change_color' => 'boolean',
         ]);
 
         $project = Project::find($id);
@@ -104,13 +109,8 @@ class ProjectController extends Controller
 
         $project->fill($validated);
 
-        // if color is set to random, generate a random color else it need to be an hex color (regex)
-        if ($request->has('color')) {
-            if ($validated['color'] === 'random') {
-                $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor());
-            } else {
-                $project->color = ColorHelper::convertToTailwindGradient(ColorHelper::generateRandomGradientColor($validated['color']));
-            }
+        if ($request->has('change_color') && $request->input('change_color')) {
+            $project->colors = json_encode(ColorHelper::prettyHexadecimal(150));
         }
 
         $project->save();
