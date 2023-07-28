@@ -48,14 +48,18 @@ export const TicketsTable = ({ tickets }: { tickets: any }) => {
                   key={ticket.id}
                   className="odd:bg-sera-periwinkle/25 even:bg-sera-periwinkle/50 hover:odd:bg-sera-periwinkle/25 hover:even:bg-sera-periwinkle/50"
                 >
-                  <TableCell className="w-24 truncate text-base text-black">
-                    {ticket.title}
+                  <TableCell className="text-base text-black">
+                    <p className="w-12 truncate md:w-80">{ticket.title}</p>
                   </TableCell>
                   <TableCell className="text-base text-black">
-                    {formatDate(ticket.created_at)}
+                    <p className="w-12 truncate md:w-56">
+                      {formatDate(ticket.created_at)}
+                    </p>
                   </TableCell>
-                  <TableCell className="hidden text-base text-black sm:block">
-                    {ticket.user.lastname}
+                  <TableCell className="text-base text-black">
+                    <p className="w-12 truncate md:w-56">
+                      {ticket.user.lastname}
+                    </p>
                   </TableCell>
                   <TableCell className="text-center">
                     <div

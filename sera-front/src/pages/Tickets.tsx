@@ -9,7 +9,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-import { TicketsTable } from "@/components/app/tickets/ticketsTable";
+import { TicketsTable } from "@/components/app/tickets/TicketsTable";
 import {
   AlertDialog,
   AlertDialogAction,

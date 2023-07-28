@@ -168,15 +168,14 @@ export const Pagination = ({
               ? "cursor-pointer hover:bg-sera-periwinkle hover:text-sera-jet"
               : "opacity-25"
           )}
+          onClick={() => {
+            if (currentPage == totalPages) {
+              return;
+            }
+            setNextPage(currentPage + 1);
+          }}
         >
-          <ChevronRight
-            onClick={() => {
-              if (currentPage == totalPages) {
-                return;
-              }
-              setNextPage(currentPage + 1);
-            }}
-          />
+          <ChevronRight />
         </button>
       </li>
     </ul>
