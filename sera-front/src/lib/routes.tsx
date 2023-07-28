@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Home } from "@/pages/Home";
 import { Logout } from "@/pages/Logout";
 import Profile from "@/pages/Profile";
+import { Project } from "@/pages/Project";
 import { Projects } from "@/pages/Projects";
 import { Tickets } from "@/pages/Tickets";
 
@@ -49,7 +50,7 @@ export const router = createBrowserRouter([
           {
             path: ":ProjectId",
             index: true,
-            element: <Projects />,
+            element: <Project />,
           },
         ],
       },

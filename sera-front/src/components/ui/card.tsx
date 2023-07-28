@@ -1,70 +1,58 @@
+import clsx from "clsx";
+import { Link } from "react-router-dom";
+
 interface CardsProps {
   skeleton: boolean;
-  projectUrl: string;
+  id: string;
   title: string;
-  projectState: any;
-  shortDesc: string;
-  bgImage: string;
+  status: string;
+  description: string;
+  colors: string;
 }
 
 let titleBgColor = "";
 
 const Card = ({
   skeleton,
+  colors,
   title,
-  projectState,
-  shortDesc,
-  projectUrl = "",
+  status,
+  description,
+  id = "",
 }: CardsProps) => {
-  if (projectState === "Done") {
+  if (status === "cancelled") {
     titleBgColor = "bg-red-500";
-  } else if (projectState === "in Progress") {
+  } else if (status === "completed") {
     titleBgColor = "bg-lime-200";
-  } else if (projectState === "Draft") {
+  } else if (status === "ongoing") {
     titleBgColor = "bg-amber-300";
   }
 
-  function generateRandomColor() {
-    // Génère une valeur aléatoire entre 0 et 255 pour chaque composante (rouge, vert, bleu)
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
+  const color1 = colors[0];
+  const color2 = colors[1];
 
-    // Retourne la couleur au format RGB
-    return `rgb(${r},${g},${b})`;
-  }
-
-  function generateGradient() {
-    const color1 = generateRandomColor();
-    const color2 = generateRandomColor();
-
-    // Crée le style de dégradé linéaire avec les deux couleurs générées
-    const gradient = `linear-gradient(to right, ${color1}, ${color2})`;
-
-    return gradient;
-  }
-
-  const cardStyle = {
-    background: generateGradient(),
-  };
 
   if (skeleton) return <></>;
 
   return (
-    <a href={`project/${projectUrl}`}>
+    <Link to={`/dashboard/project/${id}`}>
       <div
-        style={cardStyle}
-        className=" h-[150px]  overflow-hidden text-ellipsis rounded-lg border-2 bg-cover bg-center p-3 text-white duration-300 ease-in-out hover:scale-105 "
+        style={{
+          backgroundImage: `linear-gradient(45deg, ${color1}, ${color2})`,
+        }}
+        className={clsx(
+          ` h-[150px] rounded-lg border-2 bg-cover bg-center p-3 text-white duration-300 ease-in-out hover:scale-105 `
+        )}
       >
         <div className="flex items-center justify-between text-xl">
-          <span>{title}</span>
-          <span className={`${titleBgColor} rounded-lg px-6 py-1 text-black`}>
-            {projectState}
-          </span>
+          <p className="truncate">{title} </p>
+          <p className={clsx(`rounded-lg px-4 py-1 text-black`, titleBgColor)}>
+            {status}
+          </p>
         </div>
-        <p className="pt-8">{shortDesc}</p>
+        <p className="w-11/12 truncate pt-4 text-left">{description}</p>
       </div>
-    </a>
+    </Link>
   );
 };
 
