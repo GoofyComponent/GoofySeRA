@@ -11,7 +11,7 @@ export const Projects = () => {
   const {
     data: projectsData,
     isLoading,
-    // error,
+    error,
     // isFetching,
   } = useQuery({
     queryKey: ["projects", { page }],
@@ -77,6 +77,15 @@ export const Projects = () => {
       : null;
   }
 
+  if (isLoading) {
+    <>
+      sa charge PD ...
+    </>
+  } else if (error) {
+    <>
+      {error} . Erreur de PD
+    </>
+  } else {
   return (
     <>
       <div className="m-10 pt-2">
@@ -136,3 +145,4 @@ export const Projects = () => {
     </>
   );
 };
+}
