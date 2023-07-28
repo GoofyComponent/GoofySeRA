@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { Check, /* Edit, */ Trash } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -62,9 +63,9 @@ export const TicketsTable = ({ tickets }: { tickets: any }) => {
                     </p>
                   </TableCell>
                   <TableCell className="text-center">
-                    <div
+                    <Badge
+                      variant="status"
                       className={clsx(
-                        `w-28 rounded-lg px-4 py-1 text-center text-base text-black`,
                         capitalizeFirstLetter(ticket.priority) === "High" &&
                           "bg-red-500",
                         capitalizeFirstLetter(ticket.priority) === "Medium" &&
@@ -75,7 +76,7 @@ export const TicketsTable = ({ tickets }: { tickets: any }) => {
                     >
                       {ticket.priority.charAt(0).toUpperCase() +
                         ticket.priority.slice(1)}
-                    </div>
+                    </Badge>
                   </TableCell>
                   <TableCell className="flex justify-end">
                     <Link

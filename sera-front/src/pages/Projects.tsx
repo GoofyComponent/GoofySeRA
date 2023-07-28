@@ -70,64 +70,57 @@ export const Projects = () => {
       : null;
   }
 
-  if (isLoading) {
-    <>
-      sa charge PD ...
-    </>
-  } else if (error) {
-    <>
-      {error} . Erreur de PD
-    </>
-  } else {
+  if (isLoading) return <>sa charge PD ...</>;
+
+  if (error) return <>{error} . Erreur de PD</>;
+
   return (
     <>
-      <div className="m-10 pt-2">
-        <div className="flex justify-between align-middle">
-          <h2 className="mb-16 text-4xl font-bold">Recent Projects</h2>
-          <select
-            className="mr-10 h-9 rounded-lg border bg-transparent px-12 py-1 text-base font-semibold outline-0"
-            value={projectTrie}
-            onChange={handleOnChange}
-          >
-            <option value="" disabled selected hidden>
-              trier par ...
-            </option>
-            <option className="text-base" value="ongoing">
-              ongoing
-            </option>
-            <option className="text-base" value="completed">
-              completed
-            </option>
-            <option className="text-base" value="cancelled">
-              cancelled
-            </option>
-          </select>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {!isLoading
-            ? projectsData.data
-                .map(
-                  (project: {
-                    id: string;
-                    skeleton: boolean;
-                    title: string;
-                    status: string;
-                    description: string;
-                    colors: string;
-                  }) => (
-                    <Card
-                      key={project.id}
-                      skeleton={project.skeleton}
-                      id={project.id}
-                      title={project.title}
-                      status={project.status}
-                      description={project.description}
-                      colors={project.colors}
-                    />
-                  )
-                )
-            : null}
-        </div>
+      <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
+        <h2>Projects</h2>
+        <select
+          className="mr-10 h-9 rounded-lg border bg-transparent px-12 py-1 text-base font-semibold outline-0"
+          value={projectTrie}
+          onChange={handleOnChange}
+        >
+          <option value="" disabled selected hidden>
+            trier par ...
+          </option>
+          <option className="text-base" value="ongoing">
+            ongoing
+          </option>
+          <option className="text-base" value="completed">
+            completed
+          </option>
+          <option className="text-base" value="cancelled">
+            cancelled
+          </option>
+        </select>
+      </div>
+
+      <div className="mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {!isLoading
+          ? projectsData.data.map(
+              (project: {
+                id: string;
+                skeleton: boolean;
+                title: string;
+                status: string;
+                description: string;
+                colors: string;
+              }) => (
+                <Card
+                  key={project.id}
+                  skeleton={project.skeleton}
+                  id={project.id}
+                  title={project.title}
+                  status={project.status}
+                  description={project.description}
+                  colors={project.colors}
+                />
+              )
+            )
+          : null}
       </div>
       <Pagination
         totalPages={projectsData.last_page}
@@ -137,4 +130,3 @@ export const Projects = () => {
     </>
   );
 };
-}
