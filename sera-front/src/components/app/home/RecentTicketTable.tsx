@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
+import { TicketsTable } from "@/components/app/tickets/TicketsTable";
 import { Button } from "@/components/ui/button";
 import { axios } from "@/lib/axios";
-
-import { TicketsTable } from "../tickets/ticketsTable";
 
 export const RecentTicketTable = () => {
   const recentTicket = useQuery({
