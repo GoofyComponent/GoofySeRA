@@ -37,21 +37,19 @@ export const LoginForm = () => {
       const formData = new FormData();
       formData.append("email", data.email);
       formData.append("password", data.password);
-      return await axios
-        .post("/login", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          console.log(res);
-          dispatch(registerLogin());
-          navigate(`/dashboard`);
-        });
+      return await axios.post("/login", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
     },
     onError: (error: any) => {
-      console.log(error);
       setTypedError(error.response?.data.message);
+    },
+    onSuccess: () => {
+      setTypedError("");
+      dispatch(registerLogin());
+      navigate(`/dashboard`);
     },
   });
 
@@ -64,7 +62,6 @@ export const LoginForm = () => {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
     loginRequest.mutate(data);
   }
 
