@@ -25,22 +25,28 @@ export const Pagination = ({
   if (totalPages <= 5) {
     return (
       <ul className="mx-auto flex h-14 items-center justify-center -space-x-px align-middle text-sm">
-        {currentPage != 1 && (
-          <li>
-            <button
-              type="button"
-              title="Previous page"
-              className={clsx(
-                "cursor-pointer",
-                "m-2 flex h-10 w-10 items-center justify-center rounded-full leading-tight",
-                "bg-transparent text-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet"
-              )}
-              onClick={() => setNextPage(currentPage - 1)}
-            >
-              <ChevronLeft />
-            </button>
-          </li>
-        )}
+        <li>
+          <button
+            type="button"
+            title="Previous page"
+            className={clsx(
+              "m-2 flex h-10 w-10 items-center justify-center rounded-full leading-tight",
+              "bg-transparent text-sera-jet",
+              currentPage != 1
+                ? "hover:text-sera- cursor-pointer hover:bg-sera-periwinkle"
+                : "opacity-25"
+            )}
+            onClick={() => {
+              if (currentPage == 1) {
+                return;
+              }
+              setNextPage(currentPage - 1);
+            }}
+          >
+            <ChevronLeft />
+          </button>
+        </li>
+
         {totalPagesPlusOne.map((page) => {
           console.log(page);
           return (
@@ -63,21 +69,28 @@ export const Pagination = ({
           );
         })}
 
-        {currentPage != totalPages && (
-          <li>
-            <button
-              title="Next page"
-              type="button"
-              className={clsx(
-                "cursor-pointer",
-                "m-2 flex h-10 w-10 items-center justify-center rounded-full leading-tight",
-                "bg-transparent text-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet"
-              )}
-            >
-              <ChevronRight onClick={() => setNextPage(currentPage + 1)} />
-            </button>
-          </li>
-        )}
+        <li className={clsx(currentPage == totalPages && "cursor-default")}>
+          <button
+            title="Next page"
+            type="button"
+            className={clsx(
+              "m-2 flex h-10 w-10 items-center justify-center rounded-full leading-tight",
+              "bg-transparent text-sera-jet",
+              currentPage != totalPages
+                ? "cursor-pointer hover:bg-sera-periwinkle hover:text-sera-jet"
+                : "opacity-25"
+            )}
+          >
+            <ChevronRight
+              onClick={() => {
+                if (currentPage == totalPages) {
+                  return;
+                }
+                setNextPage(currentPage + 1);
+              }}
+            />
+          </button>
+        </li>
       </ul>
     );
   }
