@@ -42,7 +42,6 @@ export const Pagination = ({
           </li>
         )}
         {totalPagesPlusOne.map((page) => {
-          console.log(page);
           return (
             <li key={page}>
               <button
