@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
@@ -16,17 +16,10 @@ export const Projects = () => {
   } = useQuery({
     queryKey: ["projects", { page }],
     queryFn: async () => {
-      const projects = await axios.get(`api/projects?page=${page}`);
-
-      console.log("projects.projectsData", projects.data);
-
+      const projects = await axios.get(`api/projects?page=${page}&sort=desc`);
       return projects.data;
     },
   });
-
-  useEffect(() => {
-    console.log("projectsData", projectsData);
-  }, [projectsData]);
 
   const [projectTrie, setProjectTrie] = useState("");
 
@@ -113,7 +106,6 @@ export const Projects = () => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {!isLoading
             ? projectsData.data
-                .reverse()
                 .map(
                   (project: {
                     id: string;

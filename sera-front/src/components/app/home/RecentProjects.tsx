@@ -26,16 +26,16 @@ const RecentProjects = () => {
   } = useQuery({
     queryKey: ["projects", { page }],
     queryFn: async () => {
-      const projects = await axios.get(`api/projects?page=${page}`);
+      const projects = await axios.get(`api/projects?page=${page}&sort=desc&maxPerPage=3`);
 
-      console.log("projects.projectsData", projects.data);
+      console.log("projectsData recent", projects.data);
 
       return projects.data;
     },
   });
 
   useEffect(() => {
-    console.log("projectsData", projectsData);
+    console.log("projectsData recent useEffect", projectsData);
   }, [projectsData]);
 
   return (
@@ -44,7 +44,6 @@ const RecentProjects = () => {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {!isLoading
           ? projectsData.data
-              .slice(-3)
               .map(
                 (project: {
                   id: string;
