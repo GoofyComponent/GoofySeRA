@@ -1,449 +1,32 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 import { Card } from "@/components/ui/card";
+import { Pagination } from "@/components/ui/pagination";
+import { axios } from "@/lib/axios";
 
 export const Projects = () => {
-  interface Project {
-    skeleton: false;
-    projectUrl: string;
-    title: string;
-    projectState: "Done" | "Draft" | "in Progress";
-    shortDesc: string;
-    bgImage: string;
-  }
+  const [page, setPage] = useState(1);
 
-  const projects: Project[] = [
-    {
-      skeleton: false,
-      projectUrl: "projet-1",
-      title: "Projet 1",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 1",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
+  const {
+    data: projectsData,
+    isLoading,
+    // error,
+    // isFetching,
+  } = useQuery({
+    queryKey: ["projects", { page }],
+    queryFn: async () => {
+      const projects = await axios.get(`api/projects?page=${page}`);
+
+      console.log("projects.projectsData", projects.data);
+
+      return projects.data;
     },
-    {
-      skeleton: false,
-      projectUrl: "projet-2",
-      title: "Projet 2",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 2",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-3",
-      title: "Projet 3",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 3",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-4",
-      title: "Projet 4",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 4",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-5",
-      title: "Projet 5",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 5",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-6",
-      title: "Projet 6",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 6",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-7",
-      title: "Projet 7",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 7",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-8",
-      title: "Projet 8",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 8",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-9",
-      title: "Projet 9",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 9",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-10",
-      title: "Projet 10",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 10",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-1",
-      title: "Projet 1",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 1",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-2",
-      title: "Projet 2",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 2",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-3",
-      title: "Projet 3",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 3",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-4",
-      title: "Projet 4",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 4",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-5",
-      title: "Projet 5",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 5",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-6",
-      title: "Projet 6",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 6",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-7",
-      title: "Projet 7",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 7",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-8",
-      title: "Projet 8",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 8",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-9",
-      title: "Projet 9",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 9",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-10",
-      title: "Projet 10",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 10",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-1",
-      title: "Projet 1",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 1",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-2",
-      title: "Projet 2",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 2",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-3",
-      title: "Projet 3",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 3",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-4",
-      title: "Projet 4",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 4",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-5",
-      title: "Projet 5",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 5",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-6",
-      title: "Projet 6",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 6",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-7",
-      title: "Projet 7",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 7",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-8",
-      title: "Projet 8",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 8",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-9",
-      title: "Projet 9",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 9",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-10",
-      title: "Projet 10",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 10",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-1",
-      title: "Projet 1",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 1",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-2",
-      title: "Projet 2",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 2",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-3",
-      title: "Projet 3",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 3",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-4",
-      title: "Projet 4",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 4",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-5",
-      title: "Projet 5",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 5",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-6",
-      title: "Projet 6",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 6",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-7",
-      title: "Projet 7",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 7",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-8",
-      title: "Projet 8",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 8",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-9",
-      title: "Projet 9",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 9",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-10",
-      title: "Projet 10",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 10",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-1",
-      title: "Projet 1",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 1",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-2",
-      title: "Projet 2",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 2",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-3",
-      title: "Projet 3",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 3",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-4",
-      title: "Projet 4",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 4",
-      bgImage:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUbEmkBInE22Ri2OoJ9wRX8SGIvW1Ha3l3WAn-_eSV2PojipcoyrWkF-ZTsv68mbzSccc&usqp=CAU",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-5",
-      title: "Projet 5",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 5",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-6",
-      title: "Projet 6",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 6",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-7",
-      title: "Projet 7",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 7",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-8",
-      title: "Projet 8",
-      projectState: "Draft",
-      shortDesc: "Description courte du projet 8",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-9",
-      title: "Projet 9",
-      projectState: "in Progress",
-      shortDesc: "Description courte du projet 9",
-      bgImage:
-        "https://media.licdn.com/dms/image/C5103AQEGl16vH2V4Gg/profile-displayphoto-shrink_200_200/0/1566880663515?e=1694044800&v=beta&t=6w2Qdvc20fxXKkp1KK3TYFw7dEsmQdWJoMcD-EBRPWI",
-    },
-    {
-      skeleton: false,
-      projectUrl: "projet-10",
-      title: "Projet 10",
-      projectState: "Done",
-      shortDesc: "Description courte du projet 10",
-      bgImage: "https://destroykeaum.alwaysdata.net/assets/images/pp.jpg",
-    },
-  ];
+  });
+
+  useEffect(() => {
+    console.log("projectsData", projectsData);
+  }, [projectsData]);
 
   const [projectTrie, setProjectTrie] = useState("");
 
@@ -452,58 +35,47 @@ export const Projects = () => {
     setProjectTrie(e.target.value);
   };
 
-  const renderProjectTrie = () => {
-    let result;
-    switch (projectTrie) {
-      // si option in-progress est selectionné, on range les projest dans l'ordre suivant: in progress, draft, done
-      case "in-progress":
-        result = projects.sort((a, b) => {
-          if (a.projectState === "in Progress") {
+  //trie les projets en fonction de la valeur du select en rangeant les projets par status (ongoing, completed, cancelled) si completed est selectionné, les projets completed seront en premier puis ongoing puis cancelled si ongoing est selectionné, les projets ongoing seront en premier puis completed puis cancelled si cancelled est selectionné, les projets cancelled seront en premier puis completed puis ongoing
+  if (projectTrie === "ongoing") {
+    !isLoading
+      ? projectsData.data.sort((a: any) => {
+          if (a.status === "ongoing") {
             return -1;
-          } else if (a.projectState === "Draft" && b.projectState === "Done") {
-            return -1;
-          } else {
+          } else if (a.status === "completed") {
+            return 1;
+          } else if (a.status === "cancelled") {
             return 1;
           }
-        });
-        break;
-      // si option in-progress est selectionné, on range les projest dans l'ordre suivant: done , in progress, draft, done
-      case "done":
-        result = projects.sort((a, b) => {
-          if (a.projectState === "Done") {
+          return 0;
+        })
+      : null;
+  } else if (projectTrie === "completed") {
+    !isLoading
+      ? projectsData.data.sort((a: any) => {
+          if (a.status === "completed") {
             return -1;
-          } else if (
-            a.projectState === "in Progress" &&
-            b.projectState === "Draft"
-          ) {
-            return -1;
-          } else {
+          } else if (a.status === "ongoing") {
+            return 1;
+          } else if (a.status === "cancelled") {
             return 1;
           }
-        });
-        break;
-      // si option in-progress est selectionné, on range les projest dans l'ordre suivant: in progress, draft, done
-      case "draft":
-        result = projects.sort((a, b) => {
-          if (a.projectState === "Draft") {
+          return 0;
+        })
+      : null;
+  } else if (projectTrie === "cancelled") {
+    !isLoading
+      ? projectsData.data.sort((a: any) => {
+          if (a.status === "cancelled") {
             return -1;
-          } else if (
-            a.projectState === "in Progress" &&
-            b.projectState === "Done"
-          ) {
-            return -1;
-          } else {
+          } else if (a.status === "ongoing") {
+            return 1;
+          } else if (a.status === "completed") {
             return 1;
           }
-        });
-        break;
-      default:
-        result = projects;
-        break;
-    }
-    return result;
-  };
-  const sortedProjects = renderProjectTrie();
+          return 0;
+        })
+      : null;
+  }
 
   return (
     <>
@@ -518,31 +90,49 @@ export const Projects = () => {
             <option value="" disabled selected hidden>
               trier par ...
             </option>
-            <option className="text-base" value="in-progress">
-              In progress
+            <option className="text-base" value="ongoing">
+              ongoing
             </option>
-            <option className="text-base" value="done">
-              Done
+            <option className="text-base" value="completed">
+              completed
             </option>
-            <option className="text-base" value="draft">
-              Draft
+            <option className="text-base" value="cancelled">
+              cancelled
             </option>
           </select>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {sortedProjects.map((project) => (
-            <Card
-              key={project.projectUrl}
-              skeleton={project.skeleton}
-              projectUrl={project.projectUrl}
-              title={project.title}
-              projectState={project.projectState}
-              shortDesc={project.shortDesc}
-              bgImage={project.bgImage}
-            />
-          ))}
+          {!isLoading
+            ? projectsData.data
+                .reverse()
+                .map(
+                  (project: {
+                    id: string;
+                    skeleton: boolean;
+                    title: string;
+                    status: string;
+                    description: string;
+                    colors: string;
+                  }) => (
+                    <Card
+                      key={project.id}
+                      skeleton={project.skeleton}
+                      id={project.id}
+                      title={project.title}
+                      status={project.status}
+                      description={project.description}
+                      colors={project.colors}
+                    />
+                  )
+                )
+            : null}
         </div>
       </div>
+      <Pagination
+        totalPages={projectsData.last_page}
+        currentPage={projectsData.current_page}
+        setNextPage={setPage}
+      />
     </>
   );
 };
