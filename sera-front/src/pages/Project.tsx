@@ -14,10 +14,7 @@ import {
 
 import { SharedRessources } from "../components/ui/sharedRessources";
 
-
 export const Project = () => {
-
-
   const project = {
     skeleton: false,
     projectUrl: "1",
@@ -68,7 +65,7 @@ export const Project = () => {
       <div>
         <div className="m-10 pt-2 ">
           <div className="flex items-center">
-            <Link to="/dashboard/projects">
+            <Link to="..">
               <ChevronLeft
                 size={48}
                 className="mr-2 rounded-full bg-sera-periwinkle duration-200 ease-in-out hover:scale-105"

@@ -26,7 +26,9 @@ const RecentProjects = () => {
   } = useQuery({
     queryKey: ["projects", { page }],
     queryFn: async () => {
-      const projects = await axios.get(`api/projects?page=${page}&sort=desc&maxPerPage=3`);
+      const projects = await axios.get(
+        `api/projects?page=${page}&sort=desc&maxPerPage=3`
+      );
 
       console.log("projectsData recent", projects.data);
 
@@ -43,27 +45,26 @@ const RecentProjects = () => {
       <h2 className="mb-2 text-4xl font-bold">Recent Projects</h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {!isLoading
-          ? projectsData.data
-              .map(
-                (project: {
-                  id: string;
-                  skeleton: boolean;
-                  title: string;
-                  status: any;
-                  description: string;
-                  colors: string;
-                }) => (
-                  <Card
-                    key={project.id}
-                    skeleton={project.skeleton}
-                    id={project.id}
-                    title={project.title}
-                    status={project.status}
-                    description={project.description}
-                    colors={project.colors}
-                  />
-                )
+          ? projectsData.data.map(
+              (project: {
+                id: string;
+                skeleton: boolean;
+                title: string;
+                status: any;
+                description: string;
+                colors: string;
+              }) => (
+                <Card
+                  key={project.id}
+                  skeleton={project.skeleton}
+                  id={project.id}
+                  title={project.title}
+                  status={project.status}
+                  description={project.description}
+                  colors={project.colors}
+                />
               )
+            )
           : null}
         <Link to={"projects"}>
           <div className="h-[150px] overflow-hidden  text-ellipsis rounded-lg border-2 bg-sera-jet bg-cover bg-center p-3 text-white duration-300 ease-in-out hover:scale-105 ">
