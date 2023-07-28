@@ -37,8 +37,7 @@ export const UserForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log("data");
-    console.log(data);
+    console.log("Change users infos submitted", data);
   };
 
   return (

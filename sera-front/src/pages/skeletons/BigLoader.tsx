@@ -13,11 +13,14 @@ export const BigLoader = ({
 }: BigLoaderProps) => {
   return (
     <>
-      <main
-        className={`mt-auto flex h-screen flex-col items-center justify-center bg-${bgColor}`}
+      <section
+        className={`flex h-full min-h-[15em] w-full flex-col items-center justify-center bg-${bgColor}`}
       >
-        <Loader2 size={loaderSize} className={`m-auto text-${textColor}`} />
-      </main>
+        <Loader2
+          size={loaderSize}
+          className={`m-auto animate-spin text-${textColor}`}
+        />
+      </section>
     </>
   );
 };

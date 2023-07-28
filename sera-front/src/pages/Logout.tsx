@@ -15,8 +15,6 @@ export const Logout = () => {
     queryFn: async () => {
       const logout = await axios.post("/logout");
 
-      console.log(logout);
-
       return logout.data;
     },
     enabled: false,
@@ -42,7 +40,6 @@ export const Logout = () => {
     }
 
     if (logoutCall.isSuccess) {
-      console.log(logoutCall.data);
       dispatch(userReset());
       dispatch(appReset());
       return navigate("/login");
