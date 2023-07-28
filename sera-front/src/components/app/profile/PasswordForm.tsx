@@ -43,7 +43,7 @@ export const PasswordForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
+    console.log("Change password submitted", data);
   };
 
   return (

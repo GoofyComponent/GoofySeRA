@@ -48,7 +48,6 @@ export const Pagination = ({
         </li>
 
         {totalPagesPlusOne.map((page) => {
-          console.log(page);
           return (
             <li key={page}>
               <button
@@ -169,15 +168,14 @@ export const Pagination = ({
               ? "cursor-pointer hover:bg-sera-periwinkle hover:text-sera-jet"
               : "opacity-25"
           )}
+          onClick={() => {
+            if (currentPage == totalPages) {
+              return;
+            }
+            setNextPage(currentPage + 1);
+          }}
         >
-          <ChevronRight
-            onClick={() => {
-              if (currentPage == totalPages) {
-                return;
-              }
-              setNextPage(currentPage + 1);
-            }}
-          />
+          <ChevronRight />
         </button>
       </li>
     </ul>

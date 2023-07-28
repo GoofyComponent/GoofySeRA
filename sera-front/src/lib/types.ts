@@ -5,6 +5,9 @@ export interface Tickets {
 export interface TicketsEntity {
   id: number;
   user_id: number;
+  user: {
+    lastname: string;
+  };
   priority: string;
   title: string;
   description: string;
