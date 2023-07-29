@@ -10,6 +10,7 @@ import { Rooms } from "@/pages/Rooms";
 import { Tickets } from "@/pages/Tickets";
 import { Users } from "@/pages/Users";
 import { VideoReview } from "@/pages/VideoReview";
+import { Error404 } from "@/pages/Error404";
 
 import App from "../pages/App";
 import { Login } from "../pages/Login";
@@ -114,6 +115,10 @@ const paths = [
   {
     path: "/",
     element: <Navigate to="/login" replace />,
+  },
+  {
+    path: "*",
+    element: <Error404 />,
   },
 ];
 
