@@ -43,12 +43,12 @@ export const router = createBrowserRouter([
       {
         path: "projects",
         element: <Projects />,
-        /* children: [
-          {
-            path: ":ProjectId",
-            element: <Project />,
-          },
-        ], */
+        //  children: [
+        //     {
+        //       path: ":ProjectId",
+        //       element: <Project />,
+        //     },
+        //   ],
       },
       {
         path: "projects/:ProjectId",
