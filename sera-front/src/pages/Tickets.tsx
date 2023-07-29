@@ -101,7 +101,7 @@ export const Tickets = () => {
     },
     onSuccess: (data) => {
       const dataCleaned = data.data.original;
-      navigate(`/dashboard/project/${dataCleaned.id}`);
+      navigate(`/dashboard/projects/${dataCleaned.id}`);
     },
     onError: () => {
       navigate(`/dashboard/tickets/${TicketId}?action=validate`);
