@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { BadgeHelp, ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
