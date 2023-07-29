@@ -48,29 +48,28 @@ const RecentProjects = () => {
             )
           : null}
       </h2>
-      {!isLoading? 
+      {!isLoading ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {recentprojectsData.data.map(
-              (project: {
-                id: string;
-                skeleton: boolean;
-                title: string;
-                status: any;
-                description: string;
-                colors: string;
-              }) => (
-                <Card
-                  key={project.id}
-                  skeleton={project.skeleton}
-                  id={project.id}
-                  title={project.title}
-                  status={project.status}
-                  description={project.description}
-                  colors={project.colors}
-                />
-              )
+            (project: {
+              id: string;
+              skeleton: boolean;
+              title: string;
+              status: any;
+              description: string;
+              colors: string;
+            }) => (
+              <Card
+                key={project.id}
+                skeleton={project.skeleton}
+                id={project.id}
+                title={project.title}
+                status={project.status}
+                description={project.description}
+                colors={project.colors}
+              />
             )
-          }
+          )}
           <Link to={"projects"}>
             <div className="h-[150px] overflow-hidden  text-ellipsis rounded-lg border-2 bg-sera-jet bg-cover bg-center p-3 text-white duration-300 ease-in-out hover:scale-105 ">
               <div className="flex items-center justify-between text-xl">
@@ -78,9 +77,9 @@ const RecentProjects = () => {
               </div>
               <p className="pt-8">There is XX another projects</p>
             </div>
-          </Link> 
+          </Link>
         </div>
-        : 
+      ) : (
         <div className="flex max-h-[9em] w-full items-center">
           <BigLoader
             loaderSize={42}
@@ -88,11 +87,9 @@ const RecentProjects = () => {
             textColor="sera-jet"
           />
         </div>
-      }
+      )}
     </div>
   );
 };
-
-
 
 export { RecentProjects };
