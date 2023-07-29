@@ -20,7 +20,7 @@ export const RecentTicketTable = () => {
     <div className="m-6 overflow-hidden rounded-lg bg-[#F2F1F6] pt-2">
       <div className="flex justify-between py-2">
         <h2 className="mb-2 px-4 text-4xl font-semibold text-sera-jet">
-          Ticket{" "}
+          Recent Tickets{" "}
           {recentTicket.data && (
             <span className="text-sm font-normal italic">
               This is the last 4 recent tickets
