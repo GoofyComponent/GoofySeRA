@@ -29,9 +29,6 @@ const RecentProjects = () => {
       const recentprojects = await axios.get(
         `api/projects?page=${page}&sort=desc&maxPerPage=3`
       );
-
-      console.log("recentprojectsData recent", recentprojects.data);
-
       return recentprojects.data;
     },
   });

@@ -31,14 +31,9 @@ export const Project = () => {
     queryKey: ["project", { id }],
     queryFn: async () => {
       const project = await axios.get(`/api/projects/${id}`);
-      console.log("projectsData simple", project.data);
       return project.data;
     },
   });
-
-  useEffect(() => {
-    console.log("projectsData projet simple", projectData);
-  }, [projectData]);
 
   if (isLoading) return;
   <BigLoader
