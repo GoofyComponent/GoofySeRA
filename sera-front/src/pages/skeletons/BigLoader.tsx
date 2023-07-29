@@ -4,6 +4,7 @@ type BigLoaderProps = {
   bgColor?: string;
   textColor?: string;
   loaderSize?: number;
+  loaderMinHeight?: string;
 };
 
 export const BigLoader = ({
