@@ -80,7 +80,7 @@ const RecentProjects = () => {
         <div className="flex max-h-[9em] w-full items-center">
           <BigLoader
             loaderSize={42}
-            bgColor="sera-periwinkle/25"
+            bgColor="transparent"
             textColor="sera-jet"
           />
         </div>

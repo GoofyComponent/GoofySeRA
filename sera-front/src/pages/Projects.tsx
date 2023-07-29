@@ -129,7 +129,7 @@ export const Projects = () => {
           ) : (
             <BigLoader
               loaderSize={42}
-              bgColor="sera-periwinkle/25"
+              bgColor="transparent"
               textColor="sera-jet"
             />
           )}
