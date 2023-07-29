@@ -193,7 +193,7 @@ export const Tickets = () => {
     <section className="flex h-full flex-col justify-between">
       <div>
         <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
-          <h2>Ticket</h2>
+          <h2>Tickets</h2>
 
           <Dialog
             onOpenChange={() => {
