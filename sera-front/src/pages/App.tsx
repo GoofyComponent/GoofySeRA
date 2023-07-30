@@ -74,7 +74,16 @@ function App() {
         </div>
         <div className="my-auto flex justify-end">
           <div className="relative my-auto mr-2 flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-sera-periwinkle">
+          <Popover>
+            <PopoverTrigger className="m-auto">
             <Bell className="m-auto text-[#916AF6]" />
+            </PopoverTrigger>
+            <PopoverContent className="flex flex-col text-lg font-medium text-sera-jet divide-y">
+              <div className="">
+                Notification
+              </div>
+            </PopoverContent>
+          </Popover>
           </div>
           <Popover>
             <PopoverTrigger>
