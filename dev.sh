@@ -44,6 +44,9 @@ echo "--- launch docker container ---"
 #Storage link
 ./sera-back/vendor/bin/sail artisan storage:link
 
+#Generate l5-swagger
+./sera-back/vendor/bin/sail artisan l5-swagger:generate
+
 echo "--- wait for 10 seconds ---"
 sleep 10
 

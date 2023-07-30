@@ -95,6 +95,7 @@ jobs:
           docker exec develop-sera-back-laravel-test php artisan view:cache
           docker exec develop-sera-back-laravel-test php artisan optimize
           docker exec develop-sera-back-laravel-test php artisan storage:link
+          docker exec develop-sera-back-laravel-test php artisan l5-swagger:generate
 
       - name: Run migrations
         run: |

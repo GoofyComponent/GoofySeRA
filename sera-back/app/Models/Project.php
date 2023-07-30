@@ -10,6 +10,16 @@ class Project extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'project_request_id',
+        'title',
+        'description',
+        'start_date',
+        'end_date',
+        'status',
+        'colors'
+    ];
+
     public function projectRequest()
     {
         return $this->belongsTo(ProjectRequest::class);
