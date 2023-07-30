@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,6 +15,8 @@ import {
 import { axios } from "@/lib/axios";
 
 import { BigLoader } from "./skeletons/BigLoader";
+import { Label } from "@radix-ui/react-label";
+import { Input } from "@/components/ui/input";
 
 // import { SharedRessources } from "../components/ui/sharedRessources";
 
@@ -55,7 +56,7 @@ export const Project = () => {
                 <h3 className="text-4xl">Shared ressources :</h3>
                 <Dialog>
                   <DialogTrigger>
-                    <Button className="bg-sera-periwinkle">
+                    <Button className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
                       {" "}
                       Add ressource
                     </Button>
@@ -68,15 +69,51 @@ export const Project = () => {
                           <span className="ml-2"> Add ressource </span>
                         </div>
                       </DialogTitle>
-                      <DialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
-                      </DialogDescription>
                     </DialogHeader>
+                    <div>
+                      <div className="flex flex-col">
+                        <Label htmlFor="title">Title</Label>
+                        <Input
+                          type="text"
+                          id="title"
+                          className="col-span-3"
+                          
+                        />
+                      </div>
+                      <div className="pt-4">
+                        <Label htmlFor="description">Description</Label>
+                        <Input
+                          type="textarea"
+                          id="description"
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="pt-4">
+                        <Label htmlFor="description">Link</Label>
+                        <Input
+                          type="textarea"
+                          id="description"
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="pt-4">
+                        <Label htmlFor="description">Tag</Label>
+                        <Input
+                          type="textarea"
+                          id="description"
+                          className="col-span-3"
+                        />
+                      </div>
+                    </div>
                     <DialogFooter>
-                      <DialogTrigger>Cancel</DialogTrigger>
-                      <Button>Continue</Button>
+                    <DialogTrigger>
+                      <Button className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
+                        Cancel
+                      </Button>
+                      </DialogTrigger>
+                      <Button type="submit" className="bg-sera-periwinkle text-sera-jet hover:bg-sera-periwinkle/50 hover:text-sera-jet/50">
+                        add ressource
+                      </Button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
