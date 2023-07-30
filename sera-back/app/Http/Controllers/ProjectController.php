@@ -12,7 +12,45 @@ use App\Helpers\ColorHelper;
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/projects",
+     *     summary="Get all projects",
+     *     description="Get all projects",
+     *     operationId="getProjects",
+     *     tags={"projects"},
+     *     @OA\Parameter(
+     *         description="Number of items per page",
+     *         in="query",
+     *         name="maxPerPage",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *             default=10
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         description="Sort order",
+     *         in="query",
+     *         name="sort",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *             default="asc"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden"
+     *     )
+     * )
      */
     public function index(Request $request)
     {
@@ -47,7 +85,79 @@ class ProjectController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *   path="/api/projects",
+     *   summary="Create a project",
+     *   description="Create a project",
+     *   operationId="createProject",
+     *   tags={"projects"},
+     *   @OA\RequestBody(
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         @OA\Property(
+     *           property="project_request_id",
+     *           type="integer",
+     *         ),
+     *         @OA\Property(
+     *           property="title",
+     *           type="string",
+     *         ),
+     *         @OA\Property(
+     *           property="description",
+     *           type="string",
+     *         ),
+     *         required={"project_request_id", "title", "description"}
+     *       )
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=201,
+     *     description="Successful operation",
+     *     @OA\JsonContent(
+     *       @OA\Property(
+     *         property="id",
+     *         type="integer",
+     *       ),
+     *       @OA\Property(
+     *         property="project_request_id",
+     *         type="integer",
+     *       ),
+     *       @OA\Property(
+     *         property="title",
+     *         type="string",
+     *       ),
+     *       @OA\Property(
+     *         property="description",
+     *         type="string",
+     *       ),
+     *       @OA\Property(
+     *         property="colors",
+     *         type="string",
+     *       ),
+     *       @OA\Property(
+     *         property="created_at",
+     *         type="string",
+     *       ),
+     *       @OA\Property(
+     *         property="updated_at",
+     *         type="string",
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(
+     *     response=400,
+     *     description="Bad request"
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *     response=403,
+     *     description="Forbidden"
+     *   )
+     * )
      */
     public function store(Request $request)
     {
@@ -73,7 +183,72 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/projects/{id}",
+     *     summary="Get a project",
+     *     description="Get a project",
+     *     operationId="getProject",
+     *     tags={"projects"},
+     *     @OA\Parameter(
+     *         description="ID of project to return",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer"
+     *             ),
+     *             @OA\Property(
+     *                 property="project_request_id",
+     *                 type="integer"
+     *             ),
+     *             @OA\Property(
+     *                 property="title",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="description",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="colors",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="string"
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found"
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -87,8 +262,105 @@ class ProjectController extends Controller
         return $project;
     }
 
-    /**
-     * Update the specified resource in storage.
+    /** @OA\Put(
+     *     path="/api/projects/{id}",
+     *     summary="Update a project",
+     *     description="Update a project",
+     *     operationId="updateProject",
+     *     tags={"projects"},
+     *     @OA\Parameter(
+     *         description="ID of project to update",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *       @OA\MediaType(
+     *         mediaType="application/json",
+     *         @OA\Schema(
+     *           @OA\Property(
+     *             property="title",
+     *             type="string",
+     *           ),
+     *           @OA\Property(
+     *             property="description",
+     *             type="string",
+     *           ),
+     *           @OA\Property(
+     *             property="start_date",
+     *             type="date",
+     *           ),
+     *           @OA\Property(
+     *             property="end_date",
+     *             type="date",
+     *           ),
+     *           @OA\Property(
+     *             property="status",
+     *             type="string",
+     *             enum={"ongoing", "completed", "cancelled"},
+     *           ),
+     *           @OA\Property(
+     *             property="change_color",
+     *             type="boolean",
+     *           ),
+     *           required={"title", "description", "start_date", "end_date", "status", "change_color"}
+     *         )
+     *       )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer"
+     *             ),
+     *             @OA\Property(
+     *                 property="project_request_id",
+     *                 type="integer"
+     *             ),
+     *             @OA\Property(
+     *                 property="title",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="description",
+     *                 type="string"
+     *             ),
+     *             @OA\Property(
+     *                 property="colors",
+     *                 type="string"
+     *             ),
+     *            @OA\Property(
+     *                property="created_at",
+     *               type="string"
+     *           ),
+     *          @OA\Property(
+     *             property="updated_at",
+     *            type="string"
+     *       ),
+     *    ),
+     * ),
+     * @OA\Response(
+     *   response=400,
+     *  description="Bad request"
+     * ),
+     * @OA\Response(
+     *  response=401,
+     * description="Unauthenticated"
+     * ),
+     * @OA\Response(
+     * response=403,
+     * description="Forbidden"
+     * ),
+     * @OA\Response(
+     * response=404,
+     * description="Not found"
+     * )
+     * )
      */
     public function update(Request $request, $id): JsonResponse
     {
@@ -118,8 +390,50 @@ class ProjectController extends Controller
         return response()->json($project);
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/projects/{id}",
+     *     summary="Delete a project",
+     *     description="Delete a project",
+     *     operationId="deleteProject",
+     *     tags={"projects"},
+     *     @OA\Parameter(
+     *         description="ID of project to delete",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Not found"
+     *     )
+     * )
      */
     public function destroy($id)
     {
