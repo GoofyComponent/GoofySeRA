@@ -139,6 +139,7 @@ export const Projects = () => {
             totalPages={projectsData.last_page}
             currentPage={projectsData.current_page}
             setNextPage={setPage}
+            isCurrentlyLoading={isLoading}
           />
         ) : null}
       </div>

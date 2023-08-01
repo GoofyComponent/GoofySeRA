@@ -5,12 +5,14 @@ type PaginationProps = {
   totalPages: number;
   currentPage: number;
   setNextPage: (page: number) => void;
+  isCurrentlyLoading: boolean;
 };
 
 export const Pagination = ({
   totalPages,
   currentPage,
   setNextPage,
+  isCurrentlyLoading,
 }: PaginationProps) => {
   const totalPagesPlusOne = Array.from(Array(totalPages).keys()).map(function (
     page
@@ -33,14 +35,15 @@ export const Pagination = ({
               "m-2 flex h-10 w-10 items-center justify-center rounded-full leading-tight",
               "bg-transparent text-sera-jet",
               currentPage != 1
-                ? "hover:text-sera- cursor-pointer hover:bg-sera-periwinkle"
-                : "opacity-25"
+                ? " cursor-pointer hover:bg-sera-periwinkle"
+                : "opacity-25",
+              isCurrentlyLoading && "!cursor-wait !opacity-25"
             )}
             onClick={() => {
-              if (currentPage == 1) {
+              if (currentPage == 1 || isCurrentlyLoading) {
                 return;
               }
-              setNextPage(currentPage - 1);
+              return setNextPage(currentPage - 1);
             }}
           >
             <ChevronLeft />
@@ -58,9 +61,12 @@ export const Pagination = ({
                   "m-2 flex h-10 w-10 items-center justify-center rounded-full leading-tight",
                   currentPage === page
                     ? "bg-sera-jet text-sera-periwinkle hover:bg-sera-periwinkle hover:text-sera-jet"
-                    : "bg-transparent text-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet"
+                    : "bg-transparent text-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet",
+                  isCurrentlyLoading && "!cursor-wait !opacity-25"
                 )}
-                onClick={() => setNextPage(page)}
+                onClick={() => {
+                  if (!isCurrentlyLoading) return setNextPage(page);
+                }}
               >
                 {page}
               </button>
@@ -77,15 +83,16 @@ export const Pagination = ({
               "bg-transparent text-sera-jet",
               currentPage != totalPages
                 ? "cursor-pointer hover:bg-sera-periwinkle hover:text-sera-jet"
-                : "opacity-25"
+                : "opacity-25",
+              isCurrentlyLoading && "!cursor-wait !opacity-25"
             )}
           >
             <ChevronRight
               onClick={() => {
-                if (currentPage == totalPages) {
+                if (currentPage == totalPages || isCurrentlyLoading) {
                   return;
                 }
-                setNextPage(currentPage + 1);
+                return setNextPage(currentPage + 1);
               }}
             />
           </button>
@@ -120,14 +127,15 @@ export const Pagination = ({
             "m-2 flex h-10 w-10 items-center justify-center rounded-full leading-tight",
             "bg-transparent text-sera-jet",
             currentPage != 1
-              ? "hover:text-sera- cursor-pointer hover:bg-sera-periwinkle"
-              : "opacity-25"
+              ? " cursor-pointer hover:bg-sera-periwinkle"
+              : "opacity-25",
+            isCurrentlyLoading && "!cursor-wait !opacity-25"
           )}
           onClick={() => {
-            if (currentPage == 1) {
+            if (currentPage == 1 || isCurrentlyLoading) {
               return;
             }
-            setNextPage(currentPage - 1);
+            return setNextPage(currentPage - 1);
           }}
         >
           <ChevronLeft />
@@ -147,9 +155,13 @@ export const Pagination = ({
                 "m-2 flex h-10 w-10 items-center justify-center rounded-full leading-tight",
                 currentPage === pageInINT
                   ? "bg-sera-jet text-sera-periwinkle hover:bg-sera-periwinkle hover:text-sera-jet"
-                  : "bg-transparent text-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet"
+                  : "bg-transparent text-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet",
+                isCurrentlyLoading && "!cursor-wait !opacity-25"
               )}
-              onClick={() => setNextPage(pageInINT)}
+              onClick={() => {
+                if (!isCurrentlyLoading) return setNextPage(pageInINT);
+                return;
+              }}
             >
               {page}
             </button>
@@ -166,13 +178,14 @@ export const Pagination = ({
             "bg-transparent text-sera-jet",
             currentPage != totalPages
               ? "cursor-pointer hover:bg-sera-periwinkle hover:text-sera-jet"
-              : "opacity-25"
+              : "opacity-25",
+            isCurrentlyLoading && "!cursor-wait !opacity-25"
           )}
           onClick={() => {
-            if (currentPage == totalPages) {
+            if (currentPage == totalPages || isCurrentlyLoading) {
               return;
             }
-            setNextPage(currentPage + 1);
+            return setNextPage(currentPage + 1);
           }}
         >
           <ChevronRight />
