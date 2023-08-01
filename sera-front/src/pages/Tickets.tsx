@@ -285,6 +285,7 @@ export const Tickets = () => {
         totalPages={totalPages}
         currentPage={currentPage}
         setNextPage={setPage}
+        isCurrentlyLoading={isLoading}
       />
 
       {!isLoading && (

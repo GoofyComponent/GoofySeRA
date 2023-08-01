@@ -40,23 +40,26 @@ export const Project = () => {
     <>
       <div>
         {!isLoading ? (
-          <div className="m-10 pt-2 ">
-            <div className="flex items-center">
-              <Link to="..">
-                <ChevronLeft
-                  size={48}
-                  className="mr-2 rounded-full bg-sera-periwinkle duration-200 ease-in-out hover:scale-105"
-                />
-              </Link>
+          <>
+            <div className="m-6 flex items-center">
+              <Button variant="title" size="title" className="mr-4" asChild>
+                <Link
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  to={-1}
+                >
+                  <ChevronLeft size={50} strokeWidth={3} />
+                </Link>
+              </Button>
               <span className="ml-4 text-4xl">Projet</span>
               <ChevronRight size={48} className="ml-2" />
               <h3 className="text-4xl font-bold">{projectData.title}</h3>
             </div>
-            <div className="mt-10">
+            <div className="mx-6 mt-10">
               <h3 className="text-4xl">Description :</h3>
               <p className="mt-2 text-xl">{projectData.description}</p>
             </div>
-            <div className="mt-10">
+            <div className="mx-6 mt-10">
               <div className="flex items-center justify-between">
                 <h3 className="text-4xl">Shared ressources :</h3>
                 <Dialog>
@@ -100,7 +103,7 @@ export const Project = () => {
               ))}
             </div> */}
             </div>
-          </div>
+          </>
         ) : (
           <BigLoader
             loaderSize={42}
