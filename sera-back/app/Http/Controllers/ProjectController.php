@@ -17,7 +17,7 @@ class ProjectController extends Controller
      *     summary="Get all projects",
      *     description="Get all projects",
      *     operationId="getProjects",
-     *     tags={"projects"},
+     *     tags={"Projects"},
      *     @OA\Parameter(
      *         description="Number of items per page",
      *         in="query",
@@ -37,6 +37,15 @@ class ProjectController extends Controller
      *             type="string",
      *             default="asc"
      *         )
+     *     ),
+     *    @OA\Parameter(
+     *       description="Filter by status",
+     *       in="query",
+     *       name="status",
+     *       required=false,
+     *       @OA\Schema(
+     *          type="string",
+     *      )
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -58,6 +67,7 @@ class ProjectController extends Controller
         $request->validate([
             'maxPerPage' => 'integer',
             'sort' => 'string|in:asc,desc',
+            'status' => 'string|in:ongoing,completed,cancelled',
         ]);
 
         $maxPerPage = $request->input('maxPerPage', 10);
@@ -67,9 +77,15 @@ class ProjectController extends Controller
             throw new \Exception('Invalid sort parameter. Only "asc" or "desc" allowed.');
         }
 
+
         $query = Project::with('Team.users');
 
         $query->orderBy('updated_at', $sort);
+
+        // Filter by status
+        if ($request->has('status')) {
+            $query->where('status', $request->input('status'));
+        }
 
         $projects = $query->paginate($maxPerPage);
 
@@ -90,7 +106,7 @@ class ProjectController extends Controller
      *   summary="Create a project",
      *   description="Create a project",
      *   operationId="createProject",
-     *   tags={"projects"},
+     *   tags={"Projects"},
      *   @OA\RequestBody(
      *     @OA\MediaType(
      *       mediaType="application/json",
@@ -188,7 +204,7 @@ class ProjectController extends Controller
      *     summary="Get a project",
      *     description="Get a project",
      *     operationId="getProject",
-     *     tags={"projects"},
+     *     tags={"Projects"},
      *     @OA\Parameter(
      *         description="ID of project to return",
      *         in="path",
@@ -267,7 +283,7 @@ class ProjectController extends Controller
      *     summary="Update a project",
      *     description="Update a project",
      *     operationId="updateProject",
-     *     tags={"projects"},
+     *     tags={"Projects"},
      *     @OA\Parameter(
      *         description="ID of project to update",
      *         in="path",
@@ -397,7 +413,7 @@ class ProjectController extends Controller
      *     summary="Delete a project",
      *     description="Delete a project",
      *     operationId="deleteProject",
-     *     tags={"projects"},
+     *     tags={"Projects"},
      *     @OA\Parameter(
      *         description="ID of project to delete",
      *         in="path",
