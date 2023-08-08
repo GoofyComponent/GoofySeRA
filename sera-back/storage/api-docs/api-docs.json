@@ -1543,6 +1543,212 @@
                 }
             }
         },
+        "/api/projects/steps/set-date": {
+            "post": {
+                "tags": [
+                    "Step"
+                ],
+                "summary": "Set date to a step",
+                "description": "Set date to a step",
+                "operationId": "SetDateToAStep",
+                "requestBody": {
+                    "description": "Set date to a step",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "project_id",
+                                    "step",
+                                    "start_date",
+                                    "end_date"
+                                ],
+                                "properties": {
+                                    "project_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "step": {
+                                        "type": "string",
+                                        "example": "Capture"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "example": "2021-05-05"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "example": "2021-05-05"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Project",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Project title"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Project description"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "ongoing"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        },
+                                        "project_request_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Project not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects/steps/update-date'": {
+            "post": {
+                "tags": [
+                    "Step"
+                ],
+                "summary": "Update date to a step",
+                "description": "Update date to a step",
+                "operationId": "UpdateDateToAStep",
+                "requestBody": {
+                    "description": "Update date to a step",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "project_id",
+                                    "step",
+                                    "start_date",
+                                    "end_date"
+                                ],
+                                "properties": {
+                                    "project_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "step": {
+                                        "type": "string",
+                                        "example": "Capture"
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "example": "2021-05-05"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "example": "2021-05-05"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Project",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Project title"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Project description"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "ongoing"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        },
+                                        "project_request_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Project not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/teams": {
             "get": {
                 "tags": [
