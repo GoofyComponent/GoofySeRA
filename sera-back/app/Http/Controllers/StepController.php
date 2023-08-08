@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Models\ProjectRequest;
-use App\Models\Project;
 
 class StepController extends Controller
 {
@@ -183,5 +184,155 @@ class StepController extends Controller
         }
 
         return response()->json($steps->$stepParam, 200);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/projects/steps/set-date",
+     *     tags={"Step"},
+     *     summary="Set date to a step",
+     *     description="Set date to a step",
+     *     operationId="SetDateToAStep",
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Set date to a step",
+     *         @OA\JsonContent(
+     *             required={"project_id", "step", "start_date", "end_date"},
+     *             @OA\Property(property="project_id", type="integer", example="1"),
+     *             @OA\Property(property="step", type="string", example="Capture"),
+     *             @OA\Property(property="start_date", type="string", example="2021-05-05"),
+     *             @OA\Property(property="end_date", type="string", example="2021-05-05"),
+     *         ),
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Project",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="title", type="string", example="Project title"),
+     *             @OA\Property(property="description", type="string", example="Project description"),
+     *             @OA\Property(property="status", type="string", example="ongoing"),
+     *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+     *             @OA\Property(property="project_request_id", type="integer", example="1"),
+     *         ),
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=404,
+     *         description="Project not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Project not found."),
+     *         ),
+     *     ),
+     * )
+     */
+    public function setDateToAStep(Request $request){
+
+        $validatedData = $request->validate([
+            'project_id' => 'required|integer',
+            'step' => 'required|string|in:' . implode(',', array_keys(config('steps'))),
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+        ]);
+
+        $project = Project::find($validatedData['project_id']);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        $startDate = Carbon::parse($validatedData['start_date']);
+        $endDate = Carbon::parse($validatedData['end_date']);
+
+        $steps->{$validatedData['step']}->start_date = $startDate->toDateString();
+        $steps->{$validatedData['step']}->end_date = $endDate->toDateString();
+
+
+        $project->steps = json_encode($steps);
+        $project->save();
+
+        return response()->json($project, 200);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/projects/steps/update-date'",
+     *     tags={"Step"},
+     *     summary="Update date to a step",
+     *     description="Update date to a step",
+     *     operationId="UpdateDateToAStep",
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Update date to a step",
+     *         @OA\JsonContent(
+     *             required={"project_id", "step", "start_date", "end_date"},
+     *             @OA\Property(property="project_id", type="integer", example="1"),
+     *             @OA\Property(property="step", type="string", example="Capture"),
+     *             @OA\Property(property="start_date", type="string", example="2021-05-05"),
+     *             @OA\Property(property="end_date", type="string", example="2021-05-05"),
+     *         ),
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Project",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="title", type="string", example="Project title"),
+     *             @OA\Property(property="description", type="string", example="Project description"),
+     *             @OA\Property(property="status", type="string", example="ongoing"),
+     *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+     *             @OA\Property(property="project_request_id", type="integer", example="1"),
+     *         ),
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=404,
+     *         description="Project not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Project not found."),
+     *         ),
+     *     ),
+     * )
+     *
+     */
+    public function updateDateToAStep(Request $request){
+
+        $validatedData = $request->validate([
+            'project_id' => 'required|integer',
+            'step' => 'required|string|in:' . implode(',', array_keys(config('steps'))),
+            'start_date' => 'date',
+            'end_date' => 'date',
+        ]);
+
+        $project = Project::find($validatedData['project_id']);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        if($validatedData['start_date'] !== null){
+            $startDate = Carbon::parse($validatedData['start_date']);
+            $steps->{$validatedData['step']}->start_date = $startDate->toDateString();
+        }
+
+        if($validatedData['end_date'] !== null){
+            $endDate = Carbon::parse($validatedData['end_date']);
+            $steps->{$validatedData['step']}->end_date = $endDate->toDateString();
+        }
+
+        $project->steps = json_encode($steps);
+        $project->save();
+
+        return response()->json($project, 200);
     }
 }
