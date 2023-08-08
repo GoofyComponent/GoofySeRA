@@ -189,6 +189,7 @@ class ProjectController extends Controller
         $project->title = $validated['title'];
         $project->description = $validated['description'];
         $project->colors = json_encode(ColorHelper::prettyHexadecimal(150));
+        $project->steps = json_encode(config('steps'));
         $project->save();
 
         $team = new Team();
