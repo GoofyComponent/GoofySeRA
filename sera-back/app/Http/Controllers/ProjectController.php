@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Team;
 use App\Models\Project;
 use Illuminate\Support\Js;
+use App\Helpers\ColorHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Helpers\ColorHelper;
 
 class ProjectController extends Controller
 {
@@ -93,8 +94,29 @@ class ProjectController extends Controller
             throw new \Exception('No projects found.');
         }
 
+
+
         foreach ($projects as $project) {
             $project->colors = json_decode($project->colors, true);
+
+            // We get steps. Each step has start_date and end_date
+            // Set project start_date and end_date properties with the oldest and the newest date
+            $steps = json_decode($project->steps);
+            $project->start_date = null;
+            $project->end_date = null;
+
+            foreach ($steps as $step) {
+                $start_date = Carbon::parse($step->start_date);
+                $end_date = Carbon::parse($step->end_date);
+
+                if ($project->start_date === null || $start_date->lt($project->start_date)) {
+                    $project->start_date = $start_date;
+                }
+                if ($project->end_date === null || $end_date->gt($project->end_date)) {
+                    $project->end_date = $end_date;
+                }
+            }
+
         }
 
         return $projects;
@@ -275,6 +297,23 @@ class ProjectController extends Controller
         }
 
         $project->colors = json_decode($project->colors, true);
+        // We get steps. Each step has start_date and end_date
+        // Set project start_date and end_date properties with the oldest and the newest date
+        $steps = json_decode($project->steps);
+        $project->start_date = null;
+        $project->end_date = null;
+
+        foreach ($steps as $step) {
+            $start_date = Carbon::parse($step->start_date);
+            $end_date = Carbon::parse($step->end_date);
+
+            if ($project->start_date === null || $start_date->lt($project->start_date)) {
+                $project->start_date = $start_date;
+            }
+            if ($project->end_date === null || $end_date->gt($project->end_date)) {
+                $project->end_date = $end_date;
+            }
+        }
 
         return $project;
     }
