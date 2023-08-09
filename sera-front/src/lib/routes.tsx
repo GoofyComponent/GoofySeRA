@@ -4,6 +4,7 @@ import App from "@/pages/App";
 import { Capture } from "@/pages/Capture";
 import { Error404 } from "@/pages/Error404";
 import { Home } from "@/pages/Home";
+import { Knowledge } from "@/pages/Knowledge";
 import { Login } from "@/pages/Login";
 import { Logout } from "@/pages/Logout";
 import { Planning } from "@/pages/Planning";
@@ -107,6 +108,10 @@ const paths = [
       {
         path: "projects/:ProjectId",
         element: <Project />,
+      },
+      {
+        path: "edito/knowledge-base",
+        element: <Knowledge />,
       },
       {
         path: "projects/:ProjectId/prepare",
