@@ -17,7 +17,7 @@ export const RecentTicketTable = () => {
   });
 
   return (
-    <div className="m-6 overflow-hidden rounded-lg bg-[#F2F1F6] pt-2">
+    <div className="m-6 overflow-hidden rounded-lg bg-sera-grey-bg pt-2">
       <div className="flex justify-between py-2">
         <h2 className="mb-2 px-4 text-4xl font-semibold text-sera-jet">
           Recent Tickets{" "}

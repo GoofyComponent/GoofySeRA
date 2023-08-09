@@ -39,3 +39,14 @@ export const formatDate = (timestamp: string) => {
   const dateFormatee = `${jour} ${mois} ${annee} - ${heure}:${minute}`;
   return dateFormatee;
 };
+
+export const selectRoleDisplay = (role: string) => {
+  switch (role) {
+    case "cursus_director":
+      return "Cursus Director";
+      break;
+    default:
+      return "Visitor";
+      break;
+  }
+};
