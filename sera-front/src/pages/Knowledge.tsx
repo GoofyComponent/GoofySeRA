@@ -1,311 +1,113 @@
-import { Label } from "@radix-ui/react-label";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import clsx from "clsx";
+import { useState } from "react";
 
-import { KnowledgeTable } from "@/components/app/knowledge/KnowledgeTable";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export const Knowledge = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { dataId } = useParams<{ dataId: string }>();
-
   const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
-
-  useEffect(() => {
-    console.log(dataId);
-    if (searchParams.get("action") === "add") {
-      console.log("add");
-      setTicketDialogOpen(true);
-    }
-    if (searchParams.get("action") === "infos") {
-      console.log("infos");
-      setTicketDialogOpen(true);
-    }
-    if (searchParams.get("action") === "edit") {
-      console.log("edit");
-      setTicketDialogOpen(true);
-    }
-    if (searchParams.get("action") === "delete") {
-      console.log("delete");
-      setTicketDialogOpen(true);
-    }
-  }, [dataId]);
 
   return (
     <>
       <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
-        <div className="flex">
-          <h2>Knowledge base</h2>
-          <Button
-            onClick={() => {
-              navigate("/dashboard/knowledge?action=add");
-              setTicketDialogOpen(true);
-            }}
-            className="ml-4 mt-1 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          >
-            Create a new data
-          </Button>
-        </div>
+        <h2>Knowledge base</h2>
 
         <div className="flex justify-start">
-          <Input
-            className="mr-2 w-[360px]"
-            type="text"
-            placeholder="Search in the database"
-            value={"searchInput"}
-            onChange={(e) => {
-              console.log(e.target.value);
-              /* const inputValue = e.target.value;
-              setSearchInput(inputValue);
-              if (inputValue.trim() === "") {
-                refetchUsers(users);
-              } */
+          <Dialog
+            onOpenChange={() => {
+              setTicketDialogOpen(!ticketDialogOpen);
             }}
-          />
-          <Button
-            onClick={() => console.log("") /* refetchUsers(users) */}
-            className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            open={ticketDialogOpen}
           >
-            Search
-          </Button>
+            <Button
+              onClick={() => setTicketDialogOpen(true)}
+              className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            >
+              Create a new data
+            </Button>
+            <DialogContent>
+              <p>aaaaaaaaaaaaaaaaaaa</p>
+            </DialogContent>
+          </Dialog>
+          <Input
+            type="text"
+            placeholder="Search a data"
+            className="ml-4 w-60"
+          />
         </div>
       </div>
-      <KnowledgeTable datas={fakeData} />
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-sera-periwinkle/50 hover:odd:bg-sera-periwinkle/50 ">
+            <TableHead className="text-xl font-semibold text-sera-jet">
+              Name
+            </TableHead>
+            <TableHead className="text-xl font-semibold text-sera-jet">
+              Biography
+            </TableHead>
+            <TableHead className="text-xl font-semibold text-sera-jet">
+              Type
+            </TableHead>
+            <TableHead className="text-right text-xl font-semibold text-sera-jet">
+              Action
+            </TableHead>
+          </TableRow>
+        </TableHeader>
 
-      <Dialog
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            navigate("/dashboard/knowledge");
-          }
-          setTicketDialogOpen(!ticketDialogOpen);
-        }}
-        open={ticketDialogOpen}
-      >
-        {searchParams.get("action") === "add" && AddKnowledgeModal()}
-        {searchParams.get("action") === "infos" && ViewKnowledgeModal()}
-        {searchParams.get("action") === "edit" && EditKnowledgeModal()}
-        {searchParams.get("action") === "delete" && DeleteKnowledgeModal()}
-      </Dialog>
+        <TableBody>
+          {fakeData.map((data) => (
+            <TableRow
+              key={data.name}
+              className="odd:bg-sera-periwinkle/25 even:bg-sera-periwinkle/50 hover:odd:bg-sera-periwinkle/25 hover:even:bg-sera-periwinkle/50"
+            >
+              <TableCell
+                className={clsx(
+                  " text-base text-black",
+                  data.image && "my-4 flex justify-start"
+                )}
+              >
+                {data.image && (
+                  <Avatar className="my-auto mr-4">
+                    <AvatarImage src={data.image} />
+                  </Avatar>
+                )}
+                <p className="my-auto w-12 truncate md:w-80">{data.name}</p>
+              </TableCell>
+              <TableCell className="text-base text-black">
+                <p className="line-clamp-4 w-12 md:w-80">{data.biography}</p>
+              </TableCell>
+              <TableCell className="text-base text-black">
+                <p className="w-12 truncate md:w-80">{data.type}</p>
+              </TableCell>
+              <TableCell className="text-right">
+                <Button
+                  className="bg-sera-periwinkle text-sera-jet hover:bg-sera-jet hover:text-sera-periwinkle"
+                  onClick={() => setTicketDialogOpen(true)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  className="bg-sera-periwinkle text-sera-jet hover:bg-sera-jet hover:text-sera-periwinkle"
+                  onClick={() => setTicketDialogOpen(true)}
+                >
+                  Delete
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </>
-  );
-};
-
-const AddKnowledgeModal = () => {
-  return (
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Create a new info ?</DialogTitle>
-        <DialogDescription>
-          <p>
-            You are about to create a new info. Please fill in the following
-            fields.
-          </p>
-        </DialogDescription>
-      </DialogHeader>
-      <div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2" htmlFor="name">
-            Name
-          </Label>
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            value={""}
-            placeholder={"Name"}
-            className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
-          />
-        </div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2" htmlFor="infos">
-            Infos
-          </Label>
-          <Textarea
-            id="infos"
-            value={""}
-            placeholder={"Infos"}
-            className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
-          />
-        </div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2" htmlFor="type">
-            Type
-          </Label>
-          <p>Select</p>
-        </div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2" htmlFor="image">
-            Image (optional)
-          </Label>
-          <Input
-            type="file"
-            id="image"
-            className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
-          />
-        </div>
-        <Button
-          className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          onClick={() => console.log("")}
-        >
-          Create
-        </Button>
-      </div>
-    </DialogContent>
-  );
-};
-
-const ViewKnowledgeModal = () => {
-  return (
-    <DialogContent className="w-1/2">
-      <DialogHeader>
-        <DialogTitle>Data Name</DialogTitle>
-        <DialogDescription>
-          <p>Type</p>
-        </DialogDescription>
-      </DialogHeader>
-      <div className="flex">
-        <img
-          className="mr-2 w-1/2 rounded-lg"
-          src="https://source.unsplash.com/random"
-        />
-        <div className="ml-2 max-h-[40em] w-1/2 overflow-auto">
-          <p className="text-xl font-semibold text-sera-jet">Infos</p>
-          <p className="text-base text-sera-jet">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-            maximus, mauris ut aliquam ultrices, rLorem ipsum dolor sit amet,
-            consectetur adipiscing elit. Donec maximus, mauris ut aliquam
-            ultrices, rLorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec maximus, mauris ut aliquam ultrices, rLorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Donec maximus, mauris ut aliquam
-            {/*  ultrices, rLorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec maximus, mauris ut aliquam ultrices, rLorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Donec maximus, mauris ut aliquam
-            ultrices, rLorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec maximus, mauris ut aliquam ultrices, ronec maximus, mauris ut
-            aliquam ultrices, rLorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Donec maximus, mauris ut aliquam ultrices, rLorem
-            ipsum dolor sit amet, consectetur adipiscing elit. Donec maximus,
-            mauris ut aliquam ultrices, ronec maximus, mauris ut aliquam
-            ultrices, rLorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec maximus, mauris ut aliquam ultrices, rLorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Donec maximus, mauris ut aliquam
-            ultrices, r */}
-          </p>
-        </div>
-      </div>
-      <Button
-        className="mx-2 border-2 border-black bg-white text-black transition-all hover:bg-white hover:text-black hover:opacity-25"
-        onClick={() => console.log("")}
-      >
-        Close
-      </Button>
-    </DialogContent>
-  );
-};
-
-const EditKnowledgeModal = () => {
-  return (
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Update - [infosname] ?</DialogTitle>
-      </DialogHeader>
-      <div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2" htmlFor="name">
-            Name
-          </Label>
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            value={""}
-            placeholder={"Name"}
-            className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
-          />
-        </div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2" htmlFor="infos">
-            Infos
-          </Label>
-          <Textarea
-            id="infos"
-            value={""}
-            placeholder={"Infos"}
-            className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
-          />
-        </div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2" htmlFor="type">
-            Type
-          </Label>
-          <p>Select</p>
-        </div>
-        <div className="mb-4 flex flex-col">
-          <Label className="mb-2" htmlFor="image">
-            Image (optional)
-          </Label>
-          <Input
-            type="file"
-            id="image"
-            className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
-          />
-        </div>
-        <Button
-          className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          onClick={() => {
-            console.log("");
-          }}
-        >
-          Create
-        </Button>
-      </div>
-    </DialogContent>
-  );
-};
-
-const DeleteKnowledgeModal = () => {
-  return (
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Delete - [Dataname] ?</DialogTitle>
-        <DialogDescription>
-          <p>You are about to delete the data [Dataname].</p>
-          <p>This action is irreversible.</p>
-        </DialogDescription>
-      </DialogHeader>
-      <div className="flex justify-end">
-        <Button
-          className="mx-2 border-2 border-black bg-white text-black transition-all hover:bg-white hover:text-black hover:opacity-25"
-          onClick={() => {}}
-        >
-          Cancel
-        </Button>
-        <Button
-          className="mx-2 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          onClick={() => {
-            console.log("");
-          }}
-        >
-          Delete
-        </Button>
-      </div>
-    </DialogContent>
   );
 };
 

@@ -136,6 +136,10 @@ const paths = [
       },
 
       {
+        path: "edito/knowledge-base",
+        element: <Knowledge />,
+      },
+      {
         path: "projects/:ProjectId/prepare",
         element: <Planning />,
       },
