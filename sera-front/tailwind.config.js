@@ -20,6 +20,7 @@ module.exports = {
         "sera-jet": "#413B41",
         "sera-periwinkle": "#E5D1FF",
         "sera-tertiary": "#000000",
+        "sera-grey-bg": "#F2F1F6",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

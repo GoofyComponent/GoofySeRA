@@ -34,7 +34,7 @@ const RecentProjects = () => {
   });
 
   return (
-    <div className="m-6 rounded-lg bg-[#F2F1F6] px-4 pb-4 pt-2">
+    <div className="m-6 rounded-lg bg-sera-grey-bg px-4 pb-4 pt-2">
       <h2 className="mb-2 text-4xl font-semibold text-sera-jet">
         Recent Projects{" "}
         {!isLoading
