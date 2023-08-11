@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -13,32 +15,104 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { updateInfos } from "@/helpers/slices/UserSlice";
+import { axios } from "@/lib/axios";
 
 const FormSchema = z.object({
-  lastname: z.string().min(2, {
-    message: "Your lastname must be at least 2 characters.",
-  }),
-  firstname: z.string().min(2, {
-    message: "Your firstname must be at least 2 characters.",
-  }),
-  email: z.string().email({ message: "Invalid email address" }),
+  lastname: z
+    .string()
+    .min(5, {
+      message: "Your lastname must be at least 5 characters.",
+    })
+    .optional(),
+  firstname: z
+    .string()
+    .min(5, {
+      message: "Your firstname must be at least 5 characters.",
+    })
+    .optional(),
+  email: z.string().email({ message: "Invalid email address" }).optional(),
 });
 
 export const UserForm = () => {
   const oldUserData = useSelector((state: any) => state.user.infos);
+  const dispatch = useDispatch();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      lastname: oldUserData.lastname,
-      firstname: oldUserData.firstname,
-      email: oldUserData.email,
+      lastname: undefined,
+      firstname: undefined,
+      email: undefined,
     },
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log("Change users infos submitted", data);
+    if (
+      data.lastname === oldUserData.lastname &&
+      data.firstname === oldUserData.firstname &&
+      data.email === oldUserData.email
+    ) {
+      toast({
+        title: "No change",
+        description: `You entered the same infos as before. Please change at least one field.`,
+      });
+      return;
+    }
+
+    if (!data.lastname && !data.firstname && !data.email) {
+      toast({
+        title: "Wrong inputs",
+        description: `Please change at least one field.`,
+      });
+      return;
+    }
+
+    return updateUserData.mutate(data);
   };
+
+  const updateUserData = useMutation({
+    mutationFn: async (data: {
+      lastname?: string;
+      firstname?: string;
+      email?: string;
+    }) => {
+      const formData = new URLSearchParams();
+
+      if (data.lastname) formData.append("lastname", data.lastname);
+      if (data.firstname) formData.append("firstname", data.firstname);
+      if (data.email) formData.append("email", data.email);
+
+      if (formData.toString() === "") throw new Error("No data to update");
+
+      return await axios.put(`/api/users/${oldUserData.id}`, formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+    },
+    onSuccess: (response: any) => {
+      if (response && response.data) {
+        dispatch(updateInfos(response.data));
+
+        toast({
+          title: "Success !",
+          description: `Your infos have been correctly updated.`,
+        });
+      }
+
+      return;
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      toast({
+        title: "Were unable to update your infos at the moment",
+        description: `Please try again later.`,
+      });
+    },
+  });
 
   return (
     <Form {...form}>
@@ -53,7 +127,11 @@ export const UserForm = () => {
             <FormItem>
               <FormLabel className="text-lg">Lastname</FormLabel>
               <FormControl>
-                <Input {...field} className="border border-sera-jet text-lg" />
+                <Input
+                  {...field}
+                  className="border border-sera-jet text-lg"
+                  placeholder={oldUserData.lastname}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -66,7 +144,11 @@ export const UserForm = () => {
             <FormItem>
               <FormLabel className="text-lg">Firstname</FormLabel>
               <FormControl>
-                <Input {...field} className="border border-sera-jet text-lg" />
+                <Input
+                  {...field}
+                  className="border border-sera-jet text-lg"
+                  placeholder={oldUserData.firstname}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -79,7 +161,11 @@ export const UserForm = () => {
             <FormItem>
               <FormLabel className="text-lg">Email</FormLabel>
               <FormControl>
-                <Input {...field} className="border border-sera-jet text-lg" />
+                <Input
+                  {...field}
+                  className="border border-sera-jet text-lg"
+                  placeholder={oldUserData.email}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,8 +174,13 @@ export const UserForm = () => {
         <Button
           type="submit"
           className="ml-auto flex border-2 bg-sera-jet text-base text-sera-periwinkle hover:border-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet md:w-1/12"
+          disabled={updateUserData.isLoading || !form.formState.isValid}
         >
-          Save
+          {updateUserData.isLoading ? (
+            <Loader2 className={`m-auto animate-spin`} size={12} />
+          ) : (
+            "Save"
+          )}
         </Button>
       </form>
     </Form>

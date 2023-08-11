@@ -1,6 +1,7 @@
 import Axios from "axios";
 import Cookies from "universal-cookie";
 
+import { toast } from "@/components/ui/use-toast";
 import { reset } from "@/helpers/slices/AppSlice";
 import store from "@/helpers/store";
 
@@ -44,8 +45,13 @@ axios.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.message) {
-      store.dispatch(reset());
-      router.navigate("/login");
+      /* store.dispatch(reset());
+      router.navigate("/login"); */
+
+      toast({
+        title: "Were unable to contact our services for the moment.",
+        description: `Please try again later. ${error} ${error.message}`,
+      });
     }
 
     if (
