@@ -9,6 +9,7 @@ import { Projects } from "@/pages/Projects";
 import { Rooms } from "@/pages/Rooms";
 import { Tickets } from "@/pages/Tickets";
 import { Users } from "@/pages/Users";
+import { VideoReview } from "@/pages/VideoReview";
 
 import App from "../pages/App";
 import { Login } from "../pages/Login";
@@ -91,6 +92,10 @@ const paths = [
       {
         path: "projects/:ProjectId/planification",
         element: <Planification />,
+      },
+      {
+        path: "projects/:ProjectId/video-review",
+        element: <VideoReview />,
       },
       {
         path: "profile",
