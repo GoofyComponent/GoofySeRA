@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ChatContainer } from "@/components/app/videoReview/ChatContainer";
@@ -10,6 +10,7 @@ import mockVideoReview from "@/helpers/fakeData/mockVideoReview.json";
 
 export const VideoReview = () => {
   const [activeVersion, setActiveVersion] = useState(mockVideoReview[0]);
+  const plyrRef = useRef(null);
 
   useEffect(() => {
     console.log(activeVersion);
@@ -38,10 +39,10 @@ export const VideoReview = () => {
           setActiveVersion={setActiveVersion}
         />
 
-        <PlyrSection videoData={activeVersion.video} />
+        <PlyrSection videoData={activeVersion.video} plyrRef={plyrRef} />
       </section>
       <section className="my-2 ml-4 min-h-full w-1/3 rounded-l-3xl bg-sera-periwinkle/40 py-3">
-        <ChatContainer chatData={activeVersion.comments} />
+        <ChatContainer chatData={activeVersion.comments} plyrRef={plyrRef} />
       </section>
     </div>
   );

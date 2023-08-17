@@ -1,13 +1,22 @@
 import { Separator } from "@radix-ui/react-select";
 import { Clock, SendHorizontal } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { setPlayerMarkers } from "@/helpers/slices/VideoReviewSlice";
+import { videoTimeDeserializer, videoTimeSerializer } from "@/lib/utils";
 
-export const ChatContainer = ({ chatData }: any) => {
+export const ChatContainer = ({ chatData, plyrRef }: any) => {
+  const dispatch = useDispatch();
+  const [message, setMessage] = useState("");
   const messageContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    dispatch(setPlayerMarkers(chatData));
+  }, [chatData]);
 
   useEffect(
     () => {
@@ -20,6 +29,37 @@ export const ChatContainer = ({ chatData }: any) => {
       /* trigger */
     ]
   );
+
+  const setPlayerTime = (time: string) => {
+    console.log("◊time", time, videoTimeDeserializer(time));
+    plyrRef.current.plyr.currentTime = videoTimeDeserializer(time);
+  };
+
+  const messageSerializer = (message: string) => {
+    //When a [[]] is found, replace it by a real span tag
+
+    const regex = /\[\[(.*?)\]\]/g;
+    const matches = message.match(regex);
+
+    if (!matches) return message;
+
+    const newMessage = message.split(regex);
+
+    return newMessage.map((part, index) => {
+      if (index % 2 === 0) return part;
+
+      return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+        <span
+          key={index}
+          className="cursor-pointer select-none text-blue-600 hover:text-blue-400"
+          onClick={() => setPlayerTime(part)}
+        >
+          {part}
+        </span>
+      );
+    });
+  };
 
   return (
     <>
@@ -46,7 +86,10 @@ export const ChatContainer = ({ chatData }: any) => {
                 </p>
               </div>
 
-              <p className="w-full break-words text-sm">{message.message}</p>
+              <p className="w-full break-words text-sm">
+                {messageSerializer(message.message)}
+              </p>
+
               <Separator className="mt-2 bg-sera-jet text-sera-jet" />
             </div>
           </div>
@@ -57,7 +100,18 @@ export const ChatContainer = ({ chatData }: any) => {
         className="mx-auto w-11/12 rounded-xl bg-[#D9D9D9] p-2"
       >
         <div className="mb-2">
-          <Button variant="micro" size="micro">
+          <Button
+            variant="micro"
+            size="micro"
+            onClick={(e) => {
+              e.preventDefault();
+              setMessage(
+                `${message} [[${videoTimeSerializer(
+                  plyrRef.current.plyr.currentTime
+                )}]]`
+              );
+            }}
+          >
             <Clock className="mr-1" />
             <p className="ml-1 font-extralight italic">Time</p>
           </Button>
@@ -66,6 +120,8 @@ export const ChatContainer = ({ chatData }: any) => {
           <Textarea
             placeholder="Type your message here"
             className="mr-2 resize-none"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
           <Button className="mb-0 ml-2 mt-auto bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
             <SendHorizontal />

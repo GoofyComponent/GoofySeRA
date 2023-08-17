@@ -178,3 +178,29 @@ export const stepLinkExtractor = (step: number) => {
       break;
   }
 };
+
+export const videoTimeSerializer = (seconds: number) => {
+  //get rid of the decimal part
+  seconds = Math.floor(seconds);
+
+  //return the time as HH:MM:SS
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds - hours * 3600) / 60);
+  const sec = seconds - hours * 3600 - minutes * 60;
+
+  const hoursStr = hours < 10 ? "0" + hours : hours;
+  const minutesStr = minutes < 10 ? "0" + minutes : minutes;
+  const secStr = sec < 10 ? "0" + sec : sec;
+
+  return `${hoursStr}:${minutesStr}:${secStr}`;
+};
+
+export const videoTimeDeserializer = (time: string) => {
+  //return the time in seconds
+  const timeArray = time.split(":");
+  const hours = parseInt(timeArray[0]);
+  const minutes = parseInt(timeArray[1]);
+  const seconds = parseInt(timeArray[2]);
+
+  return hours * 3600 + minutes * 60 + seconds;
+};
