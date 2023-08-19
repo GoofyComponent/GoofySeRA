@@ -22,7 +22,6 @@ class SharedRessourceController extends Controller
         }
 
         $ressources = $project->ressources();
-
         return response()->json($ressources);
 
     }
@@ -55,9 +54,9 @@ class SharedRessourceController extends Controller
 
 
         $name = $request->name.'_'.$request->file->getClientOriginalName();
-        
+
         $name = strtolower(str_replace(' ', '', $name));
-        
+
         $path = $request->file->storeAs(
             'ressource/project_'.$project->id.'/'.$request->type,
             $name,
