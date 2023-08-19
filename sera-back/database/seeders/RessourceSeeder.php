@@ -14,5 +14,6 @@ class RessourceSeeder extends Seeder
     {
         // Create one ressource with name 'video' and one with name 'image'
 
+        \App\Models\Ressource::factory()->count(10)->create();
     }
 }
