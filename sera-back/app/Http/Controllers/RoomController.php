@@ -8,7 +8,44 @@ use Illuminate\Http\Request;
 class RoomController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/rooms",
+     *     summary="Get all rooms",
+     *     tags={"Rooms"},
+     *     @OA\Parameter(
+     *         description="Number of rooms per page",
+     *         in="query",
+     *         name="maxPerPage",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *             default=10
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         description="Sort rooms by updated_at",
+     *         in="query",
+     *         name="sort",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"asc", "desc"},
+     *             default="asc"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of rooms",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No rooms found",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid sort parameter. Only 'asc' or 'desc' allowed.",
+     *     ),
+     * )
      */
     public function index(Request $request)
     {
@@ -39,7 +76,35 @@ class RoomController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/rooms",
+     *     summary="Create a room",
+     *     tags={"Rooms"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Room data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Room 1"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Room created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="name", type="string", example="Room 1"),
+     *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="The name field is required."),
+     *         )
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -55,7 +120,37 @@ class RoomController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/rooms/{id}",
+     *     summary="Get a room",
+     *     tags={"Rooms"},
+     *     @OA\Parameter(
+     *         description="Room id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Room",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="name", type="string", example="Room 1"),
+     *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Room not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Room not found."),
+     *         )
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -68,8 +163,45 @@ class RoomController extends Controller
         return $room;
     }
 
-    /**
-     * Update the specified resource in storage.
+/**
+     * @OA\Put(
+     *     path="/api/rooms/{id}",
+     *     summary="Update a room",
+     *     tags={"Rooms"},
+     *     @OA\Parameter(
+     *         description="Room id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Room data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Room 1"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Room updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="name", type="string", example="Room 1"),
+     *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Room not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Room not found."),
+     *         )
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -90,7 +222,34 @@ class RoomController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/rooms/{id}",
+     *     summary="Delete a room",
+     *     tags={"Rooms"},
+     *     @OA\Parameter(
+     *         description="Room id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Room deleted",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="string", example="Room deleted."),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Room not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Room not found."),
+     *         )
+     *     )
+     * )
      */
     public function destroy($id)
     {
@@ -107,8 +266,55 @@ class RoomController extends Controller
 
 
     /**
-     * Reserve a room for a project.
+     * @OA\Post(
+     *     path="/api/rooms/{id}/reservations",
+     *     summary="Reserve a room",
+     *     tags={"Rooms"},
+     *     @OA\Parameter(
+     *         description="Room id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Reservation data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="project_id", type="integer", example="1"),
+     *             @OA\Property(property="date", type="string", example="2021-05-20"),
+     *             @OA\Property(property="start_time", type="string", example="14:00"),
+     *             @OA\Property(property="end_time", type="string", example="15:00"),
+     *             @OA\Property(property="title", type="string", example="Meeting"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Reservation created",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="project_id", type="integer", example="1"),
+     *             @OA\Property(property="room_id", type="integer", example="1"),
+     *             @OA\Property(property="date", type="string", example="2021-05-20"),
+     *             @OA\Property(property="start_time", type="string", example="14:00"),
+     *             @OA\Property(property="end_time", type="string", example="15:00"),
+     *             @OA\Property(property="title", type="string", example="Meeting"),
+     *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Room already reserved",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Room already reserved. Need to be 30 minutes before the end of the reservation to be able to reserve again."),
+     *         ),
+     *     ),
+     * )
      */
+
     public function reserve(Request $request, $id)
     {
         $validated = $request->validate([

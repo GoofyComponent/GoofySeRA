@@ -12,7 +12,53 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/users",
+     *     summary="Get a list of users",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="role",
+     *         in="query",
+     *         description="Filter by role",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="maxPerPage",
+     *         in="query",
+     *         description="Maximum number of users per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="sort",
+     *         in="query",
+     *         description="Sort by updated_at (asc or desc)",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of users",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid role or sort parameter",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index(Request $request)
     {
@@ -59,11 +105,79 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-
-
-
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/users/{id}",
+     *     summary="Get a user by id",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The id of the user",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="The user",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *             ),
+     *             @OA\Property(
+     *                 property="firstname",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="lastname",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="role",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="avatar_filename",
+     *                 type="string",
+     *                 nullable=true,
+     *             ),
+     *             @OA\Property(
+     *                 property="avatar_url",
+     *                 type="string",
+     *                 nullable=true,
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="string",
+     *                 format="date-time",
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="string",
+     *                 format="date-time",
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     * )
      */
     public function show($id)
     {
@@ -81,7 +195,114 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/users/{id}",
+     *     summary="Update a user",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The id of the user",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="password",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="firstname",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="lastname",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="role",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="The updated user",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *             ),
+     *             @OA\Property(
+     *                 property="firstname",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="lastname",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="role",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="avatar_filename",
+     *                 type="string",
+     *                 nullable=true,
+     *             ),
+     *             @OA\Property(
+     *                 property="avatar_url",
+     *                 type="string",
+     *                 nullable=true,
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="string",
+     *                 format="date-time",
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="string",
+     *                 format="date-time",
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid email, password, firstname, lastname or role",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -103,15 +324,43 @@ class UserController extends Controller
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
-
         $user->save();
 
         return response()->json($user, 200);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/users/{id}",
+     *     summary="Delete a user",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The id of the user",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User deleted",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     * )
      */
+
     public function destroy($id)
     {
         $user = User::find($id);
@@ -125,16 +374,200 @@ class UserController extends Controller
         return response()->json(['message' => 'User deleted.']);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/roles",
+     *     summary="Get a list of roles",
+     *     tags={"Users"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of roles",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="string",
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function getRoles(Request $request)
     {
         return response()->json(array_keys(config('roles')));
     }
 
+    /**
+     * @OA\Get(
+     *    path="/api/me",
+     *    summary="Get the authenticated user",
+     *    tags={"Users"},
+     *    @OA\Response(
+     *      response=200,
+     *      description="The authenticated user",
+     *      @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(
+     *              property="id",
+     *              type="integer",
+     *          ),
+     *          @OA\Property(
+     *              property="firstname",
+     *              type="string",
+     *          ),
+     *          @OA\Property(
+     *              property="lastname",
+     *              type="string",
+     *          ),
+     *          @OA\Property(
+     *              property="email",
+     *              type="string",
+     *          ),
+     *          @OA\Property(
+     *              property="role",
+     *              type="string",
+     *          ),
+     *          @OA\Property(
+     *              property="avatar_filename",
+     *              type="string",
+     *              nullable=true,
+     *          ),
+     *          @OA\Property(
+     *              property="avatar_url",
+     *              type="string",
+     *              nullable=true,
+     *          ),
+     *          @OA\Property(
+     *              property="created_at",
+     *              type="string",
+     *              format="date-time",
+     *          ),
+     *          @OA\Property(
+     *              property="updated_at",
+     *              type="string",
+     *              format="date-time",
+     *          ),
+     *      ),
+     *    ),
+     *    @OA\Response(
+     *      response=401,
+     *      description="Unauthenticated",
+     *      @OA\JsonContent(
+     *          type="object",
+     *          @OA\Property(
+     *              property="error",
+     *              type="string",
+     *          ),
+     *      ),
+     *    ),
+     * )
+     */
     public function getAuthenticatedUser(Request $request)
     {
-        return response()->json(Auth::user());
+        $user = Auth::user();
+        if ($user->avatar_filename !== null) {
+            $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
+        }
+        return response()->json($user);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/users/{id}/image",
+     *     summary="Upload an image for a user",
+     *     tags={"Users"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="The id of the user",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="image",
+     *                     type="string",
+     *                     format="binary",
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="The updated user",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *             ),
+     *             @OA\Property(
+     *                 property="firstname",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="lastname",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="role",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="avatar_filename",
+     *                 type="string",
+     *                 nullable=true,
+     *             ),
+     *             @OA\Property(
+     *                 property="avatar_url",
+     *                 type="string",
+     *                 nullable=true,
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="string",
+     *                 format="date-time",
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="string",
+     *                 format="date-time",
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid image",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     * )
+     */
     public function uploadImage(Request $request, $id)
     {
         $request->validate([

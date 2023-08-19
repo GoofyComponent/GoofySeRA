@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { Card } from "@/components/ui/card";
 import { axios } from "@/lib/axios";
+import { BigLoader } from "@/pages/skeletons/BigLoader";
 
 // interface Project {
 //   skeleton: false;
@@ -19,62 +19,72 @@ const RecentProjects = () => {
   const page = 1;
 
   const {
-    data: projectsData,
+    data: recentprojectsData,
     isLoading,
     // error,
     // isFetching,
   } = useQuery({
-    queryKey: ["projects", { page }],
+    queryKey: ["recentprojects", { page }],
     queryFn: async () => {
-      const projects = await axios.get(`api/projects?page=${page}`);
-
-      console.log("projects.projectsData", projects.data);
-
-      return projects.data;
+      const recentprojects = await axios.get(
+        `api/projects?page=${page}&sort=desc&maxPerPage=3`
+      );
+      return recentprojects.data;
     },
   });
 
-  useEffect(() => {
-    console.log("projectsData", projectsData);
-  }, [projectsData]);
-
   return (
-    <div className="m-10 rounded-lg bg-[#F2F1F6] p-10 pt-2">
-      <h2 className="mb-2 text-4xl font-bold">Recent Projects</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="m-6 rounded-lg bg-sera-grey-bg px-4 pb-4 pt-2">
+      <h2 className="mb-2 text-4xl font-semibold text-sera-jet">
+        Recent Projects{" "}
         {!isLoading
-          ? projectsData.data
-              .slice(-3)
-              .map(
-                (project: {
-                  id: string;
-                  skeleton: boolean;
-                  title: string;
-                  status: any;
-                  description: string;
-                  colors: string;
-                }) => (
-                  <Card
-                    key={project.id}
-                    skeleton={project.skeleton}
-                    id={project.id}
-                    title={project.title}
-                    status={project.status}
-                    description={project.description}
-                    colors={project.colors}
-                  />
-                )
-              )
+          ? recentprojectsData.data && (
+              <span className="text-sm font-normal italic">
+                This is the last 3 recent projects
+              </span>
+            )
           : null}
-        <Link to={"projects"}>
-          <div className="h-[150px] overflow-hidden  text-ellipsis rounded-lg border-2 bg-sera-jet bg-cover bg-center p-3 text-white duration-300 ease-in-out hover:scale-105 ">
-            <div className="flex items-center justify-between text-xl">
-              <span>See more...</span>
+      </h2>
+      {!isLoading ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {recentprojectsData.data.map(
+            (project: {
+              id: string;
+              skeleton: boolean;
+              title: string;
+              status: any;
+              description: string;
+              colors: string;
+            }) => (
+              <Card
+                key={project.id}
+                skeleton={project.skeleton}
+                id={project.id}
+                title={project.title}
+                status={project.status}
+                description={project.description}
+                colors={project.colors}
+              />
+            )
+          )}
+          <Link to={"projects"}>
+            <div className="h-[150px] overflow-hidden  text-ellipsis rounded-lg border-2 bg-sera-jet bg-cover bg-center p-3 text-white duration-300 ease-in-out hover:scale-105 ">
+              <div className="flex items-center justify-between text-xl">
+                <span>See more...</span>
+              </div>
+              <p className="pt-8">There is XX another projects</p>
             </div>
-            <p className="pt-8">There is XX another projects</p>
-          </div>
-        </Link>
-      </div>
+          </Link>
+        </div>
+      ) : (
+        <div className="flex max-h-[9em] w-full items-center">
+          <BigLoader
+            loaderSize={42}
+            bgColor="transparent"
+            textColor="sera-jet"
+          />
+        </div>
+      )}
     </div>
   );
 };

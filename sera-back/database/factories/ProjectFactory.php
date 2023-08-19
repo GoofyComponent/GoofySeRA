@@ -20,6 +20,7 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         $statusArray = ["ongoing", "completed", "cancelled"];
+        $defaultSteps = config('steps');
         $projectRequest = ProjectRequest::factory()->create();
         return [
             'project_request_id' => $projectRequest->id,
@@ -29,6 +30,7 @@ class ProjectFactory extends Factory
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
             'end_date' => Carbon::now()->addDays(2)->format('Y-m-d'),
             'colors' => json_encode(ColorHelper::prettyHexadecimal(150)),
+            'steps' => json_encode($defaultSteps),
         ];
     }
 }

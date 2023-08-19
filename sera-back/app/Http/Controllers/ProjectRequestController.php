@@ -8,7 +8,78 @@ use App\Models\ProjectRequest;
 class ProjectRequestController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/projects-requests",
+     *     summary="Get all project requests",
+     *     tags={"Project Requests"},
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Filter by status",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"pending", "accepted", "rejected"}
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="priority",
+     *         in="query",
+     *         description="Filter by priority",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *             enum={1, 2, 3}
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="sort",
+     *         in="query",
+     *         description="Sort by updated_at",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"asc", "desc"}
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="maxPerPage",
+     *         in="query",
+     *         description="Max number of project requests per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of project requests",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid status parameter",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Invalid status"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to retrieve project requests",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Failed to retrieve project requests"
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index(Request $request)
     {
@@ -52,7 +123,49 @@ class ProjectRequestController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *    path="/api/projects-requests",
+     *    summary="Create a project request",
+     *    tags={"Project Requests"},
+     *    @OA\RequestBody(
+     *        required=true,
+     *        description="Project request data",
+     *        @OA\JsonContent(
+     *            required={"priority", "title", "description", "needs", "status"},
+     *            @OA\Property(property="priority", type="integer", example="1"),
+     *            @OA\Property(property="title", type="string", example="Project title"),
+     *            @OA\Property(property="description", type="string", example="Project description"),
+     *            @OA\Property(property="needs", type="string", example="Project needs"),
+     *            @OA\Property(property="status", type="string", example="pending")
+     *        )
+     *    ),
+     *    @OA\Response(
+     *        response=201,
+     *        description="Project request created",
+     *        @OA\JsonContent(
+     *            @OA\Property(property="id", type="integer", example="1"),
+     *            @OA\Property(property="priority", type="integer", example="1"),
+     *            @OA\Property(property="title", type="string", example="Project title"),
+     *            @OA\Property(property="description", type="string", example="Project description"),
+     *            @OA\Property(property="needs", type="string", example="Project needs"),
+     *            @OA\Property(property="status", type="string", example="pending"),
+     *            @OA\Property(property="user_id", type="integer", example="1"),
+     *            @OA\Property(property="created_at", type="string", format="date-time", example="2021-01-01 00:00:00"),
+     *            @OA\Property(property="updated_at", type="string", format="date-time", example="2021-01-01 00:00:00")
+     *        )
+     *    ),
+     *    @OA\Response(
+     *        response=400,
+     *        description="Invalid data",
+     *        @OA\JsonContent(
+     *            @OA\Property(property="priority", type="string", example="The priority field is required."),
+     *            @OA\Property(property="title", type="string", example="The title field is required."),
+     *            @OA\Property(property="description", type="string", example="The description field is required."),
+     *            @OA\Property(property="needs", type="string", example="The needs field is required."),
+     *            @OA\Property(property="status", type="string", example="The status field is required.")
+     *        )
+     *    )
+     * )
      */
     public function store(Request $request)
     {
@@ -79,7 +192,43 @@ class ProjectRequestController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/projects-requests/{id}",
+     *     summary="Get a project request",
+     *     tags={"Project Requests"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Project request id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Project request",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="priority", type="integer", example="1"),
+     *             @OA\Property(property="title", type="string", example="Project title"),
+     *             @OA\Property(property="description", type="string", example="Project description"),
+     *             @OA\Property(property="needs", type="string", example="Project needs"),
+     *             @OA\Property(property="status", type="string", example="pending"),
+     *             @OA\Property(property="user_id", type="integer", example="1"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2021-01-01 00:00:00"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2021-01-01 00:00:00")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Project request not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Project request not found.")
+     *         )
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -93,8 +242,68 @@ class ProjectRequestController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/projects-requests/{id}",
+     *     summary="Update a project request",
+     *     tags={"Project Requests"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Project request id",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Project request data",
+     *         @OA\JsonContent(
+     *             required={"priority", "title", "description", "needs", "status"},
+     *             @OA\Property(property="priority", type="integer", example="1"),
+     *             @OA\Property(property="title", type="string", example="Project title"),
+     *             @OA\Property(property="description", type="string", example="Project description"),
+     *             @OA\Property(property="needs", type="string", example="Project needs"),
+     *             @OA\Property(property="status", type="string", example="pending")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Project request updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="1"),
+     *             @OA\Property(property="priority", type="integer", example="1"),
+     *             @OA\Property(property="title", type="string", example="Project title"),
+     *             @OA\Property(property="description", type="string", example="Project description"),
+     *             @OA\Property(property="needs", type="string", example="Project needs"),
+     *             @OA\Property(property="status", type="string", example="pending"),
+     *             @OA\Property(property="user_id", type="integer", example="1"),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2021-01-01 00:00:00"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2021-01-01 00:00:00")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="priority", type="string", example="The priority field is required."),
+     *             @OA\Property(property="title", type="string", example="The title field is required."),
+     *             @OA\Property(property="description", type="string", example="The description field is required."),
+     *             @OA\Property(property="needs", type="string", example="The needs field is required."),
+     *             @OA\Property(property="status", type="string", example="The status field is required.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Project request not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Project request not found.")
+     *         )
+     *     )
+     * )
      */
+
     public function update(Request $request, $id)
     {
         $projectRequest = ProjectRequest::find($id);
@@ -118,7 +327,35 @@ class ProjectRequestController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *   path="/api/projects-requests/{id}",
+     *   summary="Delete a project request",
+     *   tags={"Project Requests"},
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Project request id",
+     *     required=true,
+     *     @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="Project request deleted",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Project request deleted.")
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=404,
+     *     description="Project request not found",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="error", type="string", example="Project request not found.")
+     *     )
+     *   )
+     * )
      */
     public function destroy($id)
     {

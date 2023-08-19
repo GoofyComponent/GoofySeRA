@@ -10,7 +10,11 @@ export default function Profile() {
     <>
       <div className="mx-6 my-6 flex justify-start">
         <Button variant="title" size="title" className="mr-4" asChild>
-          <Link to="/dashboard">
+          <Link
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            to={-1}
+          >
             <ChevronLeft size={50} strokeWidth={3} />
           </Link>
         </Button>

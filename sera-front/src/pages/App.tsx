@@ -10,18 +10,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { ToastAction } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { setAppError } from "@/helpers/slices/AppSlice";
 import { updateInfos } from "@/helpers/slices/UserSlice";
 import { axios } from "@/lib/axios";
+import { selectRoleDisplay } from "@/lib/utils";
 
 import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { UserInfosSummarySkeletons } from "./skeletons/ProfilePopover";
 
 function App() {
   const errorState = useSelector((state: any) => state.app.appError);
+  const userData = useSelector((state: any) => state.user.infos);
   const dispatch = useDispatch();
   const { toast } = useToast();
 
@@ -36,7 +40,7 @@ function App() {
     dispatch(setAppError(null));
   }, [errorState]);
 
-  const info = useQuery({
+  useQuery({
     queryKey: ["user"],
     queryFn: async () => {
       const userInfos = await axios.get("/api/me");
@@ -50,10 +54,10 @@ function App() {
       <header className="my-auto flex h-[10vh] justify-between p-6">
         <div className="flex justify-start lg:w-5/12">
           <Link to={"/dashboard"}>
-            <img src={logo} alt={"SeRA App"} />
+            <img src={logo} alt={"SeRA App"} className="hover:opacity-75" />
           </Link>
           <h3 className="mx-8 mb-0 mt-auto text-2xl text-sera-periwinkle">
-            Welcome back{info.isLoading ? "" : `, ${info.data.firstname}`}!
+            Welcome back{userData.firstname && `, ${userData.firstname}`}!
           </h3>
         </div>
         <div className="my-auto flex justify-end">
@@ -65,15 +69,44 @@ function App() {
               <Avatar className="ml-2">
                 <AvatarImage src="" />
                 <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
-                  {info.isLoading
+                  {!userData.lastname && !userData.firstname
                     ? "USR"
-                    : `${info.data.firstname[0].toUpperCase() as string}.${
-                        info.data.lastname[0].toUpperCase() as string
+                    : `${userData.firstname[0].toUpperCase() as string}.${
+                        userData.lastname[0].toUpperCase() as string
                       }`}
                 </AvatarFallback>
               </Avatar>
             </PopoverTrigger>
             <PopoverContent className="flex flex-col text-lg font-medium text-sera-jet">
+              {userData ? (
+                <div>
+                  <div className="flex justify-start text-base">
+                    <p className="mr-2 w-1/2 truncate">
+                      {userData.lastname &&
+                        (userData.lastname[0].toUpperCase() as string) +
+                          userData.lastname.slice(1)}
+                    </p>
+                    <p className="ml-2 w-1/2 truncate">
+                      {userData.firstname &&
+                        (userData.firstname[0].toUpperCase() as string) +
+                          userData.firstname.slice(1)}
+                    </p>
+                  </div>
+
+                  <Separator className="my-2" />
+                  <p className="text-right text-sm opacity-50">
+                    {userData.role && selectRoleDisplay(userData.role)}
+                  </p>
+                  <p className="text-right text-sm opacity-50">
+                    {userData.email && userData.email}
+                  </p>
+                </div>
+              ) : (
+                <UserInfosSummarySkeletons />
+              )}
+
+              <Separator className="my-2" />
+
               <Link
                 to="/dashboard/profile"
                 className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
