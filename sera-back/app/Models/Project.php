@@ -34,4 +34,17 @@ class Project extends Model
     {
         return $this->hasMany(RoomReservation::class);
     }
+
+    public function ressources()
+    {
+        return $this->hasMany(Ressource::class);
+    }
+
+    /**
+    * @return Ressource[]|\Illuminate\Database\Eloquent\Collection
+    */
+    public function getSharedRessources()
+    {
+        return $this->ressources()->where('shared', true)->get();
+    }
 }
