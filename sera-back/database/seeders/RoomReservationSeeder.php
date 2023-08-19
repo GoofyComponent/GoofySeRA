@@ -14,20 +14,29 @@ class RoomReservationSeeder extends Seeder
     public function run(): void
     {
         $reservations = \App\Models\RoomReservation::factory()->count(10)->make();
-        $faker = FakerFactory::create();
-        $date = $faker->dateTimeBetween('now', '+1 years');
+        $dates = [];
+        for($i = 0; $i < 5; $i++) {
+            $dates[] = Carbon::now()->addDays($i+3)->format('Y-m-d');
+        }
 
         foreach ($reservations as $reservation) {
-            do {
-                $reservation->date = $date;
-                $reservation->start_time = Carbon::instance($date)->setTime($faker->numberBetween(8, 18), 0, 0);
-                $reservation->end_time = Carbon::instance($reservation->start_time)->addHours(rand(1, 4));
-            } while (\App\Models\RoomReservation::where('room_id', $reservation->room_id)
-                ->where('date', $reservation->date)
-                ->where('start_time', '<=', $reservation->start_time)
-                ->where('end_time', '>=', $reservation->end_time)
-                ->exists());
+            $reservation->date = $dates[array_rand($dates)];
         }
+
+
+        $reservations = $reservations->groupBy('room_id')->map(function ($item) {
+            return $item->groupBy('date')->map(function ($item) {
+                if ($item->count() > 1) {
+                    // En fonction du nombre $item->count() on crée autant d'intervalle de temps avec comme contrainte que les intervalles ne se chevauchent pas
+                    // Par exemple [8h-10h] et [9h-11h] ne sont pas possible mais [8h-10h] et [10h-12h] le sont
+                    for($i = 0; $i < $item->count(); $i++) {
+                        $item[$i]->start_time = Carbon::createFromFormat('H:i:s', '08:00:00')->addHours($i*2)->format('H:i:s');
+                        $item[$i]->end_time = Carbon::createFromFormat('H:i:s', '10:00:00')->addHours($i*2)->format('H:i:s');
+                    }
+                }
+                return $item;
+            });
+        })->flatten(2);
 
         foreach ($reservations as $reservation) {
             $reservation->save();
