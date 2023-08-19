@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\RoomReservation;
 use App\Models\Team;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             TeamSeeder::class,
             RoomSeeder::class,
+            RoomReservationSeeder::class,
         ]);
     }
 }
