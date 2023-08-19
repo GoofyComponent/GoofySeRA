@@ -593,4 +593,89 @@ class UserController extends Controller
         // Retour de la reponse avec le user
         return response()->json($user, 200);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/api/users/password",
+     *     summary="Change the password of a user",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="current_password",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="new_password",
+     *                 type="string",
+     *             ),
+     *             @OA\Property(
+     *                 property="new_confirm_password",
+     *                 type="string",
+     *             ),
+     *
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password changed",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid current_password, new_password, or new_confirm_password",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *             ),
+     *         ),
+     *     ),
+     * )
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string',
+            'new_confirm_password' => 'required|string',
+            'user_id' =>'string'
+        ]);
+
+        if($request->user_id){
+            $user = User::find($request->user_id);
+        }else{
+            $user = User::find($request->user()->id);
+        }
+
+        if ($user === null) {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
+
+        if ($request->new_password !== $request->new_confirm_password) {
+            return response()->json(['error' => 'New password and new confirm password must match.'], 400);
+        }
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['error' => 'Current password is incorrect.'], 400);
+        }
+
+        $user->password = Hash::make($request->new_password);
+
+        $user->save();
+
+        return response()->json(['message' => 'Password changed.']);
+    }
 }
