@@ -45,6 +45,6 @@ class Project extends Model
     */
     public function getSharedRessources()
     {
-        return $this->ressources()->where('shared', true)->get();
+        return $this->ressources()->where('type', 'shared')->get();
     }
 }

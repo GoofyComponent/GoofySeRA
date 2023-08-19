@@ -51,4 +51,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::resource('rooms', 'App\Http\Controllers\RoomController');
 
     Route::post('rooms/{roomId}/reservations', 'App\Http\Controllers\RoomController@reserve')->name('rooms.reserve');
+
+    Route::resource('shared-ressources', 'App\Http\Controllers\SharedRessourceController');
+
 });
