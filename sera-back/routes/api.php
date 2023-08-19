@@ -31,6 +31,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::resource('users', 'App\Http\Controllers\UserController')->except(['store']);
     Route::post('users', 'App\Http\Controllers\Auth\RegisteredUserController@store')->name('users.store');
     Route::post('users/{user}/image', 'App\Http\Controllers\UserController@uploadImage')->name('users.image');
+    Route::post('users/password', 'App\Http\Controllers\UserController@changePassword')->name('users.password');
     Route::get('roles', 'App\Http\Controllers\UserController@getRoles')->name('users.roles');
     Route::resource('projects', 'App\Http\Controllers\ProjectController');
 
