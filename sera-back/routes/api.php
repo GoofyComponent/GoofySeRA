@@ -44,6 +44,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::post('projects/steps/update-date', 'App\Http\Controllers\StepController@updateDateToAStep')->name('projects.stepsUpdateDate');
     Route::post('projects/{project_id}/planification-to-captation', 'App\Http\Controllers\StepController@planificationToCaptation')->name('projects.planificationToCaptation');
     Route::post('projects/{project_id}/add-link', 'App\Http\Controllers\ProjectController@addLinkToCaptation')->name('projects.addLink');
+    Route::post('projects/{project_id}/captation-to-postproduction', 'App\Http\Controllers\StepController@captationToPostProd')->name('projects.captationToPostproduction');
 
 
 
