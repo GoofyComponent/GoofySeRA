@@ -73,11 +73,7 @@ export const UserForm = () => {
   };
 
   const updateUserData = useMutation({
-    mutationFn: async (data: {
-      lastname?: string;
-      firstname?: string;
-      email?: string;
-    }) => {
+    mutationFn: async (data: z.infer<typeof FormSchema>) => {
       const formData = new URLSearchParams();
 
       if (data.lastname) formData.append("lastname", data.lastname);
