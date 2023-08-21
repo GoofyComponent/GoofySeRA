@@ -678,4 +678,135 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Password changed.']);
     }
+
+    /**
+    *   @OA\Get(
+    *       path="/api/users/reservations",
+    *       summary="Get the reservations of the authenticated user",
+    *       tags={"Users"},
+    *       @OA\Parameter(
+    *           name="user_id",
+    *           in="query",
+    *           description="The id of the user",
+    *           required=true,
+    *           @OA\Schema(
+    *               type="integer",
+    *           )
+    *       ),
+    *       @OA\Response(
+    *           response=200,
+    *           description="The reservations of the authenticated user",
+    *           @OA\JsonContent(
+    *               type="array",
+    *               @OA\Items(
+    *                   type="object",
+    *                   @OA\Property(
+    *                       property="id",
+    *                       type="integer",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="room_id",
+    *                       type="integer",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="project_id",
+    *                       type="integer",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="date",
+    *                       type="string",
+    *                       format="date",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="start_time",
+    *                       type="string",
+    *                       format="time",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="end_time",
+    *                       type="string",
+    *                       format="time",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="title",
+    *                       type="string",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="users",
+    *                       type="array",
+    *                       @OA\Items(
+    *                           type="object",
+    *                           @OA\Property(
+    *                               property="firstname",
+    *                               type="string",
+    *                           ),
+    *                           @OA\Property(
+    *                               property="lastname",
+    *                               type="string",
+    *                           ),
+    *                           @OA\Property(
+    *                               property="role",
+    *                               type="string",
+    *                           ),
+    *                           @OA\Property(
+    *                               property="id",
+    *                               type="integer",
+    *                           ),
+    *                       ),
+    *                   ),
+    *                   @OA\Property(
+    *                       property="created_at",
+    *                       type="string",
+    *                       format="date-time",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="updated_at",
+    *                       type="string",
+    *                       format="date-time",
+    *                   ),
+    *               ),
+    *           ),
+    *       ),
+    *       @OA\Response(
+    *           response=401,
+    *           description="Unauthenticated",
+    *           @OA\JsonContent(
+    *               type="object",
+    *               @OA\Property(
+    *                   property="error",
+    *                   type="string",
+    *               ),
+    *           ),
+    *       ),
+    *   )
+    */
+    public function getReservations(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|integer',
+        ]);
+
+        $user = User::find($request->user_id);
+
+        if ($user === null) {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
+
+        $projects = $user->projects();
+
+        $reservations = [];
+        foreach ($projects as $project) {
+            $reservations[] = $project->reservations()->get();
+        }
+
+        $reservations = collect($reservations)->flatten()->map(function ($reservation) {
+            return [
+                'date' => $reservation->date,
+                'start_time' => $reservation->start_time,
+                'end_time' => $reservation->end_time,
+            ];
+        });
+
+        return response()->json($reservations);
+    }
 }

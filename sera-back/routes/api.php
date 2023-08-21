@@ -28,6 +28,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
     Route::resource('projects-requests', 'App\Http\Controllers\ProjectRequestController');
 
+    Route::get('users/reservations', 'App\Http\Controllers\UserController@getReservations')->name('users.reservations');
     Route::resource('users', 'App\Http\Controllers\UserController')->except(['store']);
     Route::post('users', 'App\Http\Controllers\Auth\RegisteredUserController@store')->name('users.store');
     Route::post('users/{user}/image', 'App\Http\Controllers\UserController@uploadImage')->name('users.image');
