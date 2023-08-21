@@ -262,4 +262,60 @@ class StepController extends Controller
 
         return response()->json($project, 200);
     }
+
+
+    public function planificationToCaptation(Request $request, $project_id){
+
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        if(!isset($steps->Planning) || $steps->Planning->status !== 'ongoing'){
+            return response()->json(['error' => 'Planning is not ongoing.'], 400);
+        }
+
+        // Il faut que chaque step ait une date de début et de fin
+        foreach ($steps as $step => $value) {
+            if($value->start_date === null || $value->end_date === null){
+                return response()->json(['error' => 'Step ' . $step . ' has no start date or end date.'], 400);
+            }
+        }
+
+        // on regarde si le projet à une équipe
+        if(!$project->team){
+            return response()->json(['error' => 'Project has no team.'], 400);
+        }
+
+        $controller = new UserController();
+        $roles = $controller->getRoles($request)->getData();
+
+        $rolesFromTeam = $project->team->users->map(function ($user) {
+            return $user->role;
+        })->unique()->values()->toArray();
+
+        if($rolesFromTeam !== $roles){
+            return response()->json(['error' => 'Roles are not the same.'], 400);
+        }
+
+        // on regarde si le projet à une salle
+        if(!$project->reservations){
+            return response()->json(['error' => 'Project has no room reservation.'], 400);
+        }
+
+        // on mets la step planning en done
+        $steps->Planning->status = 'done';
+
+        // on mets la step captation en ongoing
+        $steps->Capture->status = 'ongoing';
+
+        $project->steps = json_encode($steps);
+        $project->save();
+
+        return response()->json($project, 200);
+
+    }
 }

@@ -158,7 +158,7 @@ class TeamController extends Controller
         $team = Team::where('project_id', $projectId)->with('users')->first();
 
         if ($team === null) {
-            throw new \Exception('Team not found.');
+            return response()->json(['error' => 'Team not found.'], 400);
         }
 
         return $team;
@@ -224,7 +224,9 @@ class TeamController extends Controller
         $team = Team::where('project_id', $projectId)->first();
 
         if ($team === null) {
-            return response()->json(['error' => 'Team not found.'], 400);
+            $team = new Team();
+            $team->project_id = $projectId;
+            $team->save();
         }
 
         if ($team->hasUser($validated['user_id'])) {
@@ -295,7 +297,7 @@ class TeamController extends Controller
         $team = Team::where('project_id', $projectId)->first();
 
         if ($team === null) {
-            throw new \Exception('Team not found.');
+            return response()->json(['error' => 'Team not found.'], 400);
         }
 
         // we check if the user is already in the team
