@@ -163,7 +163,7 @@ class RoomController extends Controller
         return $room;
     }
 
-/**
+    /**
      * @OA\Put(
      *     path="/api/rooms/{id}",
      *     summary="Update a room",
@@ -288,6 +288,7 @@ class RoomController extends Controller
      *             @OA\Property(property="start_time", type="string", example="14:00"),
      *             @OA\Property(property="end_time", type="string", example="15:00"),
      *             @OA\Property(property="title", type="string", example="Meeting"),
+     *            @OA\Property(property="users_id", type="array", @OA\Items(type="integer"), example="[1, 2]"),
      *         ),
      *     ),
      *     @OA\Response(
@@ -301,6 +302,12 @@ class RoomController extends Controller
      *             @OA\Property(property="start_time", type="string", example="14:00"),
      *             @OA\Property(property="end_time", type="string", example="15:00"),
      *             @OA\Property(property="title", type="string", example="Meeting"),
+     *            @OA\Property(property="users", type="array", @OA\Items(
+     *                  @OA\Property(property="firstname", type="string", example="John"),
+     *                  @OA\Property(property="lastname", type="string", example="Doe"),
+     *                  @OA\Property(property="role", type="string", example="professor"),
+     *                  @OA\Property(property="id", type="integer", example="1"),
+     *              ), example="[{'firstname': 'John', 'lastname': 'Doe', 'role': 'professor', 'id': 1}]"),
      *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
      *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
      *         ),
@@ -323,6 +330,7 @@ class RoomController extends Controller
             'start_time' => 'required|date_format:H:i', // ex: 14:00
             'end_time' => 'required|date_format:H:i', // ex: 15:00
             'title' => 'required|string',
+            'users_id' => 'required|array',
         ]);
 
         $room = Room::find($id);
@@ -336,7 +344,8 @@ class RoomController extends Controller
             $validated['start_time'],
             $validated['end_time'],
             $validated['title'],
-            $validated['project_id']
+            $validated['project_id'],
+            $validated['users_id']
         );
 
         if ($reservation === false) {

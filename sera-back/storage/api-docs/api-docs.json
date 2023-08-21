@@ -1249,6 +1249,13 @@
                                     "title": {
                                         "type": "string",
                                         "example": "Meeting"
+                                    },
+                                    "users_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": "[1, 2]"
                                     }
                                 },
                                 "type": "object"
@@ -1290,6 +1297,31 @@
                                         "title": {
                                             "type": "string",
                                             "example": "Meeting"
+                                        },
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "firstname": {
+                                                        "type": "string",
+                                                        "example": "John"
+                                                    },
+                                                    "lastname": {
+                                                        "type": "string",
+                                                        "example": "Doe"
+                                                    },
+                                                    "role": {
+                                                        "type": "string",
+                                                        "example": "professor"
+                                                    },
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": "1"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "example": "[{'firstname': 'John', 'lastname': 'Doe', 'role': 'professor', 'id': 1}]"
                                         },
                                         "created_at": {
                                             "type": "string",
@@ -2691,6 +2723,110 @@
                     },
                     "404": {
                         "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/reservations": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get the reservations of the authenticated user",
+                "operationId": "5e799ae0b0af7d1befd9ecd75b8addc5",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "The id of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The reservations of the authenticated user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "room_id": {
+                                                "type": "integer"
+                                            },
+                                            "project_id": {
+                                                "type": "integer"
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "format": "date"
+                                            },
+                                            "start_time": {
+                                                "type": "string",
+                                                "format": "time"
+                                            },
+                                            "end_time": {
+                                                "type": "string",
+                                                "format": "time"
+                                            },
+                                            "title": {
+                                                "type": "string"
+                                            },
+                                            "users": {
+                                                "type": "array",
+                                                "items": {
+                                                    "properties": {
+                                                        "firstname": {
+                                                            "type": "string"
+                                                        },
+                                                        "lastname": {
+                                                            "type": "string"
+                                                        },
+                                                        "role": {
+                                                            "type": "string"
+                                                        },
+                                                        "id": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
                         "content": {
                             "application/json": {
                                 "schema": {

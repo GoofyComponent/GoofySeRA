@@ -315,6 +315,8 @@ class ProjectController extends Controller
             }
         }
 
+        $project->reservations = $project->reservations()->get();
+
         return $project;
     }
 
