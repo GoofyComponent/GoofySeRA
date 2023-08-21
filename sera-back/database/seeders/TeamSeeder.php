@@ -37,5 +37,31 @@ class TeamSeeder extends Seeder
                 ]);
             }
         }
+
+
+        // on récupère le premier projet et on va lui ajouter un membre de chaque type
+        $project = \App\Models\Project::find(1);
+        foreach ($roles as $role) {
+            $user = User::where('role', $role)->first();
+            if ($user === null) {
+                $user = User::factory()->create([
+                    'role' => $role,
+                ]);
+            }
+
+            // on regarde si un team existe déjà pour ce projet
+            $team = \App\Models\Team::where('project_id', $project->id)->first();
+
+            if ($team === null) {
+                $team = \App\Models\Team::factory()->create([
+                    'project_id' => $project->id,
+                ]);
+            }
+            //  hasUser
+            if (!$team->hasUser($user->id)) {
+                $team->addUser($user->id, $team->id);
+            }
+        }
+
     }
 }

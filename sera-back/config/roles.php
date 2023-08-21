@@ -6,14 +6,14 @@ return [
     "cursus_director" => [
         "projects-requests" => ["show", "index", "store", "update", "destroy"],
         "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password"],
-        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate"],
+        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
         "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password"],
-        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate"],
+        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve"],
     ],
