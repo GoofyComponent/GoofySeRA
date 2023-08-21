@@ -34,6 +34,33 @@ class RoomReservationFactory extends Factory
         // End time is between 1 and 4 hours after start time
         $end_time = Carbon::instance($start_time)->addHours($this->faker->numberBetween(1, 4));
 
+
+        // on récupère un user avec le role de professor, un autre avec le role video_team
+        $professor = \App\Models\User::where('role', 'professor')->first();
+        if (empty($professor)) {
+            $professor = \App\Models\User::factory()->create(['role' => 'professor']);
+        }
+
+        $video_team = \App\Models\User::where('role', 'video_team')->first();
+        if (empty($video_team)) {
+            $video_team = \App\Models\User::factory()->create(['role' => 'video_team']);
+        }
+
+        $users = [
+             [
+                'firstname' => $professor->firstname,
+                'lastname' => $professor->lastname,
+                'role' => $professor->role,
+                'id' => $professor->id,
+            ],
+            [
+                'firstname' => $video_team->firstname,
+                'lastname' => $video_team->lastname,
+                'role' => $video_team->role,
+                'id' => $video_team->id,
+            ],
+        ];
+
         return [
             'room_id' => $this->faker->randomElement($rooms),
             'project_id' => $this->faker->randomElement($projects),
@@ -41,6 +68,7 @@ class RoomReservationFactory extends Factory
             'start_time' => $start_time->format('H:i'),
             'end_time' => $end_time->format('H:i'),
             'title' => $this->faker->sentence(3),
+            'users' => json_encode($users),
         ];
     }
 

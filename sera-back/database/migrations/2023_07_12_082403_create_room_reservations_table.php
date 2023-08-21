@@ -19,8 +19,8 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('title');
+            $table->json('users');
             $table->timestamps();
-
             $table->unique(['room_id', 'date', 'start_time'], 'unique_room_reservation');
         });
     }
