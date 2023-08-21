@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Room;
 use Illuminate\Http\Request;
+use App\Models\RoomReservation;
 
 class RoomController extends Controller
 {
@@ -353,5 +354,50 @@ class RoomController extends Controller
         }
 
         return $reservation;
+    }
+
+    /**
+    * @OA\Post(
+    *     path="/api/rooms/unreserve",
+    *     summary="Unreserve a room",
+    *     tags={"Rooms"},
+    *     @OA\RequestBody(
+    *         required=true,
+    *         description="Reservation id",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="reservation_id", type="integer", example="1"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Reservation deleted",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="success", type="string", example="Reservation deleted."),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Reservation not found",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="Reservation not found."),
+    *         ),
+    *     ),
+    * )
+    */
+    public function unreserve(Request $request)
+    {
+        $validated = $request->validate([
+            'reservation_id' => 'required|integer',
+        ]);
+
+        $reservation = RoomReservation::find($validated['reservation_id']);
+
+        if ($reservation === null) {
+            return response()->json(['error' => 'Reservation not found.'], 400);
+        }
+
+        $reservation->delete();
+
+        return response()->json(['success' => 'Reservation deleted.'], 200);
     }
 }

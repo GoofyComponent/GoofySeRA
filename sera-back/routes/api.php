@@ -51,7 +51,8 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::resource('teams', 'App\Http\Controllers\TeamController')->except(['update', 'store', 'destroy']);
 
 
-    Route::resource('rooms', 'App\Http\Controllers\RoomController');
 
+    Route::post('rooms/unreserve', 'App\Http\Controllers\RoomController@unreserve')->name('rooms.unreserve');
+    Route::resource('rooms', 'App\Http\Controllers\RoomController');
     Route::post('rooms/{roomId}/reservations', 'App\Http\Controllers\RoomController@reserve')->name('rooms.reserve');
 });
