@@ -34,5 +34,15 @@ class ProjectSeeder extends Seeder
         // en json pour pouvoir le mettre dans la bdd
         $project->steps = json_encode($project->steps);
         $project->save();
+
+
+
+       // On crée un un projet et on va mettre steps->Planning[status] = ongoing
+        $project = \App\Models\Project::find(2);
+        $project->steps = json_decode($project->steps);
+        $project->steps->Planning->status = 'done';
+        $project->steps->Capture->status = 'ongoing';
+        $project->steps = json_encode($project->steps);
+        $project->save();
     }
 }
