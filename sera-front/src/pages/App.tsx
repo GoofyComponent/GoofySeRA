@@ -81,12 +81,10 @@ function App() {
               {userData ? (
                 <div>
                   <div className="flex justify-start text-base">
-                    <p className="mr-2 w-1/2 truncate">
+                    <p className="w-full truncate">
                       {userData.lastname &&
                         (userData.lastname[0].toUpperCase() as string) +
-                          userData.lastname.slice(1)}
-                    </p>
-                    <p className="ml-2 w-1/2 truncate">
+                          userData.lastname.slice(1)}{" "}
                       {userData.firstname &&
                         (userData.firstname[0].toUpperCase() as string) +
                           userData.firstname.slice(1)}
