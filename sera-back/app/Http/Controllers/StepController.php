@@ -263,7 +263,45 @@ class StepController extends Controller
         return response()->json($project, 200);
     }
 
-
+    /**
+    *   @OA\Post(
+    *     path="/api/projects/{project_id}/planification-to-captation",
+    *     tags={"Step"},
+    *     summary="Planification to captation",
+    *     description="Planification to captation",
+    *     operationId="PlanificationToCaptation",
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         required=true,
+    *         description="Planification to captation",
+    *         @OA\JsonContent(
+    *             required={"project_id"},
+    *             @OA\Property(property="project_id", type="integer", example="1"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Project",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="title", type="string", example="Project title"),
+    *             @OA\Property(property="description", type="string", example="Project description"),
+    *             @OA\Property(property="status", type="string", example="ongoing"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="project_request_id", type="integer", example="1"),
+    *         ),
+    *     ))
+    */
     public function planificationToCaptation(Request $request, $project_id){
 
         $project = Project::find($project_id);
@@ -318,4 +356,65 @@ class StepController extends Controller
         return response()->json($project, 200);
 
     }
+
+    /**
+    *  @OA\Post(
+    *     path="/api/projects/{project_id}/captation-to-postproduction",
+    *     tags={"Step"},
+    *     summary="Captation to postproduction",
+    *     description="Captation to postproduction",
+    *     operationId="CaptationToPostproduction",
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Project",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="title", type="string", example="Project title"),
+    *             @OA\Property(property="description", type="string", example="Project description"),
+    *             @OA\Property(property="status", type="string", example="ongoing"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="project_request_id", type="integer", example="1"),
+    *         ),
+    *     ))
+    */
+    public function captationToPostProd(Request $request, $project_id){
+
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        if(!isset($steps->Capture) || $steps->Capture->status !== 'ongoing'){
+            return response()->json(['error' => 'Capture is not ongoing.'], 400);
+        }
+
+        // Il faut que Capture ait un link non null
+        if($steps->Capture->link === null){
+            return response()->json(['error' => 'Capture has no link.'], 400);
+        }
+
+        // Sinon on passe son status à done et on mets Post-Production en ongoing
+        $steps->Capture->status = 'done';
+        $steps->{'Post-Production'}->status = 'ongoing';
+
+        $project->steps = json_encode($steps);
+        $project->save();
+
+        return $project->steps;
+    }
+
 }
