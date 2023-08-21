@@ -506,4 +506,111 @@ class ProjectController extends Controller
         return response()->json(['message' => 'Project deleted.']);
     }
 
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{project_id}/add-link",
+    *     summary="Add link to captation",
+    *     description="Add link to captation",
+    *     operationId="addLinkToCaptation",
+    *     tags={"Projects"},
+    *     @OA\Parameter(
+    *         description="ID of project to update",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *       @OA\MediaType(
+    *         mediaType="application/json",
+    *         @OA\Schema(
+    *           @OA\Property(
+    *             property="link",
+    *             type="string",
+    *           ),
+    *           required={"link"}
+    *         )
+    *       )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *         @OA\JsonContent(
+    *             @OA\Property(
+    *                 property="id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="project_request_id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="title",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="description",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="colors",
+    *                 type="string"
+    *             ),
+    *            @OA\Property(
+    *                property="created_at",
+    *               type="string"
+    *           ),
+    *           @OA\Property(
+    *             property="updated_at",
+    *            type="string"
+    *           ),
+    *        ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Bad request"
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthenticated"
+    *     ),
+    *     @OA\Response(
+    *         response=403,
+    *         description="Forbidden"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Not found"
+    *     )
+    * )
+    */
+    public function addLinkToCaptation(Request $request, $project_id)
+    {
+        $validated = $request->validate([
+            'link' => 'required|string',
+        ]);
+
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['message' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        if ($steps->Capture->status !== 'ongoing') {
+            return response()->json(['message' => 'The Capture step is not ongoing.'], 400);
+        }
+
+        $steps->Capture->link = $validated['link'];
+
+        $project->steps = json_encode($steps);
+
+        $project->save();
+
+        return response()->json($project->steps);
+    }
+
 }

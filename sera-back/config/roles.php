@@ -6,14 +6,14 @@ return [
     "cursus_director" => [
         "projects-requests" => ["show", "index", "store", "update", "destroy"],
         "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password","reservations","reservations"],
-        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation"],
+        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve"]
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
         "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation"],
+        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve","unreserve"],
     ],
@@ -25,7 +25,7 @@ return [
     ],
     "video_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index","stepsGet"],
+        "projects" => ["show", "index","stepsGet","addLink"],
         "teams" => ["show"],
         "rooms" => ["show", "index"],
     ],
