@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 
 const FormSchema = z
@@ -85,6 +86,14 @@ export const PasswordForm = () => {
       formData.append("new_confirm_password", data.confirmNewPassword);
 
       return await axios.post("/api/users/password", formData);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Password updated",
+        description: `Your password has been updated.`,
+      });
+
+      form.reset();
     },
   });
 
