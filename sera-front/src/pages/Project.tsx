@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { BadgeHelp, ChevronLeft, ChevronRight } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { BadgeHelp } from "lucide-react";
+import { useParams } from "react-router-dom";
 
+import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -41,20 +42,10 @@ export const Project = () => {
       <div>
         {!isLoading ? (
           <>
-            <div className="m-6 flex items-center">
-              <Button variant="title" size="title" className="mr-4" asChild>
-                <Link
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  to={-1}
-                >
-                  <ChevronLeft size={50} strokeWidth={3} />
-                </Link>
-              </Button>
-              <span className="ml-4 text-4xl">Projet</span>
-              <ChevronRight size={48} className="ml-2" />
-              <h3 className="text-4xl font-bold">{projectData.title}</h3>
-            </div>
+            <HeaderTitle
+              title={projectData.title && projectData.title}
+              previousTitle="Projet"
+            />
             <div className="mx-6 mt-10">
               <h3 className="text-4xl">Description :</h3>
               <p className="mt-2 text-xl">{projectData.description}</p>
