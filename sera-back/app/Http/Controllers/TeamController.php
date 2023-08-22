@@ -113,7 +113,7 @@ class TeamController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/teams/{projectId}",
+     *     path="/api/projects/{projectId}/teams",
      *     tags={"Team"},
      *     summary="Get team",
      *     description="Get team",
@@ -167,7 +167,7 @@ class TeamController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/teams/{projectId}/add",
+     *     path="/api/projects/{projectId}/teams/add",
      *     tags={"Team"},
      *     summary="Add user to team",
      *     description="Add user to team",
@@ -241,64 +241,61 @@ class TeamController extends Controller
     }
 
     /**
-     * @OA\Post(
-     *     path="/api/teams/{projectId}/remove/{userId}",
-     *     tags={"Team"},
-     *     summary="Remove user from team",
-     *     description="Remove user from team",
-     *     operationId="RemoveUserFromTeam",
-     *     @OA\Parameter(
-     *         name="projectId",
-     *         in="path",
-     *         description="Project ID",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer",
-     *             default=1
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="userId",
-     *         in="path",
-     *         description="User ID",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer",
-     *             default=1
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="User removed from team",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="integer", example="1"),
-     *             @OA\Property(property="project_id", type="integer", example="1"),
-     *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
-     *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
-     *             @OA\Property(property="users", type="array", @OA\Items(
-     *                 @OA\Property(property="id", type="integer", example="1"),
-     *                 @OA\Property(property="name", type="string", example="John Doe"),
-     *                 @OA\Property(property="email", type="string", example="johndoe@gmail.com"),
-     *                @OA\Property(property="email_verified_at", type="string", example="2021-05-05T14:48:00.000000Z"),
-     *          )),
-     *     ),
-     * ),
-     * @OA\Response(
-     *   response=400,
-     *   description="Bad request",
-     * @OA\JsonContent(
-     *      @OA\Property(property="error", type="string", example="User not in team."),
-     * ),
-     * ),
-     * )
-     */
-    public function remove($projectId, $userId)
+    *   @OA\Post(
+    *     path="/api/projects/teams/remove",
+    *     tags={"Team"},
+    *     summary="Remove user from team",
+    *     description="Remove user from team",
+    *     operationId="RemoveUserFromTeam",
+    *     @OA\RequestBody(
+    *         required=true,
+    *         description="Remove user from team",
+    *         @OA\JsonContent(
+    *             required={"user_id"},
+    *             @OA\Property(property="user_id", type="integer", example="1"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="User removed from team",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="project_id", type="integer", example="1"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="users", type="array", @OA\Items(
+    *                 @OA\Property(property="id", type="integer", example="1"),
+    *                 @OA\Property(property="name", type="string", example="John Doe"),
+    *                 @OA\Property(property="email", type="string", example="
+    *
+    *                 "),
+    *                @OA\Property(property="email_verified_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *           )),
+    *       ),
+    *  ),
+    *       @OA\Response(
+    *         response=400,
+    *         description="Bad request",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="Team not found."),
+    *         ),
+    *     ),
+    * )
+    */
+    public function remove(Request $request, $projectId)
     {
+
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+
         $team = Team::where('project_id', $projectId)->first();
 
         if ($team === null) {
             return response()->json(['error' => 'Team not found.'], 400);
         }
+
+        $userId = $request->input('user_id');
 
         // we check if the user is already in the team
         if (!$team->hasUser($userId)) {

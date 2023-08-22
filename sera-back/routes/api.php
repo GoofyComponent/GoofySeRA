@@ -26,17 +26,25 @@ Route::get('headers', function (Request $request) {
 
 Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function () {
 
+
+    /**** Project Request ****/
+
     Route::resource('projects-requests', 'App\Http\Controllers\ProjectRequestController');
 
-    Route::get('users/reservations', 'App\Http\Controllers\UserController@getReservations')->name('users.reservations');
+    /*****************************/
+
+    /************ USER ************/
+
+    Route::get('users/get/reservations', 'App\Http\Controllers\UserController@getReservations')->name('users.reservations');
+    Route::post('users/password', 'App\Http\Controllers\UserController@changePassword')->name('users.password');
+    Route::post('users/{id}/image', 'App\Http\Controllers\UserController@uploadImage')->name('users.image');
     Route::resource('users', 'App\Http\Controllers\UserController')->except(['store']);
     Route::post('users', 'App\Http\Controllers\Auth\RegisteredUserController@store')->name('users.store');
-    Route::post('users/{user}/image', 'App\Http\Controllers\UserController@uploadImage')->name('users.image');
-    Route::post('users/password', 'App\Http\Controllers\UserController@changePassword')->name('users.password');
     Route::get('roles', 'App\Http\Controllers\UserController@getRoles')->name('users.roles');
-    Route::resource('projects', 'App\Http\Controllers\ProjectController');
 
-    Route::get('roles', 'App\Http\Controllers\UserController@getRoles')->name('users.roles');
+    /*****************************/
+
+    /************ Project ************/
 
     Route::resource('projects', 'App\Http\Controllers\ProjectController');
     Route::post('projects/init', 'App\Http\Controllers\StepController@InitProject')->name('projects.init');
@@ -46,15 +54,22 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::post('projects/{project_id}/add-link', 'App\Http\Controllers\ProjectController@addLinkToCaptation')->name('projects.addLink');
     Route::post('projects/{project_id}/captation-to-postproduction', 'App\Http\Controllers\StepController@captationToPostProd')->name('projects.captationToPostproduction');
 
+        /****TEAM ****/
 
+            Route::post('projects/{projectId}/teams/add', 'App\Http\Controllers\TeamController@update')->name('teams.add');
+            Route::post('projects/{projectId}/teams/remove', 'App\Http\Controllers\TeamController@remove')->name('teams.remove');
+            Route::get('projects/{projectId}/teams', 'App\Http\Controllers\TeamController@show')->name('teams.show');
+            Route::get('teams', 'App\Http\Controllers\TeamController@index')->name('teams.index');
 
-    Route::post('teams/{projectId}/add', 'App\Http\Controllers\TeamController@update')->name('teams.add');
-    Route::post('teams/{projectId}/remove/{userId}', 'App\Http\Controllers\TeamController@remove')->name('teams.remove');
-    Route::resource('teams', 'App\Http\Controllers\TeamController')->except(['update', 'store', 'destroy']);
+        /*************/
 
+        /***** Room *****/
 
+        Route::post('projects/{projectId}/room/reserve', 'App\Http\Controllers\RoomController@reserve')->name('rooms.reserve');
+        Route::post('projects/teams/unreserve', 'App\Http\Controllers\RoomController@unreserve')->name('rooms.unreserve');
+        Route::resource('rooms', 'App\Http\Controllers\RoomController');
 
-    Route::post('rooms/unreserve', 'App\Http\Controllers\RoomController@unreserve')->name('rooms.unreserve');
-    Route::resource('rooms', 'App\Http\Controllers\RoomController');
-    Route::post('rooms/{roomId}/reservations', 'App\Http\Controllers\RoomController@reserve')->name('rooms.reserve');
+        /****************/
+
+    /*********************************/
 });

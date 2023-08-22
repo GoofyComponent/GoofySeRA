@@ -267,66 +267,60 @@ class RoomController extends Controller
 
 
     /**
-     * @OA\Post(
-     *     path="/api/rooms/{id}/reservations",
-     *     summary="Reserve a room",
-     *     tags={"Rooms"},
-     *     @OA\Parameter(
-     *         description="Room id",
-     *         in="path",
-     *         name="id",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer",
-     *         )
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="Reservation data",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="project_id", type="integer", example="1"),
-     *             @OA\Property(property="date", type="string", example="2021-05-20"),
-     *             @OA\Property(property="start_time", type="string", example="14:00"),
-     *             @OA\Property(property="end_time", type="string", example="15:00"),
-     *             @OA\Property(property="title", type="string", example="Meeting"),
-     *            @OA\Property(property="users_id", type="array", @OA\Items(type="integer"), example="[1, 2]"),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Reservation created",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="integer", example="1"),
-     *             @OA\Property(property="project_id", type="integer", example="1"),
-     *             @OA\Property(property="room_id", type="integer", example="1"),
-     *             @OA\Property(property="date", type="string", example="2021-05-20"),
-     *             @OA\Property(property="start_time", type="string", example="14:00"),
-     *             @OA\Property(property="end_time", type="string", example="15:00"),
-     *             @OA\Property(property="title", type="string", example="Meeting"),
-     *            @OA\Property(property="users", type="array", @OA\Items(
-     *                  @OA\Property(property="firstname", type="string", example="John"),
-     *                  @OA\Property(property="lastname", type="string", example="Doe"),
-     *                  @OA\Property(property="role", type="string", example="professor"),
-     *                  @OA\Property(property="id", type="integer", example="1"),
-     *              ), example="[{'firstname': 'John', 'lastname': 'Doe', 'role': 'professor', 'id': 1}]"),
-     *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
-     *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
-     *         ),
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Room already reserved",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string", example="Room already reserved. Need to be 30 minutes before the end of the reservation to be able to reserve again."),
-     *         ),
-     *     ),
-     * )
-     */
-
-    public function reserve(Request $request, $id)
+    * @OA\Post(
+    *      path="/api/projects/{projectId}/room/reserve",
+    *      summary="Reserve a room",
+    *      tags={"Rooms"},
+    *      @OA\Parameter(
+    *          description="Project id",
+    *          in="path",
+    *          name="projectId",
+    *          required=true,
+    *          @OA\Schema(
+    *              type="integer",
+    *          )
+    *      ),
+    *      @OA\RequestBody(
+    *          required=true,
+    *          description="Reservation data",
+    *          @OA\JsonContent(
+    *              @OA\Property(property="room_id", type="integer", example="1"),
+    *              @OA\Property(property="date", type="string", example="2021-05-20"),
+    *              @OA\Property(property="start_time", type="string", example="14:00"),
+    *              @OA\Property(property="end_time", type="string", example="15:00"),
+    *              @OA\Property(property="title", type="string", example="Meeting"),
+    *              @OA\Property(property="users_id", type="array", @OA\Items(type="integer"), example="[1, 2]"),
+    *          ),
+    *      ),
+    *      @OA\Response(
+    *          response=200,
+    *          description="Reservation created",
+    *          @OA\JsonContent(
+    *              @OA\Property(property="id", type="integer", example="1"),
+    *              @OA\Property(property="room_id", type="integer", example="1"),
+    *              @OA\Property(property="date", type="string", example="2021-05-20"),
+    *              @OA\Property(property="start_time", type="string", example="14:00"),
+    *              @OA\Property(property="end_time", type="string", example="15:00"),
+    *              @OA\Property(property="title", type="string", example="Meeting"),
+    *              @OA\Property(property="project_id", type="integer", example="1"),
+    *              @OA\Property(property="users_id", type="array", @OA\Items(type="integer"), example="[1, 2]"),
+    *              @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+    *              @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+    *          ),
+    *      ),
+    *      @OA\Response(
+    *          response=400,
+    *          description="Room already reserved",
+    *          @OA\JsonContent(
+    *              @OA\Property(property="error", type="string", example="Room already reserved. Need to be 30 minutes before the end of the reservation to be able to reserve again."),
+    *          ),
+    *      ),
+    * )
+    */
+    public function reserve(Request $request, $project_id)
     {
         $validated = $request->validate([
-            'project_id' => 'required|integer',
+            'room_id' => 'required|integer',
             'date' => 'required|date', // ex: 2021-05-20
             'start_time' => 'required|date_format:H:i', // ex: 14:00
             'end_time' => 'required|date_format:H:i', // ex: 15:00
@@ -334,7 +328,7 @@ class RoomController extends Controller
             'users_id' => 'required|array',
         ]);
 
-        $room = Room::find($id);
+        $room = Room::find($validated['room_id']);
 
         if ($room === null) {
             return response()->json(['error' => 'Room not found.'], 400);
@@ -345,7 +339,7 @@ class RoomController extends Controller
             $validated['start_time'],
             $validated['end_time'],
             $validated['title'],
-            $validated['project_id'],
+            $project_id,
             $validated['users_id']
         );
 
@@ -358,7 +352,7 @@ class RoomController extends Controller
 
     /**
     * @OA\Post(
-    *     path="/api/rooms/unreserve",
+    *     path="/api/projects/teams/unreserve",
     *     summary="Unreserve a room",
     *     tags={"Rooms"},
     *     @OA\RequestBody(

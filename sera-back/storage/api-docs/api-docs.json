@@ -1290,18 +1290,18 @@
                 }
             }
         },
-        "/api/rooms/{id}/reservations": {
+        "/api/projects/{projectId}/room/reserve": {
             "post": {
                 "tags": [
                     "Rooms"
                 ],
                 "summary": "Reserve a room",
-                "operationId": "9d0a31657079c019442aae777895edc5",
+                "operationId": "1512a830a88178cc6228480c6588bb03",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "projectId",
                         "in": "path",
-                        "description": "Room id",
+                        "description": "Project id",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1315,7 +1315,7 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "project_id": {
+                                    "room_id": {
                                         "type": "integer",
                                         "example": "1"
                                     },
@@ -1359,10 +1359,6 @@
                                             "type": "integer",
                                             "example": "1"
                                         },
-                                        "project_id": {
-                                            "type": "integer",
-                                            "example": "1"
-                                        },
                                         "room_id": {
                                             "type": "integer",
                                             "example": "1"
@@ -1383,30 +1379,16 @@
                                             "type": "string",
                                             "example": "Meeting"
                                         },
-                                        "users": {
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "users_id": {
                                             "type": "array",
                                             "items": {
-                                                "properties": {
-                                                    "firstname": {
-                                                        "type": "string",
-                                                        "example": "John"
-                                                    },
-                                                    "lastname": {
-                                                        "type": "string",
-                                                        "example": "Doe"
-                                                    },
-                                                    "role": {
-                                                        "type": "string",
-                                                        "example": "professor"
-                                                    },
-                                                    "id": {
-                                                        "type": "integer",
-                                                        "example": "1"
-                                                    }
-                                                },
-                                                "type": "object"
+                                                "type": "integer"
                                             },
-                                            "example": "[{'firstname': 'John', 'lastname': 'Doe', 'role': 'professor', 'id': 1}]"
+                                            "example": "[1, 2]"
                                         },
                                         "created_at": {
                                             "type": "string",
@@ -1441,13 +1423,13 @@
                 }
             }
         },
-        "/api/rooms/unreserve": {
+        "/api/projects/teams/unreserve": {
             "post": {
                 "tags": [
                     "Rooms"
                 ],
                 "summary": "Unreserve a room",
-                "operationId": "03b139363ff617ebfeb656347b06d7e0",
+                "operationId": "c3d481d6506866526ea70a9e62d5b2a2",
                 "requestBody": {
                     "description": "Reservation id",
                     "required": true,
@@ -2161,7 +2143,7 @@
                 }
             }
         },
-        "/api/teams/{projectId}": {
+        "/api/projects/{projectId}/teams": {
             "get": {
                 "tags": [
                     "Team"
@@ -2253,7 +2235,7 @@
                 }
             }
         },
-        "/api/teams/{projectId}/add": {
+        "/api/projects/{projectId}/teams/add": {
             "post": {
                 "tags": [
                     "Team"
@@ -2365,7 +2347,7 @@
                 }
             }
         },
-        "/api/teams/{projectId}/remove/{userId}": {
+        "/api/projects/teams/remove": {
             "post": {
                 "tags": [
                     "Team"
@@ -2373,28 +2355,26 @@
                 "summary": "Remove user from team",
                 "description": "Remove user from team",
                 "operationId": "RemoveUserFromTeam",
-                "parameters": [
-                    {
-                        "name": "projectId",
-                        "in": "path",
-                        "description": "Project ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
-                        }
-                    },
-                    {
-                        "name": "userId",
-                        "in": "path",
-                        "description": "User ID",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "default": 1
+                "requestBody": {
+                    "description": "Remove user from team",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "User removed from team",
@@ -2432,7 +2412,7 @@
                                                     },
                                                     "email": {
                                                         "type": "string",
-                                                        "example": "johndoe@gmail.com"
+                                                        "example": "\n    *\n    *                 "
                                                     },
                                                     "email_verified_at": {
                                                         "type": "string",
@@ -2456,7 +2436,7 @@
                                     "properties": {
                                         "error": {
                                             "type": "string",
-                                            "example": "User not in team."
+                                            "example": "Team not found."
                                         }
                                     },
                                     "type": "object"
@@ -3032,13 +3012,13 @@
                 }
             }
         },
-        "/api/users/reservations": {
+        "/api/users/get/reservations": {
             "get": {
                 "tags": [
                     "Users"
                 ],
-                "summary": "Get the reservations of the authenticated user",
-                "operationId": "5e799ae0b0af7d1befd9ecd75b8addc5",
+                "summary": "Get the reservations of one user",
+                "operationId": "675cd811bd459107236389e971361860",
                 "parameters": [
                     {
                         "name": "user_id",
@@ -3052,7 +3032,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "The reservations of the authenticated user",
+                        "description": "The reservations of one user",
                         "content": {
                             "application/json": {
                                 "schema": {
