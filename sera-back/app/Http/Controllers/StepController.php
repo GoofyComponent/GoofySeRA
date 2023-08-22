@@ -65,6 +65,14 @@ class StepController extends Controller
             'project_request_id' => 'required|integer',
         ]);
 
+        // get the user connected
+        $user = $request->user();
+
+        // if the user is not project_manager or cursus_director return 403
+        if (!in_array($user->role, ['project_manager', 'cursus_director'])) {
+            return response()->json(['error' => 'Unauthorized.'], 403);
+        }
+
 
         $projectRequest = ProjectRequest::find($validatedData['project_request_id']);
 
@@ -90,6 +98,13 @@ class StepController extends Controller
             'description' => $validatedData['description'],
         ]));
 
+        $project = json_decode($project->getContent());
+
+        $teamController = new TeamController();
+
+        $teamController->update(new Request([
+            'user_id' => $projectRequest->user_id,
+        ]), $project->id);
 
         $projectRequest->save();
 
