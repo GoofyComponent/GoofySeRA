@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TicketsEntity } from "@/lib/types";
+import { TicketsEntity } from "@/lib/types/types";
 import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
