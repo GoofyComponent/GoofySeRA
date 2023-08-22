@@ -57,12 +57,14 @@ export const Project = () => {
             >
               Ressources partagées
             </TabsTrigger>
-            <TabsTrigger
-              value="members"
-              className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
-            >
-              Membres
-            </TabsTrigger>
+            {projectData.team && (
+              <TabsTrigger
+                value="members"
+                className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+              >
+                Membres
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <Separator className="mb-2 h-0.5 w-full bg-sera-jet"></Separator>

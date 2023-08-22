@@ -30,7 +30,8 @@ export const MembersContainer = () => {
 
   console.log(projectMembers);
 
-  if (isLoading) return <BigLoader />;
+  if (isLoading)
+    return <BigLoader bgColor="bg-transparent" textColor="text-sera-jet" />;
 
   if (error) return <>{error} . Erreur </>;
 
