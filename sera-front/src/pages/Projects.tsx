@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card-project";
 import { Pagination } from "@/components/ui/pagination";
 import {
   Select,

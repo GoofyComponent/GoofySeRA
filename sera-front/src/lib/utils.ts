@@ -45,8 +45,50 @@ export const selectRoleDisplay = (role: string) => {
     case "cursus_director":
       return "Cursus Director";
       break;
+    case "project_manager":
+      return "Project Manager";
+      break;
+    case "professor":
+      return "Professor";
+      break;
+    case "video_team":
+      return "Video Team";
+      break;
+    case "video_editor":
+      return "Video Editor";
+    case "transcription_team":
+      return "Transcription Team";
+      break;
+    case "traduction_team":
+      return "Traduction Team";
+      break;
+    case "editorial_team":
+      return "Editorial Team";
+      break;
     default:
       return "Visitor";
       break;
   }
+};
+
+export const getInitials = (lastname?: string, firstname?: string) => {
+  if (!lastname && firstname)
+    return firstname[0].toUpperCase() + firstname[1].toLowerCase();
+
+  if (lastname && !firstname)
+    return lastname[0].toUpperCase() + lastname[1].toLowerCase();
+
+  if (!lastname || !firstname) return "";
+
+  return lastname[0].toUpperCase() + "." + firstname[0].toUpperCase();
+};
+
+export const formatName = (lastname?: string, firstname?: string) => {
+  if (!lastname || !firstname) return "";
+
+  if (lastname.length === 0 || firstname.length === 0) return "";
+
+  return (
+    capitalizeFirstLetter(lastname) + " " + capitalizeFirstLetter(firstname)
+  );
 };

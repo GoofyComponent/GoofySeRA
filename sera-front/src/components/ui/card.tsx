@@ -1,63 +1,79 @@
-import clsx from "clsx";
-import { Link } from "react-router-dom";
+import * as React from "react"
 
-import { Badge } from "./badge";
+import { cn } from "@/lib/utils"
 
-interface CardsProps {
-  skeleton: boolean;
-  id: string;
-  title: string;
-  status: string;
-  description: string;
-  colors: string;
-}
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      className
+    )}
+    {...props}
+  />
+))
+Card.displayName = "Card"
 
-let titleBgColor = "";
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    {...props}
+  />
+))
+CardHeader.displayName = "CardHeader"
 
-const Card = ({
-  skeleton,
-  colors,
-  title,
-  status,
-  description,
-  id = "",
-}: CardsProps) => {
-  if (status === "cancelled") {
-    titleBgColor = "bg-red-500";
-  } else if (status === "completed") {
-    titleBgColor = "bg-lime-200";
-  } else if (status === "ongoing") {
-    titleBgColor = "bg-yellow-200";
-  }
+const CardTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn(
+      "text-2xl font-semibold leading-none tracking-tight",
+      className
+    )}
+    {...props}
+  />
+))
+CardTitle.displayName = "CardTitle"
 
-  const color1 = colors[0];
-  const color2 = colors[1];
+const CardDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
+))
+CardDescription.displayName = "CardDescription"
 
-  if (skeleton) return <></>;
+const CardContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+))
+CardContent.displayName = "CardContent"
 
-  return (
-    <Link to={`/dashboard/projects/${id}`}>
-      <div
-        style={{
-          backgroundImage: `linear-gradient(45deg, ${color1}, ${color2})`,
-        }}
-        className={clsx(
-          ` h-[150px] rounded-lg border-2 bg-cover bg-center p-3 text-white duration-300 ease-in-out hover:scale-105 `
-        )}
-      >
-        <div className="flex flex-col justify-between text-xl">
-          <Badge
-            variant="status"
-            className={clsx(titleBgColor, "ml-auto mr-0 w-auto text-sm")}
-          >
-            {status.charAt(0).toUpperCase() + status.slice(1)}
-          </Badge>
-          <p className="truncate">{title}</p>
-        </div>
-        <p className="w-11/12 truncate pt-4 text-left">{description}</p>
-      </div>
-    </Link>
-  );
-};
+const CardFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex items-center p-6 pt-0", className)}
+    {...props}
+  />
+))
+CardFooter.displayName = "CardFooter"
 
-export { Card };
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
