@@ -681,8 +681,8 @@ class UserController extends Controller
 
     /**
     *   @OA\Get(
-    *       path="/api/users/reservations",
-    *       summary="Get the reservations of the authenticated user",
+    *       path="/api/users/get/reservations",
+    *       summary="Get the reservations of one user",
     *       tags={"Users"},
     *       @OA\Parameter(
     *           name="user_id",
@@ -695,7 +695,7 @@ class UserController extends Controller
     *       ),
     *       @OA\Response(
     *           response=200,
-    *           description="The reservations of the authenticated user",
+    *           description="The reservations of one user",
     *           @OA\JsonContent(
     *               type="array",
     *               @OA\Items(
