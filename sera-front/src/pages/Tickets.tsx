@@ -39,7 +39,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { axios } from "@/lib/axios";
-import { TicketsEntity } from "@/lib/types";
+import { TicketsEntity } from "@/lib/types/types";
 
 export const Tickets = () => {
   const ticketStatus = "pending";
