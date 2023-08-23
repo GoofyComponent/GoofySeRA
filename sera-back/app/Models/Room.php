@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Controllers\UserController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Http\Request;
 
 
 class Room extends Model
@@ -131,4 +132,5 @@ class Room extends Model
 
         return $reservation;
     }
+
 }

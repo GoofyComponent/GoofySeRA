@@ -1036,6 +1036,10 @@
                                     "name": {
                                         "type": "string",
                                         "example": "Room 1"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Room 1 description"
                                     }
                                 },
                                 "type": "object"
@@ -1057,6 +1061,10 @@
                                         "name": {
                                             "type": "string",
                                             "example": "Room 1"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Room 1 description"
                                         },
                                         "created_at": {
                                             "type": "string",
@@ -1081,6 +1089,10 @@
                                         "name": {
                                             "type": "string",
                                             "example": "The name field is required."
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "The description field is required."
                                         }
                                     },
                                     "type": "object"
@@ -1183,6 +1195,10 @@
                                     "name": {
                                         "type": "string",
                                         "example": "Room 1"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Room 1 description"
                                     }
                                 },
                                 "type": "object"
@@ -1204,6 +1220,10 @@
                                         "name": {
                                             "type": "string",
                                             "example": "Room 1"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Room 1 description"
                                         },
                                         "created_at": {
                                             "type": "string",
