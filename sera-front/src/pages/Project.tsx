@@ -57,14 +57,14 @@ export const Project = () => {
             >
               Ressources partagées
             </TabsTrigger>
-            {/* {projectData.team && ( */}
-            <TabsTrigger
-              value="members"
-              className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
-            >
-              Membres
-            </TabsTrigger>
-            {/*  )} */}
+            {projectData.team && (
+              <TabsTrigger
+                value="members"
+                className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+              >
+                Membres
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <Separator className="mb-2 h-0.5 w-full bg-sera-jet"></Separator>
@@ -76,6 +76,12 @@ export const Project = () => {
             </div>
             <h3 className="text-xl font-semibold">Description :</h3>
             <p className="text-normal mt-2">{projectData.description}</p>
+            <div>
+              <h3 className="text-xl font-semibold">What&apos;s next ?</h3>
+              <p className="text-normal mt-2">
+                BLABLABLA VOUS DEVEZ ENCORE FAIRE CA POUR VALIDERR LETAPE
+              </p>
+            </div>
           </TabsContent>
           <TabsContent value="ressources">
             <SharedContainer />

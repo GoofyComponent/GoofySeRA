@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, UserX } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useMatch, useParams } from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -19,12 +19,16 @@ interface UserCardProps {
 }
 
 export const MembersContainer = () => {
+  const isProjectPage = useMatch("/dashboard/projects/:ProjectId");
+
   const { ProjectId: id } = useParams<{ ProjectId: string }>();
+
+  console.log("isProjectPage", isProjectPage);
 
   const getProjectMembers = useQuery({
     queryKey: ["projectMembers", { id }],
     queryFn: async () => {
-      const projectMembers = await axios.get(`/api/teams/${id}`);
+      const projectMembers = await axios.get(`api/projects/${id}/teams`);
       return projectMembers.data;
     },
   });
@@ -48,14 +52,21 @@ export const MembersContainer = () => {
               email={member.email}
               role={member.role}
               avatar={member.avatar_filename}
-              action={true}
+              action={!isProjectPage}
             />
           ))}
-        <div className="m-2 flex h-20 w-96 justify-start rounded-lg border-2 border-dashed border-sera-jet px-4 py-2">
-          <Plus className="m-auto" />
-          <p className="m-auto text-xl">ADD A NEW MEMBER</p>
-        </div>
+        {!isProjectPage && (
+          <div className="m-2 flex h-20 w-96 justify-start rounded-lg border-2 border-dashed border-sera-jet px-4 py-2">
+            <Plus className="m-auto" />
+            <p className="m-auto text-xl">ADD A NEW MEMBER</p>
+          </div>
+        )}
       </div>
+      <Link to={`planification`} className="ml-auto mr-0">
+        <p className="ml-auto mr-0 text-sera-jet underline hover:text-sera-jet/75">
+          Manage the project team &gt;&gt;
+        </p>
+      </Link>
     </section>
   );
 };
@@ -72,10 +83,13 @@ const UserCard = ({
   const { ProjectId } = useParams<{ ProjectId: string }>();
 
   const deleteUser = useMutation({
-    queryKey: ["deleteUser", { id }],
+    mutationKey: ["deleteUser", { id }],
     mutationFn: async () => {
       const deleteUser = await axios.post(
-        `/api/teams/${ProjectId}/remove/${id}}`
+        `/api/projects/${ProjectId}/teams/remove`,
+        {
+          user_id: id,
+        }
       );
       return deleteUser.data;
     },

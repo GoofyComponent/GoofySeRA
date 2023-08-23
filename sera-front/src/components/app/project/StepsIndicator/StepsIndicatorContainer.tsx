@@ -13,14 +13,14 @@ export const StepsIndicatorContainer = () => {
           title="Planification"
           description="Planification de la mission"
           isAccessible={true}
-          stepUrl="/project/1/planification"
+          stepUrl={`planification`}
         />
         <StepsIndicatorCell
           step={2}
           title="Captation"
           description="Préparation de la mission"
           isAccessible={false}
-          stepUrl="/project/1/captation"
+          stepUrl={"captation"}
         />
         <StepsIndicatorCell
           step={3}
