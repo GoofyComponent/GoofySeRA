@@ -57,6 +57,8 @@ class RoomController extends Controller
         $validated = $request->validate([
             'maxPerPage' => 'integer',
             'sort' => 'string|in:asc,desc',
+            'name' => 'string',
+            'inDescription' => 'boolean',
         ]);
 
         $maxPerPage = $request->input('maxPerPage', 10); // Default to 10 if not specified
@@ -68,8 +70,19 @@ class RoomController extends Controller
             return response()->json(['error' => 'Invalid sort parameter. Only "asc" or "desc" allowed.'], 400);
         }
 
+        // Get a query builder instance for the Room model
+        $query = Room::query();
+
+        // Filter by name (optional)
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+            if ($request->has('inDescription')) {
+                $query->orWhere('description', 'like', '%' . $request->input('name') . '%');
+            }
+        }
+
         // Retrieve rooms with reservations
-        $rooms = Room::orderBy('updated_at', $sort)->paginate($maxPerPage)->load('reservations');
+        $rooms = $query->orderBy('updated_at', $sort)->paginate($maxPerPage)->load('reservations');
 
         if ($rooms->isEmpty()) {
             return response()->json(['error' => 'No rooms found.'], 404);
@@ -77,6 +90,7 @@ class RoomController extends Controller
 
         return $rooms;
     }
+
 
     /**
      * @OA\Post(
