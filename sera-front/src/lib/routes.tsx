@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { Home } from "@/pages/Home";
 import { Logout } from "@/pages/Logout";
+import { Planification } from "@/pages/Planification";
 import Profile from "@/pages/Profile";
 import { Project } from "@/pages/Project";
 import { Projects } from "@/pages/Projects";
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
       {
         path: "projects/:ProjectId",
         element: <Project />,
+      },
+      {
+        path: "projects/:ProjectId/planification",
+        element: <Planification />,
       },
       {
         path: "profile",
