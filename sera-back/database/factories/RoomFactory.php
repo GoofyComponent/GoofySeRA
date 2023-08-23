@@ -20,6 +20,7 @@ class RoomFactory extends Factory
     {
         return [
             'name' => $this->faker->sentence(3),
+            'description' => $this->faker->sentence(10),
         ];
     }
 }
