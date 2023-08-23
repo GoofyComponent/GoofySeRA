@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card-project";
 import { axios } from "@/lib/axios";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
