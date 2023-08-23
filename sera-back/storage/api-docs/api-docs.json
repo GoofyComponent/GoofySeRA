@@ -1503,6 +1503,96 @@
                 }
             }
         },
+        "/api/projects/{projectId}/rooms/available": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get available rooms",
+                "operationId": "edc99e985d38ed671a5b844db8f8133f",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Project id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "duration",
+                        "in": "query",
+                        "description": "Duration in minutes",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021-05-20"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of available rooms",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Room 1"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Room 1 description"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-05-20T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-05-20T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid date",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "The date does not match the format Y-m-d."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/projects/init": {
             "post": {
                 "tags": [
@@ -2497,6 +2587,15 @@
                         "name": "sort",
                         "in": "query",
                         "description": "Sort by updated_at (asc or desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Search by name (firstname or lastname)",
                         "required": false,
                         "schema": {
                             "type": "string"
