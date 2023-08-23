@@ -13,7 +13,13 @@ class TeamSeeder extends Seeder
      */
     public function run(): void
     {
-        $projects = \App\Models\Project::factory()->count(3)->create();
+        // on récupère tous les projets
+        $projects = \App\Models\Project::all();
+
+        // si aucun projet n'existe, on en crée 3
+        if ($projects->count() === 0) {
+            $projects = \App\Models\Project::factory()->count(3)->create();
+        }
         foreach ($projects as $project) {
             $teams[] = \App\Models\Team::factory()->create([
                 'project_id' => $project->id,
@@ -63,5 +69,25 @@ class TeamSeeder extends Seeder
             }
         }
 
+
+        // on va prendre 6 projets au hasard et supprimer tous leurs roles sauf le directeur de projet
+        $projects = \App\Models\Project::inRandomOrder()->limit(6)->get();
+        foreach ($projects as $project) {
+            $teams = \App\Models\Team::where('project_id', $project->id)->get();
+            foreach ($teams as $team) {
+                $users = $team->users;
+                foreach ($users as $user) {
+                    if ($user->role !== 'project_manager') {
+                        $team->removeUser($user->id, $team->id);
+                    }
+                }
+                $team->save();
+            }
+        }
+
+
+
     }
+
+
 }
