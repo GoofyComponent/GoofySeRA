@@ -86,6 +86,7 @@ class RoomController extends Controller
      *         description="Room data",
      *         @OA\JsonContent(
      *             @OA\Property(property="name", type="string", example="Room 1"),
+     *             @OA\Property(property="description", type="string", example="Room 1 description"),
      *         )
      *     ),
      *     @OA\Response(
@@ -94,6 +95,7 @@ class RoomController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="id", type="integer", example="1"),
      *             @OA\Property(property="name", type="string", example="Room 1"),
+     *             @OA\Property(property="description", type="string", example="Room 1 description"),
      *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
      *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
      *         )
@@ -103,6 +105,7 @@ class RoomController extends Controller
      *         description="Invalid data",
      *         @OA\JsonContent(
      *             @OA\Property(property="name", type="string", example="The name field is required."),
+     *             @OA\Property(property="description", type="string", example="The description field is required."),
      *         )
      *     )
      * )
@@ -111,10 +114,12 @@ class RoomController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
+            'description' => 'required|string',
         ]);
 
         $room = new Room();
         $room->name = $validated['name'];
+        $room->description = $validated['description'];
         $room->save();
 
         return $room;
@@ -183,6 +188,7 @@ class RoomController extends Controller
      *         description="Room data",
      *         @OA\JsonContent(
      *             @OA\Property(property="name", type="string", example="Room 1"),
+     *             @OA\Property(property="description", type="string", example="Room 1 description"),
      *         )
      *     ),
      *     @OA\Response(
@@ -191,6 +197,7 @@ class RoomController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="id", type="integer", example="1"),
      *             @OA\Property(property="name", type="string", example="Room 1"),
+     *             @OA\Property(property="description", type="string", example="Room 1 description"),
      *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
      *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
      *         )
@@ -208,6 +215,7 @@ class RoomController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string',
+            'description' => 'required|string',
         ]);
 
         $room = Room::find($id);
@@ -217,6 +225,7 @@ class RoomController extends Controller
         }
 
         $room->name = $validated['name'];
+        $room->description = $validated['description'];
         $room->save();
 
         return $room;
