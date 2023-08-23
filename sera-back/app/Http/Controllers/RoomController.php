@@ -6,6 +6,9 @@ use App\Models\Room;
 use Illuminate\Http\Request;
 use App\Models\RoomReservation;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
+
 class RoomController extends Controller
 {
     /**
@@ -74,7 +77,6 @@ class RoomController extends Controller
 
         return $rooms;
     }
-
 
     /**
      * @OA\Post(
@@ -403,4 +405,132 @@ class RoomController extends Controller
 
         return response()->json(['success' => 'Reservation deleted.'], 200);
     }
+
+    /**
+    * @OA\Get(
+    *     path="/api/projects/{projectId}/rooms/available",
+    *     summary="Get available rooms",
+    *     tags={"Rooms"},
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="projectId",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         description="Duration in minutes",
+    *         in="query",
+    *         name="duration",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         description="Date",
+    *         in="query",
+    *         name="date",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="string",
+    *             format="date",
+    *             example="2021-05-20"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="List of available rooms",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="name", type="string", example="Room 1"),
+    *             @OA\Property(property="description", type="string", example="Room 1 description"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Invalid date",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="The date does not match the format Y-m-d."),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Invalid duration",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="The duration must be an integer."),
+    *         )
+    *     ),
+    * )
+    */
+    public function getAvailableRooms(Request $request){
+
+        $request->validate([
+            'duration' => 'required|integer', // ex: 60
+            'date' => 'required|date', // ex: 2021-05-20
+        ]);
+
+        // on va scinder ma recherche en 2 parties
+
+        // 1. On va récupérer toutes les salles qui n'ont pas de réservation à la date donnée
+
+        $roomsWhereNoReservation = Room::query()
+        ->whereDoesntHave('reservations', function ($query) use ($request) {
+            $query->where('date', $request->input('date'));
+        })
+        ->get();
+
+        // 2. On va récupérer toutes les salles qui ont des réservations à la date donnée
+        $roomsWhereReservation = Room::query()->whereHas('reservations', function ($query) use ($request) {
+            $query->where('date', $request->input('date'));
+        })->get();
+
+        // on va ensuite vérifier que les salles qui ont des réservations peuvent être réservées sur la durée donnée
+
+        $roomsAvailable = [];
+
+        foreach ($roomsWhereReservation as $room) {
+            // on utilisera pas la fonction canBeReserved car elle prends des horaires en paramètres et non une durée
+            // Donc on va faire par intervalle de 30 minutes des vérifications de disponibilité dans la journée qui est de 9h à 19h
+            $startTime = Carbon::parse('09:00');
+            $endTime = Carbon::parse('19:00');
+
+            $duration = CarbonInterval::minutes($request->input('duration'));
+
+            while ($startTime->add($duration)->lessThanOrEqualTo($endTime)) {
+                $isAvailable = true;
+                foreach ($room->reservations as $reservation) {
+                    $dateReserv = Carbon::parse($reservation['date']);
+                    $startTimeReserv = Carbon::parse($reservation['start_time']);
+                    $endTimeReserv = Carbon::parse($reservation['end_time']);
+
+                    // si la réservation est le même jour on verifie que les horaires ne se chevauchent pas
+                    if ($dateReserv->isSameDay($request->input('date'))) {
+                        if ($startTimeReserv->between($startTime, $endTime)
+                            || $endTimeReserv->between($startTime, $endTime)
+                            || $startTime->between($startTimeReserv, $endTimeReserv)
+                            || $endTime->between($startTimeReserv, $endTimeReserv)
+                        ) {
+                            $isAvailable = false;
+                        }
+                    }
+                }
+                if ($isAvailable) {
+                    $roomsAvailable[] = $room;
+                }
+            }
+        }
+
+
+        // on va fusionner les 2 tableaux pour avoir un seul tableau avec toutes les salles disponibles à la date donnée et sur la durée donnée
+        $roomsAvailable = array_merge($roomsWhereNoReservation->toArray(), $roomsAvailable);
+
+        return response()->json($roomsAvailable);
+    }
+
+
 }
