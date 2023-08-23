@@ -13,7 +13,13 @@ class TeamSeeder extends Seeder
      */
     public function run(): void
     {
-        $projects = \App\Models\Project::factory()->count(3)->create();
+        // on récupère tous les projets
+        $projects = \App\Models\Project::all();
+
+        // si aucun projet n'existe, on en crée 3
+        if ($projects->count() === 0) {
+            $projects = \App\Models\Project::factory()->count(3)->create();
+        }
         foreach ($projects as $project) {
             $teams[] = \App\Models\Team::factory()->create([
                 'project_id' => $project->id,
