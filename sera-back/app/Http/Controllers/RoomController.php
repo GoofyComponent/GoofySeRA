@@ -458,13 +458,6 @@ class RoomController extends Controller
     *             @OA\Property(property="error", type="string", example="The date does not match the format Y-m-d."),
     *         )
     *     ),
-    *     @OA\Response(
-    *         response=400,
-    *         description="Invalid duration",
-    *         @OA\JsonContent(
-    *             @OA\Property(property="error", type="string", example="The duration must be an integer."),
-    *         )
-    *     ),
     * )
     */
     public function getAvailableRooms(Request $request){
