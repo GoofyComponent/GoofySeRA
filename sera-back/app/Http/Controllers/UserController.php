@@ -43,6 +43,17 @@ class UserController extends Controller
      *             type="string",
      *         )
      *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="Search by name (firstname or lastname)",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *
+     *
      *     @OA\Response(
      *         response=200,
      *         description="List of users",
@@ -66,6 +77,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'maxPerPage' => 'integer',
             'sort' => 'string|in:asc,desc',
+            'name' => 'string',
         ]);
 
         $usersQuery = User::query();
@@ -88,6 +100,18 @@ class UserController extends Controller
         if ($sort !== 'asc' && $sort !== 'desc') {
             return response()->json(['error' => 'Invalid sort parameter. Only "asc" or "desc" allowed.'], 400);
         }
+
+        // Search by name (optional)
+        if ($request->filled('name')) {
+            $name = $request->input('name');
+
+            $usersQuery->where(function ($query) use ($name) {
+                $query->whereRaw('CONCAT(firstname, " ", lastname) LIKE ?', ['%' . $name . '%'])
+                    ->orWhereRaw('CONCAT(lastname, " ", firstname) LIKE ?', ['%' . $name . '%']);
+            });
+
+        }
+
         $usersQuery->orderBy('updated_at', $sort);
 
         // Pagination
