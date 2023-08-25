@@ -44,5 +44,24 @@ class ProjectSeeder extends Seeder
         $project->steps->Capture->status = 'ongoing';
         $project->steps = json_encode($project->steps);
         $project->save();
+
+
+        // On prends le projet 3 et on va mettre steps->Post-Production[status] = ongoing
+        $project = \App\Models\Project::find(3);
+        $project->steps = json_decode($project->steps);
+        $project->steps->Planning->status = 'done';
+        $project->steps->Capture->status = 'done';
+        $project->steps->{'Post-Production'}->status = 'ongoing';
+        $project->steps = json_encode($project->steps);
+        $project->save();
+
+        // Pareil pour le projet 4
+        $project = \App\Models\Project::find(4);
+        $project->steps = json_decode($project->steps);
+        $project->steps->Planning->status = 'done';
+        $project->steps->Capture->status = 'done';
+        $project->steps->{'Post-Production'}->status = 'ongoing';
+        $project->steps = json_encode($project->steps);
+        $project->save();
     }
 }
