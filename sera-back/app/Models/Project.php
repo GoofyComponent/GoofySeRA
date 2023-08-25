@@ -34,4 +34,9 @@ class Project extends Model
     {
         return $this->hasMany(RoomReservation::class);
     }
+
+    public function videoReviews()
+    {
+        return $this->hasOne(VideoReview::class);
+    }
 }
