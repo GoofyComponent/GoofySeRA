@@ -67,7 +67,7 @@ class VideoReviewSeeder extends Seeder
                             "avatar"=> "https://i.pravatar.cc/300",
                             "job"=> "Barista"
                         ],
-                        "message"=> "hello",
+                        "message"=> "hello in [[00:00:12]]",
                         "timestamp"=> "2021-05-01 12:00:00"
                     ],
                 ]
