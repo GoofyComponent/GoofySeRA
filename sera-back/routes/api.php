@@ -72,5 +72,12 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
         /****************/
 
+
+        /***** Video Review *****/
+
+        Route::get('projects/{projectId}/video-reviews', 'App\Http\Controllers\VideoReviewController@getReviewsByProjectId')->name('video-reviews.getReviewsByProjectId');
+
+        /************************/
+
     /*********************************/
 });

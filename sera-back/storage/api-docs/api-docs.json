@@ -3234,6 +3234,192 @@
                     }
                 }
             }
+        },
+        "/api/projects/{projectId}/video-reviews": {
+            "get": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Get reviews by project id",
+                "description": "Returns reviews by project id",
+                "operationId": "getReviewsByProjectId",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Project id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "in": "query",
+                        "description": "Version of the review",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "reviews": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "version": {
+                                                        "type": "integer",
+                                                        "example": "1"
+                                                    },
+                                                    "video": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "video"
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "example": "Fuji"
+                                                            },
+                                                            "sources": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "size": {
+                                                                            "type": "integer",
+                                                                            "example": "1440"
+                                                                        },
+                                                                        "provider": {
+                                                                            "type": "string",
+                                                                            "example": "html"
+                                                                        },
+                                                                        "src": {
+                                                                            "type": "string",
+                                                                            "example": "http://localhost/storage/videos-example/fuji-1440.mp4"
+                                                                        },
+                                                                        "type": {
+                                                                            "type": "string",
+                                                                            "example": "video/mp4"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "comments": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "author": {
+                                                                    "properties": {
+                                                                        "nickname": {
+                                                                            "type": "string",
+                                                                            "example": "user1"
+                                                                        },
+                                                                        "avatar": {
+                                                                            "type": "string",
+                                                                            "example": "https://i.pravatar.cc/300"
+                                                                        },
+                                                                        "job": {
+                                                                            "type": "string",
+                                                                            "example": "Software Engineer"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "message": {
+                                                                    "type": "string",
+                                                                    "example": "hello"
+                                                                },
+                                                                "timestamp": {
+                                                                    "type": "string",
+                                                                    "example": "2021-05-01 12:00:00"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-05-01 12:00:00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-05-01 12:00:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No reviews found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No reviews found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "version": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The version must be an integer."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
