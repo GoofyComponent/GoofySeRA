@@ -8,7 +8,8 @@ return [
         "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password","reservations","reservations"],
         "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction"],
         "teams" => ["add", "index", "show", "remove"],
-        "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available"]
+        "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available"],
+        "video-reviews" => ["getReviewsByProjectId"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
@@ -16,41 +17,48 @@ return [
         "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve","unreserve","available"],
+        "video-reviews" => ["getReviewsByProjectId"],
     ],
     "professor" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
         "projects" => ["show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available"],
+        "video-reviews" => ["getReviewsByProjectId"],
     ],
     "video_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
         "projects" => ["show", "index","stepsGet","addLink"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available"],
+        "video-reviews" => ["getReviewsByProjectId"],
     ],
     "video_editor" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
         "projects" => ["show", "index"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available"],
+        "video-reviews" => ["getReviewsByProjectId"],
     ],
     "transcription_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
         "projects" => ["show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available"],
+        "video-reviews" => [],
     ],
     "traduction_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
         "projects" => ["show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available"],
+        "video-reviews" => [],
     ],
     "editorial_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
         "projects" => ["show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available"],
+        "video-reviews" => [],
     ],
 ];

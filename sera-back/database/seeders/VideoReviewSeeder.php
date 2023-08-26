@@ -74,7 +74,7 @@ class VideoReviewSeeder extends Seeder
             ],
         ];
 
-        $video2->version = json_encode($jsonReview);
+        $video2->reviews = json_encode($jsonReview);
 
         $video2->save();
     }
