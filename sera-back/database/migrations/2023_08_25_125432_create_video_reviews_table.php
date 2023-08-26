@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('video_reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
-            $table->json('version')->nullable();
+            $table->json('reviews')->nullable();
             $table->timestamps();
         });
     }
