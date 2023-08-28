@@ -1,6 +1,19 @@
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+interface Member {
+  id: number;
+  email: string;
+  email_verified_at: string;
+  firstname: string;
+  lastname: string;
+  role: string;
+  avatar_filename: string;
+  created_at: string;
+  updated_at: string;
+  laravel_through_key: number;
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -109,4 +122,25 @@ export const formatName = (lastname?: string, firstname?: string) => {
   return (
     capitalizeFirstLetter(lastname) + " " + capitalizeFirstLetter(firstname)
   );
+};
+
+export const teamChecker = (team: Member[]) => {
+  //we need to check if the project has at least one of each possible roles
+  const roles = [
+    "cursus_director",
+    "project_manager",
+    "professor",
+    "video_team",
+    "video_editor",
+    "transcription_team",
+    "traduction_team",
+    "editorial_team",
+  ];
+
+  const teamRoles = team.map((member) => member.role);
+  const teamHasAllRoles = roles.every((role) => teamRoles.includes(role));
+
+  console.log(teamHasAllRoles);
+
+  return teamHasAllRoles;
 };

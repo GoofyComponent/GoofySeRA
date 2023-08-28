@@ -26,7 +26,7 @@ export const Nav = () => {
         <Link
           to="/dashboard/tickets"
           className={clsx(
-            "mx-2 my-2 h-14 rounded-lg",
+            "mx-2 my-2 h-14 rounded-lg transition-all",
             "flex justify-around text-sera-jet",
             matchPath(pathname.pathname, "/dashboard/tickets") &&
               "bg-sera-jet text-sera-periwinkle",
@@ -41,7 +41,7 @@ export const Nav = () => {
         <Link
           to="/dashboard/projects"
           className={clsx(
-            "mx-2 my-2 h-14 rounded-lg",
+            "mx-2 my-2 h-14 rounded-lg transition-all",
             "flex justify-around text-sera-jet",
             matchPath(pathname.pathname, "/dashboard/projects") &&
               "bg-sera-jet text-sera-periwinkle",
