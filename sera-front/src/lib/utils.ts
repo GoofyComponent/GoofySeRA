@@ -40,6 +40,24 @@ export const formatDate = (timestamp: string) => {
   return dateFormatee;
 };
 
+export const convertDate = (date: string) => {
+  const dateArray = date.split("-");
+  const day = dateArray[2];
+  const month = dateArray[1];
+  const year = dateArray[0];
+  return day + "/" + month + "/" + year;
+};
+
+export const convertTime = (time: string) => {
+  //Convert time in a format like 00:00:00 to js Date object
+  const timeArray = time.split(":");
+  const hour = parseInt(timeArray[0]);
+  const minute = parseInt(timeArray[1]);
+  const second = parseInt(timeArray[2]);
+  console.log(new Date(0, 0, 0, hour, minute, second));
+  return new Date(0, 0, 0, hour, minute, second);
+};
+
 export const selectRoleDisplay = (role: string) => {
   switch (role) {
     case "cursus_director":
