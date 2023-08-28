@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Room;
+use App\Models\Project;
+
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use App\Models\RoomReservation;
-
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
 
 class RoomController extends Controller
 {
@@ -537,6 +538,82 @@ class RoomController extends Controller
         $roomsAvailable = array_merge($roomsWhereNoReservation->toArray(), $roomsAvailable);
 
         return response()->json($roomsAvailable);
+    }
+
+
+    /**
+    *  @OA\Get(
+    *     path="/api/projects/{project_id}/rooms",
+    *     summary="Get rooms by project",
+    *     tags={"Rooms"},
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         description="Show reservations",
+    *         in="query",
+    *         name="reservation",
+    *         required=false,
+    *         @OA\Schema(
+    *             type="boolean",
+    *             default=false
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="List of rooms",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="name", type="string", example="Room 1"),
+    *             @OA\Property(property="description", type="string", example="Room 1 description"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-20T14:00:00.000000Z"),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Project not found",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="Project not found."),
+    *         )
+    *     ),
+    * )
+    */
+    public function showByProject(Request $request, $project_id){
+
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['message' => 'Project not found.'], 404);
+        }
+
+        $reservations = $project->reservations()->get();
+        $canReserve = $request->input('reservation');
+        if($canReserve == 'true'){
+            $canReserve = true;
+        }else{
+            $canReserve = false;
+        }
+        $rooms = [];
+        foreach ($reservations as $reservation) {
+
+            if ($reservation->project_id == $project_id) {
+                if($canReserve === true){
+                    $room = Room::find($reservation->room_id)->load('reservations');
+                }else{
+                    $room = Room::find($reservation->room_id);
+                }
+                $rooms[] = $room;
+            }
+        }
+
+        return response()->json($rooms);
     }
 
 
