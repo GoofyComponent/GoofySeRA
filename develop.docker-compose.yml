@@ -4,7 +4,7 @@ services:
     container_name: develop-sera-back-laravel-test
     volumes:
       - ./sera-back:/var/www/html
-    build: 
+    build:
       context: ./sera-back
       dockerfile: ./docker/prod.Dockerfile
       args:
@@ -16,14 +16,12 @@ services:
       - hosted
     depends_on:
       - mariadb
-      - redis
       - soketi
-
   mariadb:
     container_name: develop-sera-back-mariadb
     image: "mariadb:10"
     #ports:
-      #- "${FORWARD_DB_PORT:-3306}:3306"
+    #- "${FORWARD_DB_PORT:-3306}:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_ROOT_HOST: "%"
@@ -44,22 +42,6 @@ services:
         - "-p${DB_PASSWORD}"
       retries: 3
       timeout: 5s
-  redis:
-    container_name: develop-sera-back-redis
-    image: "redis:alpine"
-    #ports:
-      #- "${FORWARD_REDIS_PORT:-6379}:6379"
-    volumes:
-      - "sail-redis:/data"
-    networks:
-      - sail
-    healthcheck:
-      test:
-        - CMD
-        - redis-cli
-        - ping
-      retries: 3
-      timeout: 5s
   soketi:
     container_name: develop-sera-back-soketi
     image: "quay.io/soketi/soketi:latest-16-alpine"
@@ -69,12 +51,23 @@ services:
       SOKETI_DEFAULT_APP_ID: "${PUSHER_APP_ID}"
       SOKETI_DEFAULT_APP_KEY: "${PUSHER_APP_KEY}"
       SOKETI_DEFAULT_APP_SECRET: "${PUSHER_APP_SECRET}"
-    ports:
-      - "${PUSHER_PORT:-6001}:6001"
-      - "${PUSHER_METRICS_PORT:-9601}:9601"
+    #ports:
+    #- "${PUSHER_PORT:-6001}:6001"
+    #- "${PUSHER_METRICS_PORT:-9601}:9601"
     networks:
       - sail
       - monolith
+  minio:
+    container_name: develop-sera-minio
+    image: docker.io/bitnami/minio:2023
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - "./minio/data:/data"
+    networks:
+      - monolith
+      - hosted
   nextjs:
     container_name: develop-sera-front
     build:
@@ -87,8 +80,6 @@ services:
     networks:
       - monolith
       - hosted
-    #ports:
-    #- "${PORT_FRONT:-3305}:3000"
 
 networks:
   sail:
@@ -100,6 +91,3 @@ networks:
 volumes:
   sail-mariadb:
     driver: local
-  sail-redis:
-    driver: local
- 
