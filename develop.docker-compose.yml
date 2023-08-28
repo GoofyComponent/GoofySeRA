@@ -64,7 +64,8 @@ services:
       MINIO_ROOT_USER: user
       MINIO_ROOT_PASSWORD: password
     volumes:
-      - "./minio/data:/data"
+      #- ./minio/data:/data:ro
+      - sail-minio
     networks:
       - monolith
       - hosted
@@ -90,4 +91,6 @@ networks:
     external: true
 volumes:
   sail-mariadb:
+    driver: local
+  sail-minio:
     driver: local
