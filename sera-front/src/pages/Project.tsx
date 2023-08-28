@@ -87,7 +87,9 @@ export const Project = () => {
             <SharedContainer />
           </TabsContent>
           <TabsContent value="members" className="text-sera-jet">
-            <MembersContainer />
+            <section id="project-team">
+              <MembersContainer />
+            </section>
           </TabsContent>
         </Tabs>
 

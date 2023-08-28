@@ -100,7 +100,7 @@ export const Tickets = () => {
       return tickets;
     },
     onSuccess: (data) => {
-      const dataCleaned = data.data.original;
+      const dataCleaned = data.data;
       navigate(`/dashboard/projects/${dataCleaned.id}`);
     },
     onError: () => {
