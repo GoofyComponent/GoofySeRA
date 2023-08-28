@@ -16,6 +16,7 @@ services:
       - hosted
     depends_on:
       - mariadb
+      - redis
       - soketi
   mariadb:
     container_name: develop-sera-back-mariadb
@@ -90,4 +91,6 @@ networks:
     external: true
 volumes:
   sail-mariadb:
+    driver: local
+  sail-redis:
     driver: local
