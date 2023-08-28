@@ -83,7 +83,12 @@ class RoomController extends Controller
         }
 
         // Retrieve rooms with reservations
-        $rooms = $query->orderBy('updated_at', $sort)->paginate($maxPerPage)->load('reservations');
+        $rooms = $query->orderBy('updated_at', $sort)->paginate($maxPerPage);
+
+        // for each room, load('reservations')
+        foreach ($rooms as $room) {
+            $room->load('reservations');
+        }
 
         if ($rooms->isEmpty()) {
             return response()->json(['error' => 'No rooms found.'], 404);
