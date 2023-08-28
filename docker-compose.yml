@@ -28,6 +28,7 @@ services:
       - mariadb
       - redis
       - soketi
+      - minio
   mariadb:
     container_name: sera-back-mariadb
     image: "mariadb:10"
@@ -102,6 +103,20 @@ services:
       - "${PORT_FRONT:-3305}:80"
     #environment:
     #NODE_ENV: development
+  minio:
+    container_name: sera-minio
+    image: docker.io/bitnami/minio:2023
+    environment:
+      MINIO_ROOT_USER: user
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - 'minio_data:/data'
+    ports:
+      - 9000:9000
+      - 9001:9001
+    networks:
+      - monolith
+      - sail
 
 networks:
   sail:
@@ -115,3 +130,6 @@ volumes:
     driver: local
   sera-front:
     driver: local
+  minio_data:
+    driver: local
+
