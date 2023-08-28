@@ -48,8 +48,6 @@ export const Rooms = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  setTotalPages(1);
-  setCurrentPage(1);
   const [addRoomData, setAddRoomData] = useState({
     name: "",
     description: "",
@@ -126,6 +124,9 @@ export const Rooms = () => {
     /* if (!roomsData) {
       navigate("/dashboard/rooms");
     } */
+
+      setTotalPages(1);
+      setCurrentPage(1);
 
     if (searchParams.get("action") && roomId) {
       console.log("open modal");
