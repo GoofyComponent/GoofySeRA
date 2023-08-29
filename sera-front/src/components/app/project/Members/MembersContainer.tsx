@@ -13,6 +13,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import {
@@ -33,10 +41,12 @@ interface UserCardProps {
 }
 
 interface MembersContainerProps {
+  validTeam?: boolean;
   validTeamSetter?: (value: boolean) => void;
 }
 
 export const MembersContainer = ({
+  validTeam = true,
   validTeamSetter,
 }: MembersContainerProps) => {
   const isProjectPage = useMatch("/dashboard/projects/:ProjectId");
@@ -44,8 +54,13 @@ export const MembersContainer = ({
 
   const [userSearchModal, setUserSearchModal] = useState(false);
   const [searchUserInput, setSearchUserInput] = useState("");
+  const [userType, setUserType] = useState("all");
 
-  const getProjectMembers = useQuery({
+  const {
+    data: projectMembers,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryKey: ["projectMembers", { id }],
     queryFn: async () => {
       const projectMembers = await axios.get(`api/projects/${id}/teams`);
@@ -53,10 +68,26 @@ export const MembersContainer = ({
     },
   });
 
-  const { data: projectMembers, isLoading, isSuccess } = getProjectMembers;
+  const {
+    data: peopleSearch,
+    isLoading: searchLoading,
+    refetch: searchRefetch,
+  } = useQuery({
+    queryKey: ["peopleSearch", { searchUserInput, userType }],
+    queryFn: async () => {
+      let call = "api/users?";
+      if (searchUserInput && searchUserInput != "")
+        call = `${call}name=${searchUserInput}&`;
+
+      if (userType && userType != "all") call = `${call}role=${userType}`;
+
+      const peopleSearch = await axios.get(call);
+      return peopleSearch.data.data;
+    },
+  });
 
   useEffect(() => {
-    if (isSuccess && projectMembers && validTeamSetter)
+    if (projectMembers && validTeamSetter)
       validTeamSetter(teamChecker(projectMembers.users));
   }, [isSuccess, projectMembers]);
 
@@ -65,7 +96,15 @@ export const MembersContainer = ({
 
   return (
     <>
-      <h3 className="text-4xl font-medium">Membres :</h3>
+      <h3 className="text-4xl font-medium text-sera-jet">
+        Members :{" "}
+        {!validTeam && (
+          <span className="text-base text-red-700">
+            You are missing at least one role.
+          </span>
+        )}
+      </h3>
+
       <div className="mx-auto flex flex-row flex-wrap">
         {!isProjectPage && (
           <button
@@ -105,8 +144,8 @@ export const MembersContainer = ({
           <DialogHeader>
             <DialogTitle>Users</DialogTitle>
           </DialogHeader>
-          <article>
-            <div className="flex justify-between">
+          <article className="">
+            <div className=" my-2 flex justify-center">
               <Input
                 type="text"
                 id="user-search"
@@ -115,61 +154,84 @@ export const MembersContainer = ({
                   setSearchUserInput(e.currentTarget.value.toLowerCase())
                 }
                 placeholder="Search a user"
-                className="w-10/12"
+                className="mr-2 w-1/2"
               />
-              <Button className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
-                <Search size={24} />
-              </Button>
+              <Select
+                onValueChange={(value) => setUserType(value as string)}
+                defaultValue={userType}
+              >
+                <SelectTrigger className="ml-2 w-1/2">
+                  <SelectValue placeholder="Select a role (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="cursus_director">
+                      Cursus Director
+                    </SelectItem>
+                    <SelectItem value="project_manager">
+                      Project Manager
+                    </SelectItem>
+                    <SelectItem value="professor">Professor</SelectItem>
+                    <SelectItem value="video_team">Video Team</SelectItem>
+                    <SelectItem value="video_editor">Video Editor</SelectItem>
+                    <SelectItem value="transcription_team">
+                      Transcription Team
+                    </SelectItem>
+                    <SelectItem value="traduction_team">
+                      Traduction Team
+                    </SelectItem>
+                    <SelectItem value="editorial_team">
+                      Editorial Team
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
-            <div className="mx-auto my-4 flex max-h-96 flex-col overflow-auto align-middle scrollbar scrollbar-track-transparent scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-2">
-              <UserCard
-                id={2}
-                name={["John", "Doe"]}
-                email={"johnDoe@test.fr"}
-                user_role={"cursus_director"}
-                avatar={"user.avatar_filename"}
-                action={"add"}
-              />
-              <UserCard
-                id={2}
-                name={["John", "Doe"]}
-                email={"johnDoe@test.fr"}
-                user_role={"cursus_director"}
-                avatar={"user.avatar_filename"}
-                action={"add"}
-              />
-              <UserCard
-                id={2}
-                name={["John", "Doe"]}
-                email={"johnDoe@test.fr"}
-                user_role={"cursus_director"}
-                avatar={"user.avatar_filename"}
-                action={"add"}
-              />
-              <UserCard
-                id={2}
-                name={["John", "Doe"]}
-                email={"johnDoe@test.fr"}
-                user_role={"cursus_director"}
-                avatar={"user.avatar_filename"}
-                action={"add"}
-              />
-              <UserCard
-                id={2}
-                name={["John", "Doe"]}
-                email={"johnDoe@test.fr"}
-                user_role={"cursus_director"}
-                avatar={"user.avatar_filename"}
-                action={"add"}
-              />
-              <UserCard
-                id={2}
-                name={["John", "Doe"]}
-                email={"johnDoe@test.fr"}
-                user_role={"cursus_director"}
-                avatar={"user.avatar_filename"}
-                action={"add"}
-              />
+            <Button
+              className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+              onClick={() => searchRefetch()}
+            >
+              <Search size={24} />
+            </Button>
+
+            <div className="mx-auto my-4 flex  max-h-96 flex-col items-center overflow-auto align-middle scrollbar scrollbar-track-transparent scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-2">
+              {searchLoading && (
+                <BigLoader bgColor="bg-transparent" textColor="text-sera-jet" />
+              )}
+              {!searchLoading && peopleSearch && peopleSearch.length === 0 && (
+                <p className="text-center text-xl">
+                  No user found for your search
+                </p>
+              )}
+              {peopleSearch &&
+                projectMembers &&
+                peopleSearch.map((user: any) => {
+                  const isAlreadyInTeam = projectMembers.users.find(
+                    (member: any) => member.id === user.id
+                  );
+
+                  //If the only result is only users already in the team, we display a message
+                  if (peopleSearch.length === 1 && isAlreadyInTeam)
+                    return (
+                      <p className="text-center text-xl">
+                        This user is already in the team
+                      </p>
+                    );
+
+                  if (isAlreadyInTeam) return null;
+                  return (
+                    <UserCard
+                      key={user.id}
+                      id={user.id}
+                      name={[user.lastname, user.firstname]}
+                      email={user.email}
+                      user_role={user.role}
+                      avatar={user.avatar_filename}
+                      action={"add"}
+                    />
+                  );
+                })}
             </div>
           </article>
         </DialogContent>
@@ -190,7 +252,31 @@ const UserCard = ({
   const { ProjectId } = useParams<{ ProjectId: string }>();
   const userLogged = useSelector((state: any) => state.user.infos);
 
-  console.log(action, "action");
+  const addUser = useMutation({
+    mutationKey: ["addUser", { id }],
+    mutationFn: async () => {
+      const addUser = await axios.post(`/api/projects/${ProjectId}/teams/add`, {
+        user_id: id,
+      });
+      return addUser.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success !",
+        description: `The user has been correctly added to the project.`,
+      });
+
+      queryClient.invalidateQueries(["projectMembers", { id: ProjectId }]);
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+
+      toast({
+        title: "Were unable to add the user to the project at the moment",
+        description: `Please try again later.`,
+      });
+    },
+  });
 
   const deleteUser = useMutation({
     mutationKey: ["deleteUser", { id }],
@@ -222,12 +308,12 @@ const UserCard = ({
   });
 
   return (
-    <div className="m-2 flex h-20 w-96 justify-start rounded-lg border-2 border-sera-jet px-1">
+    <div className="m-2 flex min-h-min w-96 justify-start rounded-lg border-2 border-sera-jet px-1">
       <Avatar className="my-auto mr-2">
         <AvatarImage src={avatar} />
         <AvatarFallback>{getInitials(name[0], name[1])}</AvatarFallback>
       </Avatar>
-      <div>
+      <div className="my-auto">
         <h4 className="text-xl">{formatName(name[0], name[1])}</h4>
         <p className="text-normal">{selectRoleDisplay(user_role)}</p>
         <p className="text-normal">{email}</p>
@@ -238,7 +324,7 @@ const UserCard = ({
           aria-label={`Remove ${formatName(name[0], name[1])} from the project`}
           onClick={() => {
             if (action === "delete") deleteUser.mutate();
-            if (action === "add") console.log("add");
+            if (action === "add") addUser.mutate();
           }}
         >
           {action === "delete" && <UserX size={28} strokeWidth={2.25} />}

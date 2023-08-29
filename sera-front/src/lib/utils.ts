@@ -67,7 +67,7 @@ export const convertTime = (time: string) => {
   const hour = parseInt(timeArray[0]);
   const minute = parseInt(timeArray[1]);
   const second = parseInt(timeArray[2]);
-  console.log(new Date(0, 0, 0, hour, minute, second));
+
   return new Date(0, 0, 0, hour, minute, second);
 };
 
@@ -126,8 +126,7 @@ export const formatName = (lastname?: string, firstname?: string) => {
 
 export const teamChecker = (team: Member[]) => {
   //we need to check if the project has at least one of each possible roles
-  const roles = [
-    "cursus_director",
+  const mandatoryRoles = [
     "project_manager",
     "professor",
     "video_team",
@@ -138,9 +137,9 @@ export const teamChecker = (team: Member[]) => {
   ];
 
   const teamRoles = team.map((member) => member.role);
-  const teamHasAllRoles = roles.every((role) => teamRoles.includes(role));
-
-  console.log(teamHasAllRoles);
+  const teamHasAllRoles = mandatoryRoles.every((role) =>
+    teamRoles.includes(role)
+  );
 
   return teamHasAllRoles;
 };
