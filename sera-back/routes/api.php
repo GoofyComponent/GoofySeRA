@@ -66,7 +66,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         /***** Room *****/
 
         Route::post('projects/{projectId}/room/reserve', 'App\Http\Controllers\RoomController@reserve')->name('rooms.reserve');
-        Route::post('projects/teams/unreserve', 'App\Http\Controllers\RoomController@unreserve')->name('rooms.unreserve');
+        Route::post('projects/room/unreserve', 'App\Http\Controllers\RoomController@unreserve')->name('rooms.unreserve');
         Route::get('rooms/available', 'App\Http\Controllers\RoomController@getAvailableRooms')->name('rooms.available');
         Route::get('projects/{projectId}/rooms', 'App\Http\Controllers\RoomController@showByProject')->name('rooms.showByProject');
         Route::resource('rooms', 'App\Http\Controllers\RoomController');

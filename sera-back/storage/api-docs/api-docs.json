@@ -1443,13 +1443,13 @@
                 }
             }
         },
-        "/api/projects/teams/unreserve": {
+        "/api/projects/room/unreserve": {
             "post": {
                 "tags": [
                     "Rooms"
                 ],
                 "summary": "Unreserve a room",
-                "operationId": "c3d481d6506866526ea70a9e62d5b2a2",
+                "operationId": "83ad645d48699a9b028255ecc1d677fb",
                 "requestBody": {
                     "description": "Reservation id",
                     "required": true,
@@ -1503,23 +1503,14 @@
                 }
             }
         },
-        "/api/projects/{projectId}/rooms/available": {
+        "/api/rooms/available": {
             "get": {
                 "tags": [
                     "Rooms"
                 ],
                 "summary": "Get available rooms",
-                "operationId": "edc99e985d38ed671a5b844db8f8133f",
+                "operationId": "1617e123795d099ca932a30bab551bce",
                 "parameters": [
-                    {
-                        "name": "projectId",
-                        "in": "path",
-                        "description": "Project id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
                     {
                         "name": "duration",
                         "in": "query",
@@ -1614,6 +1605,16 @@
                         "name": "reservation",
                         "in": "query",
                         "description": "Show reservations",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    {
+                        "name": "alternative",
+                        "in": "query",
+                        "description": "Alternative response",
                         "required": false,
                         "schema": {
                             "type": "boolean",
