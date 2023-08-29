@@ -4,6 +4,7 @@ namespace App\Services;
 use Aws\S3\S3Client;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Support\Str;
 
 class CreateMinioUser {
 
@@ -34,40 +35,36 @@ class CreateMinioUser {
             ],
         ]);
 
-        // on crée l'utilisateur
-        $this->create();
     }
 
     // Create Access Keys for a User connected with aws_access_key_id and aws_secret_access_key
-    public function create()
-    {
+    public function create(){
 
-        // $process = new Process(['/root/minio-binaries/mc', 'admin', 'info', 'myminio']);
 
         $process = new Process(['/root/minio-binaries/mc', 'alias', 'set', "myminio", "http://minio:9000", $this->aws_access_key_id, $this->aws_secret_access_key]);
         $process->run();
 
-        // dd all errors and output
-        // dd($process->getErrorOutput());
 
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
-        // dd($process->getOutput());
+        $accesskey = Str::random(20);
+        $secretkey = Str::random(20);
 
-        $process = new Process(['/root/minio-binaries/mc', 'admin', 'info', 'myminio']);
+        $process = new Process(['/root/minio-binaries/mc', 'admin', 'user','svcacct' ,'add', '--access-key', $accesskey, '--secret-key', $secretkey, 'myminio', $this->aws_access_key_id]);
 
         $process->run();
 
-
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
 
-        dd($process->getOutput());
+        return [
+            'accesskey' => $accesskey,
+            'secretkey' => $secretkey
+        ];
 
     }
-
 
 }

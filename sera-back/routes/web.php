@@ -18,6 +18,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/test', 'App\Http\Controllers\UserController@test')->name('test');
+// Route::get('/test', 'App\Http\Controllers\UserController@test')->name('test');
 
 require __DIR__.'/auth.php';

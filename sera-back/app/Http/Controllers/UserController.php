@@ -837,8 +837,8 @@ class UserController extends Controller
     }
 
 
-    public function test(){
-        $createMinioUser = new CreateMinioUser();
-        return response()->json(['message' => 'User created.']);
-    }
+    // public function test(){
+    //     $createMinioUser = new CreateMinioUser();
+    //     return response()->json($createMinioUser->create());
+    // }
 }
