@@ -561,6 +561,16 @@ class RoomController extends Controller
     *             default=false
     *         )
     *     ),
+    *     @OA\Parameter(
+    *         description="Alternative response",
+    *         in="query",
+    *         name="alternative",
+    *         required=false,
+    *         @OA\Schema(
+    *             type="boolean",
+    *             default=false
+    *         )
+    *     ),
     *     @OA\Response(
     *         response=200,
     *         description="List of rooms",
@@ -582,6 +592,11 @@ class RoomController extends Controller
     * )
     */
     public function showByProject(Request $request, $project_id){
+
+        // si dans la requete on a alternatif=true on va return alternativeShowByProject
+        if($request->input('alternative') == 'true' || $request->input('alternative') == true){
+            return $this->alternativeShowByProject($request, $project_id);
+        }
 
         $project = Project::find($project_id);
 
@@ -617,6 +632,25 @@ class RoomController extends Controller
         }
 
         return response()->json($rooms);
+    }
+
+
+    public function alternativeShowByProject(Request $request , $project_id){
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['message' => 'Project not found.'], 404);
+        }
+
+        $reservations = $project->reservations()->get();
+
+        foreach ($reservations as $reservation) {
+            if ($reservation->project_id == $project_id) {
+                $reservation->rooms = Room::find($reservation->room_id);
+            }
+        }
+
+        return response()->json($reservations);
     }
 
 
