@@ -383,7 +383,7 @@ class RoomController extends Controller
 
     /**
     * @OA\Post(
-    *     path="/api/projects/teams/unreserve",
+    *     path="/api/projects/room/unreserve",
     *     summary="Unreserve a room",
     *     tags={"Rooms"},
     *     @OA\RequestBody(

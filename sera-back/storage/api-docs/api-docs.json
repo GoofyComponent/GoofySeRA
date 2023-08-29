@@ -1443,13 +1443,13 @@
                 }
             }
         },
-        "/api/projects/teams/unreserve": {
+        "/api/projects/room/unreserve": {
             "post": {
                 "tags": [
                     "Rooms"
                 ],
                 "summary": "Unreserve a room",
-                "operationId": "c3d481d6506866526ea70a9e62d5b2a2",
+                "operationId": "83ad645d48699a9b028255ecc1d677fb",
                 "requestBody": {
                     "description": "Reservation id",
                     "required": true,
