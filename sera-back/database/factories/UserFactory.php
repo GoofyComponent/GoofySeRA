@@ -2,8 +2,11 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Services\CreateMinioUser;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -18,6 +21,9 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $roles = array_keys(config('roles'));
+        $s3_credentials = (new CreateMinioUser())->create();
+        $s3_credentials['secretkey'] = Hash::make($s3_credentials['secretkey']);
+        $s3_credentials['accesskey'] = Hash::make($s3_credentials['accesskey']);
         return [
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -27,6 +33,7 @@ class UserFactory extends Factory
             'lastname' => fake()->lastName(),
             'role' => $roles[array_rand($roles)],
             'avatar_filename' => fake()->boolean(50) ? 'lulu' : null,
+            's3_credentials' => json_encode($s3_credentials),
         ];
     }
 
