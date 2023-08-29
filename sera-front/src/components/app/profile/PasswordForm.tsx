@@ -60,8 +60,6 @@ export const PasswordForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log("Change password submitted", data);
-
     if (data.newPassword !== data.confirmNewPassword) {
       return;
     }
