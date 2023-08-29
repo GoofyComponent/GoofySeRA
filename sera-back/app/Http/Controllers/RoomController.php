@@ -590,6 +590,7 @@ class RoomController extends Controller
         }
 
         $reservations = $project->reservations()->get();
+
         $canReserve = $request->input('reservation');
         if($canReserve == 'true'){
             $canReserve = true;
@@ -602,6 +603,12 @@ class RoomController extends Controller
             if ($reservation->project_id == $project_id) {
                 if($canReserve === true){
                     $room = Room::find($reservation->room_id)->load('reservations');
+                    // dans reservations on remove celle qui ne sont pas lié à ce projet
+                    foreach ($room->reservations as $key => $value) {
+                        if($value->project_id != $project_id){
+                            unset($room->reservations[$key]);
+                        }
+                    }
                 }else{
                     $room = Room::find($reservation->room_id);
                 }
