@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
-    vim 
+    vim
 
 RUN docker-php-ext-install pdo zip mbstring exif pcntl bcmath gd pdo_mysql mysqli
 RUN  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
@@ -30,6 +30,13 @@ RUN  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/loca
 #The index.php file is the entry point of the application. And he is in the public folder.
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc \
+  --create-dirs \
+  -o $HOME/minio-binaries/mc && \
+  chmod +x $HOME/minio-binaries/mc && \
+  export PATH=$PATH:$HOME/minio-binaries/
+
 
 # RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
