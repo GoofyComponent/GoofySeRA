@@ -8,6 +8,8 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use App\Services\CreateMinioUser;
+
 
 class UserController extends Controller
 {
@@ -832,5 +834,11 @@ class UserController extends Controller
         });
 
         return response()->json($reservations);
+    }
+
+
+    public function test(){
+        $createMinioUser = new CreateMinioUser();
+        return response()->json(['message' => 'User created.']);
     }
 }
