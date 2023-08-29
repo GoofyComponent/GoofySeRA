@@ -1503,23 +1503,14 @@
                 }
             }
         },
-        "/api/projects/{projectId}/rooms/available": {
+        "/api/rooms/available": {
             "get": {
                 "tags": [
                     "Rooms"
                 ],
                 "summary": "Get available rooms",
-                "operationId": "edc99e985d38ed671a5b844db8f8133f",
+                "operationId": "1617e123795d099ca932a30bab551bce",
                 "parameters": [
-                    {
-                        "name": "projectId",
-                        "in": "path",
-                        "description": "Project id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
                     {
                         "name": "duration",
                         "in": "query",

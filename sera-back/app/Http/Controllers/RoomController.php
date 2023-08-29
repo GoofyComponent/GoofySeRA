@@ -428,18 +428,9 @@ class RoomController extends Controller
 
     /**
     * @OA\Get(
-    *     path="/api/projects/{projectId}/rooms/available",
+    *     path="/api/rooms/available",
     *     summary="Get available rooms",
     *     tags={"Rooms"},
-    *     @OA\Parameter(
-    *         description="Project id",
-    *         in="path",
-    *         name="projectId",
-    *         required=true,
-    *         @OA\Schema(
-    *             type="integer",
-    *         )
-    *     ),
     *     @OA\Parameter(
     *         description="Duration in minutes",
     *         in="query",
