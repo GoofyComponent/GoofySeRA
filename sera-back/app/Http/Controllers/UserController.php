@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-
 use App\Services\CreateMinioUser;
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 
 
 class UserController extends Controller
@@ -489,7 +490,12 @@ class UserController extends Controller
      */
     public function getAuthenticatedUser(Request $request)
     {
-        $user = Auth::user();
+        // même si s3_credentials est caché, il est quand même retourné par la requête
+        $user = Auth::user()->makeVisible('s3_credentials');
+        $user->s3_credentials = json_decode($user->s3_credentials);
+        // on enlève les hash des credentials dans accesskey et secretkey
+        $user->s3_credentials->accesskey = Crypt::decrypt($user->s3_credentials->accesskey);
+        $user->s3_credentials->secretkey = Crypt::decrypt($user->s3_credentials->secretkey);
         if ($user->avatar_filename !== null) {
             $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
         }
