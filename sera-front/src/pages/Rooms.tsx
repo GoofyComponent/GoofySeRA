@@ -115,8 +115,8 @@ export const Rooms = () => {
 
   useEffect(() => {
     if (roomsData) {
-      /* setTotalPages(roomsData.last_page);
-      setCurrentPage(roomsData.current_page); */
+      setTotalPages(roomsData.last_page);
+      setCurrentPage(roomsData.current_page);
     }
   }, [roomsData]);
 
@@ -124,9 +124,6 @@ export const Rooms = () => {
     /* if (!roomsData) {
       navigate("/dashboard/rooms");
     } */
-
-      setTotalPages(1);
-      setCurrentPage(1);
 
     if (searchParams.get("action") && roomId) {
       console.log("open modal");
@@ -217,7 +214,7 @@ export const Rooms = () => {
           </Dialog>
         </div>
 
-        <RoomsTable rooms={isLoading ? undefined : roomsData} />
+        <RoomsTable rooms={isLoading ? undefined : roomsData.data} />
       </div>
 
       <Pagination
