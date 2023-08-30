@@ -19,7 +19,10 @@ class CreateMinioUser {
 
     public function __construct() {
 
-        echo(var_dump(env('AWS_ACCESS_KEY_ID')));
+        echo(env('AWS_ACCESS_KEY_ID'));
+        echo(env('AWS_SECRET_ACCESS_KEY'));
+        echo(env('AWS_DEFAULT_REGION'));
+        echo(env('AWS_BUCKET'));
 
         $this->aws_access_key_id = env('AWS_ACCESS_KEY_ID');
         $this->aws_secret_access_key = env('AWS_SECRET_ACCESS_KEY');
