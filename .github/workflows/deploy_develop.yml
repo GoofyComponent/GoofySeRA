@@ -105,8 +105,7 @@ jobs:
           sleep 10
           docker exec develop-sera-back-laravel-test php artisan config:cache
           docker exec develop-sera-back-laravel-test php artisan config:clear
-          # tout le dossier root doit appartenir à l'utilisateur www-data
-          docker exec develop-sera-back-laravel-test chown -R www-data:www-data /root
+
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
