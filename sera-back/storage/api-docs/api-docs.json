@@ -2016,26 +2016,6 @@
                         }
                     }
                 ],
-                "requestBody": {
-                    "description": "Planification to captation",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "project_id"
-                                ],
-                                "properties": {
-                                    "project_id": {
-                                        "type": "integer",
-                                        "example": "1"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
                         "description": "Project",

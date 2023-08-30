@@ -295,14 +295,6 @@ class StepController extends Controller
     *             format="int64"
     *         )
     *     ),
-    *     @OA\RequestBody(
-    *         required=true,
-    *         description="Planification to captation",
-    *         @OA\JsonContent(
-    *             required={"project_id"},
-    *             @OA\Property(property="project_id", type="integer", example="1"),
-    *         ),
-    *     ),
     *     @OA\Response(
     *         response=200,
     *         description="Project",
@@ -345,13 +337,17 @@ class StepController extends Controller
 
         $controller = new UserController();
         $roles = $controller->getRoles($request)->getData();
+        // dans role on enlève le role cursus_director
+        $roles = array_diff($roles, ['cursus_director']);
 
         $rolesFromTeam = $project->team->users->map(function ($user) {
             return $user->role;
         })->unique()->values()->toArray();
 
-        if($rolesFromTeam !== $roles){
-            return response()->json(['error' => 'Roles are not the same.'], 400);
+        foreach ($roles as $role) {
+            if(!in_array($role, $rolesFromTeam)){
+                return response()->json(['error' => 'Role ' . $role . ' is not in the team.'], 400);
+            }
         }
 
         // on regarde si le projet à une salle
