@@ -23,11 +23,8 @@ class CreateMinioUser {
         $this->aws_default_region = $_ENV['AWS_DEFAULT_REGION'];
         $this->aws_bucket_name = $_ENV['AWS_BUCKET'];
 
-        // echo tous les env
-        echo "AWS_ACCESS_KEY_ID : ".$_ENV['AWS_ACCESS_KEY_ID']."\n";
-        echo "AWS_SECRET_ACCESS_KEY : ".$_ENV['AWS_SECRET_ACCESS_KEY']."\n";
-        echo "AWS_DEFAULT_REGION : ".$_ENV['AWS_DEFAULT_REGION']."\n";
-        echo "AWS_BUCKET : ".$_ENV['AWS_BUCKET']."\n";
+        // echo my env file
+        echo (var_dump($_ENV));
 
         // on instancie le client Minio à travers le sdk AWS car tout est compatible
         $this->client = new S3Client([
