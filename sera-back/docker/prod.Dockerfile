@@ -37,13 +37,12 @@ RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc \
   chmod +x $HOME/minio-binaries/mc && \
   export PATH=$PATH:$HOME/minio-binaries/
 
-RUN echo $HOME
-RUN sleep 15
-
 # RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN chown -R www-data:www-data /var/www/html
 RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html
+
+RUN chown -R www-data:www-data /root
 
 # on copy les env de dev dans le container
 COPY .env /var/www/html/.env
