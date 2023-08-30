@@ -18,16 +18,16 @@ class CreateMinioUser {
     private $api_endpoint;
 
     public function __construct() {
-        $this->aws_access_key_id = env('AWS_ACCESS_KEY_ID');
-        $this->aws_secret_access_key = env('AWS_SECRET_ACCESS_KEY');
-        $this->aws_default_region = env('AWS_DEFAULT_REGION');
-        $this->aws_bucket_name = env('AWS_BUCKET');
+        $this->aws_access_key_id = $_ENV['AWS_ACCESS_KEY_ID'];
+        $this->aws_secret_access_key = $_ENV['AWS_SECRET_ACCESS_KEY'];
+        $this->aws_default_region = $_ENV['AWS_DEFAULT_REGION'];
+        $this->aws_bucket_name = $_ENV['AWS_BUCKET'];
 
         // echo tous les env
-        echo "AWS_ACCESS_KEY_ID : ".env('AWS_ACCESS_KEY_ID')."\n";
-        echo "AWS_SECRET_ACCESS_KEY : ".env('AWS_SECRET_ACCESS_KEY')."\n";
-        echo "AWS_DEFAULT_REGION : ".env('AWS_DEFAULT_REGION')."\n";
-        echo "AWS_BUCKET : ".env('AWS_BUCKET')."\n";
+        echo "AWS_ACCESS_KEY_ID : ".$_ENV['AWS_ACCESS_KEY_ID']."\n";
+        echo "AWS_SECRET_ACCESS_KEY : ".$_ENV['AWS_SECRET_ACCESS_KEY']."\n";
+        echo "AWS_DEFAULT_REGION : ".$_ENV['AWS_DEFAULT_REGION']."\n";
+        echo "AWS_BUCKET : ".$_ENV['AWS_BUCKET']."\n";
 
         // on instancie le client Minio à travers le sdk AWS car tout est compatible
         $this->client = new S3Client([
