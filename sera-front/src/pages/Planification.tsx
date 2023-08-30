@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { Check } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Check, CheckSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -14,6 +14,20 @@ export const Planification = () => {
   const [teamIsValid, setTeamIsValid] = useState(false);
   const [reservationIsValid, setReservationIsValid] = useState(false);
   const [isPlanificationValid, setIsPlanificationValid] = useState(false);
+
+  const {
+    data: projectStepStatus,
+    isLoading,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["project-step-status", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(
+        `/api/projects/${ProjectId}/steps?step=Planning`
+      );
+      return project.data[0].status;
+    },
+  });
 
   const passToCaptation = useMutation({
     mutationFn: async () => {
@@ -42,23 +56,41 @@ export const Planification = () => {
     <>
       <HeaderTitle title="Planification" previousTitle="Projet" />
       <div className="mx-6 flex flex-col justify-end">
-        <Button
-          className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          disabled={!isPlanificationValid}
-          onClick={() => {
-            if (isPlanificationValid) {
-              passToCaptation.mutate();
-            }
-          }}
-        >
-          <Check />
-          <p className="ml-2">Validate this step</p>
-        </Button>
-        {!isPlanificationValid && (
-          <p className="my-auto text-gray-600">
-            You can&apos;t validate this step until your team is complete and
-            you have at least one reservation.
-          </p>
+        {isLoading && !isSuccess && (
+          <p className="text-center italic">Loading...</p>
+        )}
+        {projectStepStatus != "done" && isSuccess && (
+          <>
+            <Button
+              className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+              disabled={!isPlanificationValid}
+              onClick={() => {
+                if (isPlanificationValid) {
+                  passToCaptation.mutate();
+                }
+              }}
+            >
+              <Check />
+              <p className="ml-2">Validate this step</p>
+            </Button>
+            {!isPlanificationValid && (
+              <p className="my-auto text-gray-600">
+                You can&apos;t validate this step until your team is complete
+                and you have at least one reservation.
+              </p>
+            )}
+          </>
+        )}
+        {projectStepStatus === "done" && isSuccess && (
+          <div className="my-auto flex justify-center rounded-lg border-2 border-sera-jet text-center text-sera-jet">
+            <CheckSquare size={32} className="my-auto mr-4" />
+            <div className="flex flex-col justify-center text-center">
+              <p className="font-bold">This step has been validated.</p>
+              <p className="font-extralight italic">
+                You can still update the information
+              </p>
+            </div>
+          </div>
         )}
       </div>
       <div id="planification" className="mx-6 flex flex-col justify-start">

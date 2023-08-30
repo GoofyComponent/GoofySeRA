@@ -152,3 +152,29 @@ export const teamChecker = (team: Member[]) => {
 
   return teamHasAllRoles;
 };
+
+export const stepLinkExtractor = (step: number) => {
+  switch (step) {
+    case 1:
+      return "planification";
+      break;
+    case 2:
+      return "captation";
+      break;
+    case 3:
+      return "review-video";
+      break;
+    case 4:
+      return "transcription";
+      break;
+    case 5:
+      return "traduction";
+      break;
+    case 6:
+      return "edito";
+      break;
+    default:
+      return "";
+      break;
+  }
+};
