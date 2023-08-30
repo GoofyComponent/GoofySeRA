@@ -85,7 +85,15 @@ export const ReservationContainer = ({
           </span>
         )}
       </h3>
-      <div className="flex flex-col justify-start">
+      <div className="mx-auto flex flex-row flex-wrap">
+        <button
+          className="m-2 flex min-h-full w-96 justify-start rounded-lg border-2 border-dashed border-sera-jet px-4 py-2"
+          onClick={() => setRoomSearchModal(true)}
+          aria-label="Open the user search modal"
+        >
+          <Plus className="m-auto" />
+          <p className="m-auto text-xl">ADD A RESERVATION</p>
+        </button>
         {projectReservations &&
           projectReservations.map((reservation: any) => (
             <ReservationCard
@@ -99,14 +107,6 @@ export const ReservationContainer = ({
               projectRoomRefetch={projectReservationsRefetch}
             />
           ))}
-        <button
-          className="m-2 flex h-20 w-96 justify-start rounded-lg border-2 border-dashed border-sera-jet px-4 py-2"
-          onClick={() => setRoomSearchModal(true)}
-          aria-label="Open the user search modal"
-        >
-          <Plus className="m-auto" />
-          <p className="m-auto text-xl">ADD A RESERVATION</p>
-        </button>
       </div>
       <SearchRoomDialog
         roomSearchModal={roomSearchModal}

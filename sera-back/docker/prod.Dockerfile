@@ -37,11 +37,13 @@ RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc \
   chmod +x $HOME/minio-binaries/mc && \
   export PATH=$PATH:$HOME/minio-binaries/
 
-
 # RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN chown -R www-data:www-data /var/www/html
-RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html
+RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html && chown -R 1000:1000 /root && chmod -R 755 /root
+RUN chown -R 1000:1000 /var/www/.mc && chmod -R 755 /var/www/.mc
 
+# on copy les env de dev dans le container
+COPY .env /var/www/html/.env
 
 CMD ["apache2-foreground"]
