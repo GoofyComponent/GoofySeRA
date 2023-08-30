@@ -43,5 +43,7 @@ RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN chown -R www-data:www-data /var/www/html
 RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html
 
+# on copy les env de dev dans le container
+COPY .env /var/www/html/.env
 
 CMD ["apache2-foreground"]

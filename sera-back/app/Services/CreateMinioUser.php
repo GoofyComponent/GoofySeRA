@@ -18,10 +18,14 @@ class CreateMinioUser {
     private $api_endpoint;
 
     public function __construct() {
+
+        echo(var_dump(env('AWS_ACCESS_KEY_ID')));
+
         $this->aws_access_key_id = env('AWS_ACCESS_KEY_ID');
         $this->aws_secret_access_key = env('AWS_SECRET_ACCESS_KEY');
         $this->aws_default_region = env('AWS_DEFAULT_REGION');
         $this->aws_bucket_name = env('AWS_BUCKET');
+
 
         // on instancie le client Minio à travers le sdk AWS car tout est compatible
         $this->client = new S3Client([
