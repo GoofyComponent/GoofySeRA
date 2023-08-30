@@ -105,6 +105,7 @@ jobs:
         run: |
           sleep 10
           echo $DEVELOP_LARAVEL_ENV_FILE > sera-back/.env 
+          echo $DEVELOP_LARAVEL_ENV_FILE
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
