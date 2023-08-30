@@ -12,6 +12,25 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $randomLastName = [
+            "Alexander",
+            "Arthur",
+            "Avery",
+            "Bennett",
+            "Caleb",
+            "Carter",
+            "Charles",
+            "Christian",
+            "Christopher",
+            "Daniel",
+            "David",
+            "Dylan",
+            "Elijah",
+            "Albuquerque",
+            "Alcott",
+            "Grousset",
+        ];
+
         // Create an user for each role in the roles config file
         foreach (config('roles') as $role => $value) {
             // if email already exists, skip
@@ -20,7 +39,7 @@ class UserSeeder extends Seeder
             }
 
             \App\Models\User::factory()->create([
-                'lastname' => $role,
+                'lastname' => $randomLastName[array_rand($randomLastName)],
                 'email' => $role . '@sera.com',
                 'password' => bcrypt('password'),
                 'role' => $role
