@@ -20,7 +20,7 @@ class CreateMinioUser {
     public function __construct() {
         // echo (var_dump($_ENV));
         // github actions env doesnt work with $_ENV so we use getenv
-        $env = getenv('APP_ENV');
+        $env = getenv('AWS_ACCESS_KEY_ID');
         echo var_dump($env);
 
         $this->aws_access_key_id = $_ENV['AWS_ACCESS_KEY_ID'];
