@@ -44,15 +44,30 @@ axios.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config;
 
+    let errormessage = "";
+
     if (error.message) {
       /* store.dispatch(reset());
       router.navigate("/login"); */
-
-      toast({
-        title: "Were unable to contact our services for the moment.",
-        description: `Please try again later. ${error} ${error.message}`,
-      });
+      errormessage = error.message;
     }
+
+    if (error.response && error.response.data && error.response.data.message) {
+      errormessage = error.response.data.message;
+    }
+
+    if (error.response && error.response.data && error.response.data.errors) {
+      errormessage = error.response.data.errors;
+    }
+
+    if (error.response && error.response.data && error.response.data.error) {
+      errormessage = error.response.data.error;
+    }
+
+    toast({
+      title: "A error occured.",
+      description: `${errormessage}`,
+    });
 
     if (
       error.response &&
