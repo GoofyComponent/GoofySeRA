@@ -126,10 +126,8 @@ export const Rooms = () => {
     } */
 
     if (searchParams.get("action") && roomId) {
-      console.log("open modal");
       setOpenModal(true);
     } else {
-      console.log("close modal");
       setOpenModal(false);
     }
 

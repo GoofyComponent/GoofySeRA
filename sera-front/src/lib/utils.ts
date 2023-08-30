@@ -1,6 +1,19 @@
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+interface Member {
+  id: number;
+  email: string;
+  email_verified_at: string;
+  firstname: string;
+  lastname: string;
+  role: string;
+  avatar_filename: string;
+  created_at: string;
+  updated_at: string;
+  laravel_through_key: number;
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -40,6 +53,15 @@ export const formatDate = (timestamp: string) => {
   return dateFormatee;
 };
 
+export const convertDateFromDateType = (date: Date) => {
+  const dateArray = date.toString().split(" ");
+  const month = dateArray[1];
+  const day = dateArray[2];
+  const year = dateArray[3];
+  const newDate = `${year}-${month}-${day}`;
+  return newDate;
+};
+
 export const convertDate = (date: string) => {
   const dateArray = date.split("-");
   const day = dateArray[2];
@@ -54,7 +76,7 @@ export const convertTime = (time: string) => {
   const hour = parseInt(timeArray[0]);
   const minute = parseInt(timeArray[1]);
   const second = parseInt(timeArray[2]);
-  console.log(new Date(0, 0, 0, hour, minute, second));
+
   return new Date(0, 0, 0, hour, minute, second);
 };
 
@@ -109,4 +131,50 @@ export const formatName = (lastname?: string, firstname?: string) => {
   return (
     capitalizeFirstLetter(lastname) + " " + capitalizeFirstLetter(firstname)
   );
+};
+
+export const teamChecker = (team: Member[]) => {
+  //we need to check if the project has at least one of each possible roles
+  const mandatoryRoles = [
+    "project_manager",
+    "professor",
+    "video_team",
+    "video_editor",
+    "transcription_team",
+    "traduction_team",
+    "editorial_team",
+  ];
+
+  const teamRoles = team.map((member) => member.role);
+  const teamHasAllRoles = mandatoryRoles.every((role) =>
+    teamRoles.includes(role)
+  );
+
+  return teamHasAllRoles;
+};
+
+export const stepLinkExtractor = (step: number) => {
+  switch (step) {
+    case 1:
+      return "planification";
+      break;
+    case 2:
+      return "captation";
+      break;
+    case 3:
+      return "review-video";
+      break;
+    case 4:
+      return "transcription";
+      break;
+    case 5:
+      return "traduction";
+      break;
+    case 6:
+      return "edito";
+      break;
+    default:
+      return "";
+      break;
+  }
 };

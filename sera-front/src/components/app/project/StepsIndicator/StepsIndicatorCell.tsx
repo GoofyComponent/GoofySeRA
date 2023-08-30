@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { CheckCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface StepsIndicatorCellProps {
@@ -6,6 +7,7 @@ interface StepsIndicatorCellProps {
   title: string;
   description: string;
   isAccessible: boolean;
+  isDone: boolean;
   stepUrl: string;
 }
 
@@ -14,6 +16,7 @@ export const StepsIndicatorCell = ({
   title,
   description,
   isAccessible,
+  isDone,
   stepUrl,
 }: StepsIndicatorCellProps) => {
   return (
@@ -35,6 +38,9 @@ export const StepsIndicatorCell = ({
           {!isAccessible && "You cannot access to this step for the moment."}
         </p>
       </div>
+      {isDone && (
+        <CheckCheck size={32} className="my-auto" strokeWidth={2.75} />
+      )}
     </Link>
   );
 };

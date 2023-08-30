@@ -1788,7 +1788,7 @@
                 }
             }
         },
-        "/api/projects/show/steps": {
+        "/api/projects/{id}/steps": {
             "get": {
                 "tags": [
                     "Step"
@@ -1798,8 +1798,8 @@
                 "operationId": "GetSteps",
                 "parameters": [
                     {
-                        "name": "project_id",
-                        "in": "query",
+                        "name": "id",
+                        "in": "path",
                         "description": "Project id",
                         "required": true,
                         "schema": {
@@ -1808,55 +1808,40 @@
                         }
                     },
                     {
-                        "name": "step",
+                        "name": "status",
                         "in": "query",
-                        "description": "Step",
+                        "description": "Status of the steps",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                                "ongoing",
+                                "done",
+                                "not_started"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "step",
+                        "in": "query",
+                        "description": "Select a specific step",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "Planning",
+                                "Capture",
+                                "Post-Production",
+                                "Transcription",
+                                "Subtitling",
+                                "Editorial"
+                            ]
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Project steps",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": "1"
-                                        },
-                                        "title": {
-                                            "type": "string",
-                                            "example": "Project title"
-                                        },
-                                        "description": {
-                                            "type": "string",
-                                            "example": "Project description"
-                                        },
-                                        "status": {
-                                            "type": "string",
-                                            "example": "ongoing"
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "example": "2021-05-05T14:48:00.000000Z"
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "example": "2021-05-05T14:48:00.000000Z"
-                                        },
-                                        "project_request_id": {
-                                            "type": "integer",
-                                            "example": "1"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Project steps"
                     },
                     "404": {
                         "description": "Project not found",
