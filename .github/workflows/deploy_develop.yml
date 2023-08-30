@@ -101,11 +101,9 @@ jobs:
       - name: Run migrations$
         # get all my env from secrets.DEVELOP_LARAVEL_ENV_FILE 
         env: 
-          DEVELOP_LARAVEL_ENV_FILE: ${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}
+          AWS_ACCESS_KEY_ID: "user"
         run: |
           sleep 10
-          echo $DEVELOP_LARAVEL_ENV_FILE > sera-back/.env 
-          echo $DEVELOP_LARAVEL_ENV_FILE
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
