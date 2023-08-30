@@ -53,6 +53,15 @@ export const formatDate = (timestamp: string) => {
   return dateFormatee;
 };
 
+export const convertDateFromDateType = (date: Date) => {
+  const dateArray = date.toString().split(" ");
+  const month = dateArray[1];
+  const day = dateArray[2];
+  const year = dateArray[3];
+  const newDate = `${year}-${month}-${day}`;
+  return newDate;
+};
+
 export const convertDate = (date: string) => {
   const dateArray = date.split("-");
   const day = dateArray[2];
