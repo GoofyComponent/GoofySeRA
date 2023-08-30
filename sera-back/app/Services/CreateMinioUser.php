@@ -19,11 +19,6 @@ class CreateMinioUser {
 
     public function __construct() {
 
-        echo(env('AWS_ACCESS_KEY_ID'));
-        echo(env('AWS_SECRET_ACCESS_KEY'));
-        echo(env('AWS_DEFAULT_REGION'));
-        echo(env('AWS_BUCKET'));
-
         $this->aws_access_key_id = env('AWS_ACCESS_KEY_ID');
         $this->aws_secret_access_key = env('AWS_SECRET_ACCESS_KEY');
         $this->aws_default_region = env('AWS_DEFAULT_REGION');
@@ -46,24 +41,6 @@ class CreateMinioUser {
 
     // Create Access Keys for a User connected with aws_access_key_id and aws_secret_access_key
     public function create(){
-
-
-        // echo the process user who is running the script
-        $process = new Process(['whoami']);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-        echo $process->getOutput();
-
-        // on cherhe ou est /minio-binaries/mc et on affiche son path
-        $process = new Process(['which', 'mc']);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-        echo $process->getOutput();
-
 
         $process = new Process(['/root/minio-binaries/mc', 'alias', 'set', "myminio", "http://minio:9000", $this->aws_access_key_id, $this->aws_secret_access_key]);
         $process->run();
