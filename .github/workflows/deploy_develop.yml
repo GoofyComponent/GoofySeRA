@@ -5,7 +5,8 @@ on:
     branches:
       - develop
       #- SERA-58
-
+  workflow_dispatch:
+    
 jobs:
   cleaning:
     uses: ./.github/workflows/rebuild-containers.yml
