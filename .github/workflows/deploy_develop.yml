@@ -105,9 +105,7 @@ jobs:
           sleep 10
           docker exec develop-sera-back-laravel-test php artisan config:cache
           docker exec develop-sera-back-laravel-test php artisan config:clear
-          # on echo le contenu du dossier /root
-          ls -la /root
-          sleep 10
+          docker exec develop-sera-back-laravel-test ls -la /root
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
