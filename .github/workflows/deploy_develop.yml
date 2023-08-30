@@ -104,6 +104,8 @@ jobs:
           AWS_ACCESS_KEY_ID: "user"
         run: |
           sleep 10
+          docker exec develop-sera-back-laravel-test php artisan config:cache
+          docker exec develop-sera-back-laravel-test php artisan config:clear
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
