@@ -19,8 +19,6 @@ class CreateMinioUser {
 
     public function __construct() {
 
-        echo(var_dump(env('AWS_ACCESS_KEY_ID')));
-
         $this->aws_access_key_id = env('AWS_ACCESS_KEY_ID');
         $this->aws_secret_access_key = env('AWS_SECRET_ACCESS_KEY');
         $this->aws_default_region = env('AWS_DEFAULT_REGION');
@@ -43,7 +41,6 @@ class CreateMinioUser {
 
     // Create Access Keys for a User connected with aws_access_key_id and aws_secret_access_key
     public function create(){
-
 
         $process = new Process(['/root/minio-binaries/mc', 'alias', 'set', "myminio", "http://minio:9000", $this->aws_access_key_id, $this->aws_secret_access_key]);
         $process->run();
