@@ -378,6 +378,10 @@ class RoomController extends Controller
             return response()->json(['error' => 'Room already reserved. Need to be 30 minutes before the end of the reservation to be able to reserve again.'], 400);
         }
 
+        if(is_array($reservation) && array_key_exists('error', $reservation)){
+            return response()->json($reservation, 400);
+        }
+
         return $reservation;
     }
 
