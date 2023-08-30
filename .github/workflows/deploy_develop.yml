@@ -98,9 +98,13 @@ jobs:
           docker exec develop-sera-back-laravel-test php artisan storage:link
           docker exec develop-sera-back-laravel-test php artisan l5-swagger:generate
 
-      - name: Run migrations
+      - name: Run migrations$
+        # get all my env from secrets.DEVELOP_LARAVEL_ENV_FILE 
+        env: 
+          DEVELOP_LARAVEL_ENV_FILE: ${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}
         run: |
           sleep 10
+          echo $DEVELOP_LARAVEL_ENV_FILE > sera-back/.env 
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
