@@ -113,15 +113,15 @@ class StepController extends Controller
 
     /**
      * @OA\Get(
-     *  path="/api/projects/show/steps",
+     *  path="/api/projects/{id}/steps",
      * tags={"Step"},
      * summary="Get project steps",
      * description="Get project steps",
      * operationId="GetSteps",
      * @OA\Parameter(
      *     description="Project id",
-     *     in="query",
-     *     name="project_id",
+     *     in="path",
+     *     name="id",
      *     required=true,
      *     @OA\Schema(
      *         type="integer",
@@ -129,26 +129,28 @@ class StepController extends Controller
      *     )
      * ),
      * @OA\Parameter(
-     *     description="Step",
+     *     description="Status of the steps",
+     *     in="query",
+     *     name="status",
+     *     required=false,
+     *     @OA\Schema(
+     *         type="string",
+     *         enum={"ongoing", "done", "not_started"}
+     *     )
+     * ),
+     * @OA\Parameter(
+     *     description="Select a specific step",
      *     in="query",
      *     name="step",
      *     required=false,
      *     @OA\Schema(
      *         type="string",
+     *         enum={"Planning", "Capture", "Post-Production", "Transcription", "Subtitling", "Editorial"}
      *     )
      * ),
      * @OA\Response(
      *     response=200,
      *     description="Project steps",
-     *     @OA\JsonContent(
-     *         @OA\Property(property="id", type="integer", example="1"),
-     *         @OA\Property(property="title", type="string", example="Project title"),
-     *         @OA\Property(property="description", type="string", example="Project description"),
-     *         @OA\Property(property="status", type="string", example="ongoing"),
-     *         @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
-     *         @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
-     *         @OA\Property(property="project_request_id", type="integer", example="1"),
-     *     ),
      * ),
      * @OA\Response(
      *     response=404,
@@ -166,17 +168,14 @@ class StepController extends Controller
      * ),
      * )
      */
-    public function getSteps(Request $request)
+    public function getSteps($id ,Request $request)
     {
-
         $validatedData = $request->validate([
-            'project_id' => 'required|integer',
-            'step' => 'string',
+            'status' => 'string',
+            'step' => 'string|in:' . implode(',', array_keys(config('steps'))),
         ]);
 
-        $stepParam = $validatedData['step'] ?? 'current';
-
-        $project = Project::find($validatedData['project_id']);
+        $project = Project::find($id);
 
         if ($project === null) {
             return response()->json(['error' => 'Project not found.'], 404);
@@ -184,21 +183,27 @@ class StepController extends Controller
 
         $steps = json_decode($project->steps);
 
-        // if stepParam is current, return all steps with status ongoing
-        if ($stepParam === 'current') {
-            $currentSteps = [];
-            foreach ($steps as $step => $value) {
-                if ($value->status === 'ongoing') {
-                    $currentSteps[$step] = $value;
-                }
+        if (isset($validatedData['step'])) {
+            if (!isset($steps->{$validatedData['step']})) {
+                return response()->json(['error' => 'Step not found.'], 400);
             }
-            return response()->json($currentSteps, 200);
-        }
-        if($steps->$stepParam === null){
-            return response()->json(['error' => 'Step not found.'], 400);
+            $steps = [$validatedData['step'] => $steps->{$validatedData['step']}];
         }
 
-        return response()->json($steps->$stepParam, 200);
+        if (isset($validatedData['status'])) {
+            $steps = array_filter((array)$steps, function ($step) use ($validatedData) {
+                return $step->status === $validatedData['status'];
+            });
+        }
+
+        // Reformat steps into an array with the step name as a property
+        $stepsWithKeys = [];
+        foreach ($steps as $key => $step) {
+            $step->name = $key;
+            $stepsWithKeys[] = $step;
+        }
+
+        return response()->json($stepsWithKeys, 200);
     }
 
     /**
