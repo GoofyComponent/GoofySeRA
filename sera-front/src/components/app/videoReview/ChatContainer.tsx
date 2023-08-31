@@ -69,30 +69,31 @@ export const ChatContainer = ({ chatData, plyrRef }: any) => {
         ref={messageContainerRef}
       >
         {chatData.map((message: any, index: any) => (
-          <div key={index} className="flex justify-start">
-            <Avatar className="mr-4 h-12 w-12">
-              <AvatarImage src={message.author.avatar} />
-            </Avatar>
-            <div className="w-9/12">
-              <div className="min-h-[3rem]">
-                <p className="mb-0 mt-auto font-medium">
-                  {message.author.nickname} - {message.author.job}
-                </p>
-                <p className="mb-auto mt-0 text-xs font-extralight">
-                  {new Date(message.timestamp).toLocaleDateString("fr-FR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+          <>
+            <div key={index} className="flex justify-start">
+              <Avatar className="mr-4 h-12 w-12">
+                <AvatarImage src={message.author.avatar} />
+              </Avatar>
+              <div className="w-9/12">
+                <div className="min-h-[3rem]">
+                  <p className="mb-0 mt-auto font-medium">
+                    {message.author.nickname} - {message.author.job}
+                  </p>
+                  <p className="mb-auto mt-0 text-xs font-extralight">
+                    {new Date(message.timestamp).toLocaleDateString("fr-FR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </div>
+
+                <p className="w-full break-words text-sm">
+                  {messageSerializer(message.message)}
                 </p>
               </div>
-
-              <p className="w-full break-words text-sm">
-                {messageSerializer(message.message)}
-              </p>
-
-              <Separator className="mt-2 bg-sera-jet text-sera-jet" />
             </div>
-          </div>
+            <Separator className="my-4 h-px w-full rounded-lg bg-sera-jet/70" />
+          </>
         ))}
       </div>
       <div

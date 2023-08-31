@@ -46,9 +46,6 @@ export const PlyrSection = ({ videoData, plyrRef }: any) => {
           className={`m-auto animate-spin text-sera-jet`}
         />
       )}
-      <button onClick={() => console.log(plyrRef.current.plyr.currentTime)}>
-        Get element from the plyrRef
-      </button>
     </div>
   );
 };
