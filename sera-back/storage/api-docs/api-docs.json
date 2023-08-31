@@ -360,13 +360,13 @@
                 }
             }
         },
-        "/api/projects/{project_id}/add-link": {
+        "/api/projects/{project_id}/add-rushs": {
             "post": {
                 "tags": [
                     "Projects"
                 ],
-                "summary": "Add link to captation",
-                "description": "Add link to captation",
+                "summary": "Add link to video rushs",
+                "description": "Add link to video rushs",
                 "operationId": "addLinkToCaptation",
                 "parameters": [
                     {
