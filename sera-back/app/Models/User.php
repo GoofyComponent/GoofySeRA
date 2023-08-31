@@ -24,6 +24,7 @@ class User extends Authenticatable
         'lastname',
         'role',
         'file',
+        's3_credentials',
     ];
 
     /**
