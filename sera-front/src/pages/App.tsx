@@ -78,9 +78,12 @@ function App() {
             <PopoverTrigger className="m-auto">
             <Bell className="m-auto text-[#916AF6]" />
             </PopoverTrigger>
-            <PopoverContent className="flex flex-col text-lg font-medium text-sera-jet divide-y">
-              <div className="">
-                Notification
+            <PopoverContent className="flex flex-col text-lg font-medium text-sera-jet divide-y mt-4">
+              <div>
+                <div className="flex justify-start text-base">
+                  <p>Notification</p>
+                </div>
+                <Separator className="my-2" />
               </div>
             </PopoverContent>
           </Popover>
