@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Chockbar from "../assets/images/chockbar-404.png";
 import "../assets/styles/chockbar.css"
 export const Error404 = () => {
@@ -36,9 +37,14 @@ export const Error404 = () => {
     <>
       <div className="flex flex-col items-center w-screen justify-center h-screen">
         <img src={Chockbar} alt="chockbar" className="w-1/5" />
-        <h2 className="text-4xl font-semibold text-sera-periwinkle italic ">
+        <h2 className="text-4xl font-semibold text-sera-periwinkle italic text-center">
           404 - Chockbar not found
         </h2>
+        <Link to={"/dashboard"}>
+          <button className="mt-4 bg-sera-periwinkle font-bold py-2 px-4 rounded text-sera-jet ease-in duration-100 hover:scale-105 ">
+            Go back to dashboard
+          </button>
+        </Link>
         {letters.map((letter, index) => (
         <span
           key={index}
