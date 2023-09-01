@@ -21,7 +21,7 @@ class SharedRessourceController extends Controller
             throw new \Exception("Le projet n'existe pas");
         }
 
-        $ressources = $project->getSharedRessources();
+        $ressources = $project->ressources();
 
         return response()->json($ressources);
 
