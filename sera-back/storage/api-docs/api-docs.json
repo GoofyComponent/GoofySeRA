@@ -473,11 +473,11 @@
                         "description": "Filter by priority",
                         "required": false,
                         "schema": {
-                            "type": "integer",
+                            "type": "string",
                             "enum": [
-                                1,
-                                2,
-                                3
+                                "high",
+                                "low",
+                                "medium"
                             ]
                         }
                     },
