@@ -22,13 +22,14 @@ class RessourceFactory extends Factory
             $project = \App\Models\Project::factory()->create();
         }
 
-        $types = ["shared"];
+        $types = [];
 
         return [
             "project_id" => $project->id,
             "name" => $this->faker->sentence(3),
             "type" => $types[array_rand($types)],
-            "url" => "/storage/images/lulu.jpg"
+            "url" => "/storage/images/lulu.jpg",
+            "description" => $this->faker->sentence(10),
         ];
     }
 }
