@@ -28,8 +28,8 @@ class ProjectRequestController extends Controller
      *         description="Filter by priority",
      *         required=false,
      *         @OA\Schema(
-     *             type="integer",
-     *             enum={1, 2, 3}
+     *             type="string",
+     *             enum={"high", "low", "medium"}
      *         )
      *     ),
      *     @OA\Parameter(
