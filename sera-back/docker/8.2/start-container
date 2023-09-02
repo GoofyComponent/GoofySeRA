@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+echo "No uuhhh"
+
+# mc alias set myminio http://minio:9000 user password
+
+if [ ! -z "$WWWUSER" ]; then
+    usermod -u $WWWUSER sail
+fi
+
+if [ ! -d /.composer ]; then
+    mkdir /.composer
+fi
+
+chmod -R ugo+rw /.composer
+
+
+
+# /root/minio-binaries/mc peut être utilisé par n'importe quel utilisateur du container ou processus
+
+# tout le dossier root doit appartenir à l'utilisateur sail
+chown -R sail:sail /root
+/root/minio-binaries/mc alias set myminio http://minio:9000 user password
+
+# /var/www/html create a bucket named sera
+/root/minio-binaries/mc mb --with-versioning --ignore-existing myminio/sera
+
+if [ $# -gt 0 ]; then
+    exec gosu $WWWUSER "$@"
+else
+    exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+fi
+
+
+

@@ -1,0 +1,27 @@
+name: Deploy in production
+
+on:
+  push:
+    branches:
+      - prod
+  workflow_dispatch:
+
+jobs:
+  build_server:
+    uses: ./.github/workflows/build_server_image.yml
+  build_webapp:
+    needs: build_server
+    uses: ./.github/workflows/build_web_image.yml
+  deploy_release:
+    needs: build_webapp
+    uses: ./.github/workflows/create_release.yml
+  notify:
+    needs: deploy_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify production build & published
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "A new release just been created on SERA, images pushed to dockerhub."

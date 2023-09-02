@@ -3,11 +3,13 @@
 First installation
 
 ```bash
-./dev.sh
+sh dev.sh
 ```
 
-Start
+Start 😋😛😛
 
 ```bash
 ./sera-back/vendor/bin/sail up -d
 ```
+
+🕺🕺🕺🕺🕺🕺🕺🕺🕺🕺

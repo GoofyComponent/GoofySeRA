@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'firstname',
+        'lastname',
+        'role',
+        'file',
     ];
 
     /**
@@ -31,6 +34,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        's3_credentials',
     ];
 
     /**
@@ -42,4 +46,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function projectRequests()
+    {
+        return $this->hasMany(ProjectRequest::class);
+    }
+
+    public function teams()
+    {
+        return $this->hasManyThrough(Team::class, UserTeam::class, 'user_id', 'id', 'id', 'team_id');
+    }
+
+    public function projects()
+    {
+        return $this->teams()->get()->map(function ($team) {
+            return $team->project;
+        });
+    }
 }

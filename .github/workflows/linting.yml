@@ -1,0 +1,35 @@
+name: Linting
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  #push:
+  #branches:
+  #- develop
+  #workflow_call:
+
+jobs:
+  lint:
+    runs-on: lint
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          clean: false
+          ref: ${{ github.event.inputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        working-directory: ./sera-front
+        run: npm ci
+
+      - name: Verify & autofix linting errors if needed
+        working-directory: ./sera-front
+        run: |
+          npm run lint-autofix

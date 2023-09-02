@@ -1,0 +1,19 @@
+name: Build the server image
+
+on: workflow_call
+
+jobs:
+  build_server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          image: destcom/sera-server
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          tag: ${{ github.ref_name }}
+          tag_with_latest: true
+          path: ./sera-back/docker/
+          build_file: ./prod.Dockerfile

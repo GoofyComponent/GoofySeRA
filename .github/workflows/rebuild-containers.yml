@@ -1,0 +1,46 @@
+name: Rebuilding containers
+
+on: workflow_call
+jobs:
+  cleaning:
+    runs-on: self-hosted
+
+    steps:
+      - name: Detect and delete front container
+        run: |
+          if [ "$(docker ps -a -q --filter "name=front" | wc -l)" -gt 0 ]
+          then
+              echo "Previous containers found, stopping and removing them..."
+              docker stop $(docker ps -a -q --filter "name=front")
+              docker rm $(docker ps -a -q --filter "name=front")
+          else
+              echo "No previous containers found, continuing..."
+          fi
+      - name: Detect and delete back container
+        run: |
+          if [ "$(docker ps -a -q --filter "name=back-laravel" | wc -l)" -gt 0 ]
+          then
+              echo "Previous containers found, stopping and removing them..."
+              docker stop $(docker ps -a -q --filter "name=back-laravel")
+              docker rm $(docker ps -a -q --filter "name=back-laravel")
+          else
+              echo "No previous containers found, continuing..."
+          fi
+      - name: Detect and delete aditionnal container
+        run: |
+          if [ "$(docker ps -a -q --filter "name=back-soketi" | wc -l)" -gt 0 ]
+          then
+              echo "Previous containers found, stopping and removing them..."
+              docker stop $(docker ps -a -q --filter "name=back-soketi")
+              docker rm $(docker ps -a -q --filter "name=back-soketi")
+          else
+              echo "No previous containers found, continuing..."
+          fi
+          if [ "$(docker ps -a -q --filter "name=back-redis" | wc -l)" -gt 0 ]
+          then
+              echo "Previous containers found, stopping and removing them..."
+              docker stop $(docker ps -a -q --filter "name=back-redis")
+              docker rm $(docker ps -a -q --filter "name=back-redis")
+          else
+              echo "No previous containers found, continuing..."
+          fi

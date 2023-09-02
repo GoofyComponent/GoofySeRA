@@ -4,46 +4,20 @@ on:
   push:
     branches:
       - develop
-
+      #- SERA-58
+  workflow_dispatch:
+    
 jobs:
+  cleaning:
+    uses: ./.github/workflows/rebuild-containers.yml
+
   deploy:
     runs-on: self-hosted
+    needs: cleaning
 
     steps:
-      - name: Check if the previous containers exists
-        run: |
-          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
-          then
-              echo "Previous containers found, stopping and removing them..."
-          else
-              echo "No previous containers found, continuing..."
-          fi
-
-      - name: Stop the previous containers
-        run: |
-          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
-          then
-              docker stop $(docker ps -a -q --filter "name=sera")
-          fi
-
-      - name: Remove the previous containers
-        run: |
-          if [ "$(docker ps -a -q --filter "name=sera" | wc -l)" -gt 0 ]
-          then
-              docker rm $(docker ps -a -q --filter "name=sera")
-          fi
-
-      - name: DEBUG - Display current directory
-        run: |
-          pwd
-          ls -la
-
-      - name: Deletes the files inside the current directory
-        run: |
-          rm -rf ./*
-
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           clean: false
@@ -53,6 +27,7 @@ jobs:
         run: |
           echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
           echo "${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}" > sera-back/.env
+          echo "${{ secrets.DEVELOP_FRONT_ENV_FILE }}" > sera-front/.env
 
       - name: Copy .env file if not exists
         run: |
@@ -79,13 +54,14 @@ jobs:
             exit 1
           fi
 
-      - name: DEBUG - Displaying the current directory && path
-        run: |
-          pwd
-          ls -la
-          find . -name composer.json
-          ls -la sera-back
-          ls -la sera-front
+      #- name: Check if the front does not have lint errors
+      #run: |
+      #docker run --rm \
+      #-u "$(id -u):$(id -g)" \
+      #-v $(pwd)/sera-front:/opt \
+      #-w /opt \
+      #node:lts \
+      #npm install && npm run lint-autofix
 
       - name: Execute composer install
         run: |
@@ -96,30 +72,40 @@ jobs:
           laravelsail/php81-composer \
           composer install --ignore-platform-reqs
 
-      - name: Check if sail folder exists
-        run: |
-          if [ ! -d ./sera-back/vendor/laravel/sail ]
-          then
-              echo "sail folder not found, exiting..."
-              exit ;
-          fi
-
       - name: Launch the containers
         run: |
-          ./sera-back/vendor/laravel/sail/bin/sail -f ./develop.docker-compose.yml up -d --build --force-recreate
+          docker-compose -f ./develop.docker-compose.yml up -d --build
 
       - name: Wait till all containers has started
         run: |
-          sleep 2m
+          sleep 30
 
-      - name: Migrate the database
+      - name: Permissions steps
         run: |
-          if [ "${1}" = "reset" ]
-          then
-              ./sera-back/vendor/laravel/sail/bin/sail artisan migrate:refresh --seed
-          else
-              ./sera-back/vendor/laravel/sail/bin/sail artisan migrate
-          fi
+          sudo chmod -R 777 ./sera-back/storage
+          sudo chmod -R 777 ./sera-back/artisan
+
+      - name: Configure laravel
+        run: |
+          docker exec develop-sera-back-laravel-test php artisan cache:clear 
+          docker exec develop-sera-back-laravel-test php artisan config:clear
+          docker exec develop-sera-back-laravel-test php artisan route:clear
+          docker exec develop-sera-back-laravel-test php artisan key:generate
+          docker exec develop-sera-back-laravel-test php artisan config:cache
+          docker exec develop-sera-back-laravel-test php artisan route:cache
+          docker exec develop-sera-back-laravel-test php artisan view:cache
+          docker exec develop-sera-back-laravel-test php artisan optimize
+          docker exec develop-sera-back-laravel-test php artisan storage:link
+          docker exec develop-sera-back-laravel-test php artisan l5-swagger:generate
+
+      - name: Run migrations$
+        # get all my env from secrets.DEVELOP_LARAVEL_ENV_FILE 
+
+        run: |
+          sleep 10
+          docker exec develop-sera-back-laravel-test php artisan config:cache
+          docker exec develop-sera-back-laravel-test php artisan config:clear
+          docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
         run: |
