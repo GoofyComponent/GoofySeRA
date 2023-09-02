@@ -64,10 +64,10 @@ export const Projects = () => {
                     </SelectTrigger>
                   </TooltipTrigger>
                   <SelectContent>
-                    <SelectItem value="0">all</SelectItem>
-                    <SelectItem value="ongoing">ongoing</SelectItem>
-                    <SelectItem value="completed">completed</SelectItem>
-                    <SelectItem value="cancelled">cancelled</SelectItem>
+                    <SelectItem value="0">All</SelectItem>
+                    <SelectItem value="ongoing">Ongoing</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
                 <TooltipContent className="rounded bg-popover ">
