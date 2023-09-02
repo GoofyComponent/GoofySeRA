@@ -10,6 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { axios } from "@/lib/axios";
 
 import { BigLoader } from "./skeletons/BigLoader";
@@ -42,24 +48,33 @@ export const Projects = () => {
         <div>
           <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
             <h2>Projects</h2>
-            <Select
-              defaultValue=""
-              name="status"
-              value={status}
-              onValueChange={(value) => {
-                setStatus(value);
-              }}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0">all</SelectItem>
-                <SelectItem value="ongoing">ongoing</SelectItem>
-                <SelectItem value="completed">completed</SelectItem>
-                <SelectItem value="cancelled">cancelled</SelectItem>
-              </SelectContent>
-            </Select>
+            <TooltipProvider>
+              <Tooltip>
+                <Select
+                  defaultValue=""
+                  name="status"
+                  value={status}
+                  onValueChange={(value) => {
+                    setStatus(value);
+                  }}
+                >
+                  <TooltipTrigger asChild>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select a priority" />
+                    </SelectTrigger>
+                  </TooltipTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">all</SelectItem>
+                    <SelectItem value="ongoing">ongoing</SelectItem>
+                    <SelectItem value="completed">completed</SelectItem>
+                    <SelectItem value="cancelled">cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+                <TooltipContent className="rounded bg-popover ">
+                  <p>Sort by status</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           {!isLoading ? (
             <div className="mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
