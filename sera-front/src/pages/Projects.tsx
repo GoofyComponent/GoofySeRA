@@ -55,6 +55,7 @@ export const Projects = () => {
                   name="status"
                   value={status}
                   onValueChange={(value) => {
+                    setPage(1);
                     setStatus(value);
                   }}
                 >
