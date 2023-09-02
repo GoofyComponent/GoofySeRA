@@ -16,6 +16,7 @@ import { BigLoader } from "./skeletons/BigLoader";
 
 export const Projects = () => {
   const [page, setPage] = useState(1);
+  const [status, setStatus] = useState("0");
 
   const {
     data: projectsData,
@@ -23,58 +24,17 @@ export const Projects = () => {
     error,
     // isFetching,
   } = useQuery({
-    queryKey: ["projects", { page }],
+    queryKey: ["projects", { page, status }],
     queryFn: async () => {
-      const projects = await axios.get(`api/projects?page=${page}&sort=desc`);
+      let requestUrl = `api/projects?page=${page}&sort=desc`;
+      if (status != "0") requestUrl += `&status=${status}`;
+
+      const projects = await axios.get(requestUrl);
       return projects.data;
     },
   });
 
-  const [projectTrie, setProjectTrie] = useState("");
-
-  //trie les projets en fonction de la valeur du select en rangeant les projets par status (ongoing, completed, cancelled) si completed est selectionné, les projets completed seront en premier puis ongoing puis cancelled si ongoing est selectionné, les projets ongoing seront en premier puis completed puis cancelled si cancelled est selectionné, les projets cancelled seront en premier puis completed puis ongoing
-  if (projectTrie === "ongoing") {
-    !isLoading
-      ? projectsData.data.sort((a: any) => {
-          if (a.status === "ongoing") {
-            return -1;
-          } else if (a.status === "completed") {
-            return 1;
-          } else if (a.status === "cancelled") {
-            return 1;
-          }
-          return 0;
-        })
-      : null;
-  } else if (projectTrie === "completed") {
-    !isLoading
-      ? projectsData.data.sort((a: any) => {
-          if (a.status === "completed") {
-            return -1;
-          } else if (a.status === "ongoing") {
-            return 1;
-          } else if (a.status === "cancelled") {
-            return 1;
-          }
-          return 0;
-        })
-      : null;
-  } else if (projectTrie === "cancelled") {
-    !isLoading
-      ? projectsData.data.sort((a: any) => {
-          if (a.status === "cancelled") {
-            return -1;
-          } else if (a.status === "ongoing") {
-            return 1;
-          } else if (a.status === "completed") {
-            return 1;
-          }
-          return 0;
-        })
-      : null;
-  }
-
-  if (error) return <>{error} . Erreur de PD</>;
+  if (error) return <>{error}</>;
 
   return (
     <>
@@ -85,18 +45,16 @@ export const Projects = () => {
             <Select
               defaultValue=""
               name="status"
-              value={projectTrie}
+              value={status}
               onValueChange={(value) => {
-                setProjectTrie(value);
+                setStatus(value);
               }}
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a priority" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="" disabled hidden>
-                  trier par ...
-                </SelectItem>
+                <SelectItem value="0">all</SelectItem>
                 <SelectItem value="ongoing">ongoing</SelectItem>
                 <SelectItem value="completed">completed</SelectItem>
                 <SelectItem value="cancelled">cancelled</SelectItem>

@@ -204,7 +204,6 @@ export const Tickets = () => {
               value={priority}
               onValueChange={(value) => {
                 setPriority(value);
-                console.log(priority);
               }}
             >
               <SelectTrigger className="mr-2 w-[180px]">
