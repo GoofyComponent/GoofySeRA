@@ -6,7 +6,7 @@ on:
       - develop
       #- SERA-58
   workflow_dispatch:
-    
+
 jobs:
   cleaning:
     uses: ./.github/workflows/rebuild-containers.yml
@@ -63,14 +63,14 @@ jobs:
       #node:lts \
       #npm install && npm run lint-autofix
 
-      - name: Execute composer install
-        run: |
-          docker run --rm \
-          -u "$(id -u):$(id -g)" \
-          -v $(pwd)/sera-back:/opt \
-          -w /opt \
-          laravelsail/php81-composer \
-          composer install --ignore-platform-reqs
+      #- name: Execute composer install
+      #run: |
+      #docker run --rm \
+      #-u "$(id -u):$(id -g)" \
+      #-v $(pwd)/sera-back:/opt \
+      #-w /opt \
+      #laravelsail/php81-composer \
+      #composer install --ignore-platform-reqs
 
       - name: Launch the containers
         run: |
@@ -99,7 +99,7 @@ jobs:
           docker exec develop-sera-back-laravel-test php artisan l5-swagger:generate
 
       - name: Run migrations$
-        # get all my env from secrets.DEVELOP_LARAVEL_ENV_FILE 
+        # get all my env from secrets.DEVELOP_LARAVEL_ENV_FILE
 
         run: |
           sleep 10
