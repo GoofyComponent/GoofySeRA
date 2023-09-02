@@ -10,7 +10,6 @@ import {
 } from "react-router-dom";
 
 import { TicketsTable } from "@/components/app/tickets/TicketsTable";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,13 +20,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -46,6 +38,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { axios } from "@/lib/axios";
 import { TicketsEntity } from "@/lib/types/types";
 
