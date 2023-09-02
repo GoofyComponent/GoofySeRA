@@ -44,6 +44,6 @@ RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html && chown -R 1
 RUN mkdir -p /var/www/.mc && chown -R 1000:1000 /var/www/.mc && chmod -R 755 /var/www/.mc
 
 # on copy les env de dev dans le container
-COPY .env /var/www/html/.env
+#COPY .env /var/www/html/.env
 
 CMD ["apache2-foreground"]
