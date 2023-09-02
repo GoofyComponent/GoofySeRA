@@ -1,41 +1,13 @@
 import clsx from "clsx";
-import { BookOpen, DoorOpen, FolderOpen, Home, Ticket } from "lucide-react";
+import { BookOpen, DoorOpen, Home, Ticket } from "lucide-react";
 import { Link, matchPath, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Separator } from "@/components/ui/separator";
 
 export const Nav = () => {
   const pathname = useLocation();
 
-  const lastSeenProject = useSelector(
-    (state: any) => state.app.lastSeenProjectId
-  );
-
   return (
     <nav className="h-[90vh] w-[14%] border-r-2 border-[#D3D4D5]">
       <ul className="flex h-full flex-col justify-start py-4">
-        {lastSeenProject && (
-          <>
-            <Link
-              to={`/dashboard/projects/${lastSeenProject}`}
-              className={clsx(
-                "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
-                "flex text-sera-jet",
-                matchPath(
-                  pathname.pathname,
-                  `/dashboard/projects/${lastSeenProject}`
-                ) && "bg-sera-jet text-sera-periwinkle ",
-                "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
-              )}
-            >
-              <FolderOpen size={32} className="my-auto mr-2" />
-              <p className="my-auto hidden text-2xl font-semibold lg:block">
-                Last seen
-              </p>
-            </Link>
-            <Separator className="my-2 mr-2" />
-          </>
-        )}
         <Link
           to="/dashboard"
           className={clsx(
