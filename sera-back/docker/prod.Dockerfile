@@ -37,6 +37,9 @@ RUN curl https://dl.min.io/client/mc/release/linux-amd64/mc \
   chmod +x $HOME/minio-binaries/mc && \
   export PATH=$PATH:$HOME/minio-binaries/
 
+RUN /root/minio-binaries/mc alias set myminio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD
+RUN /root/minio-binaries/mc mb --with-versioning --ignore-existing myminio/sera
+
 # RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 RUN chown -R www-data:www-data /var/www/html
