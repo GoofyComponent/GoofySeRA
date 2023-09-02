@@ -9,16 +9,15 @@ use App\Models\Project;
 class SharedRessourceController extends Controller
 {
 
-    public function index(Request $request)
+    public function index($projectId)
     {
-        $this->validate($request, [
-            'project_id' => 'required|integer'
-        ]);
 
-        $project = Project::find($request->project_id);
+        $project = Project::find($projectId);
 
         if (!$project) {
-            throw new \Exception("Le projet n'existe pas");
+            return response()->json([
+                'message' => 'La ressource n\'existe pas'
+            ], 400);
         }
 
         $ressources = $project->ressources();
@@ -27,19 +26,18 @@ class SharedRessourceController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(Request $request,$projectId)
     {
         $acceptedTypes = ['image','audio', 'document'];
 
         $this->validate($request, [
-            'project_id' => 'required|integer',
             'name' => 'required|string',
             'type' => 'required|string|in:'.implode(',', $acceptedTypes),
             'description' => 'required|string',
             'file' => 'required|file'
         ]);
 
-        $project = Project::find($request->project_id);
+        $project = Project::find($projectId);
 
         if (!$project) {
             return response()->json([
@@ -51,13 +49,13 @@ class SharedRessourceController extends Controller
         $ressource->name = $request->name;
         $ressource->type = $request->type;
         $ressource->description = $request->description;
-        $ressource->project_id = $request->project_id;
+        $ressource->project_id = $projectId;
 
 
         $name = $request->name.'_'.$request->file->getClientOriginalName();
-        
+
         $name = strtolower(str_replace(' ', '', $name));
-        
+
         $path = $request->file->storeAs(
             'ressource/project_'.$project->id.'/'.$request->type,
             $name,
@@ -77,9 +75,9 @@ class SharedRessourceController extends Controller
 
     }
 
-    public function show($id)
+    public function show($ressourceId)
     {
-        $ressources = Ressource::find($id);
+        $ressources = Ressource::find($ressourceId);
 
         if (!$ressources) {
             return response()->json([
@@ -90,14 +88,14 @@ class SharedRessourceController extends Controller
         return response()->json($ressources, 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $ressourceId)
     {
         $validatedData = $request->validate([
             'name' => 'required|string',
             'description' => 'required|string',
         ]);
 
-        $ressource = Ressource::find($id);
+        $ressource = Ressource::find($ressourceId);
 
         if (!$ressource) {
             return response()->json([
@@ -110,9 +108,9 @@ class SharedRessourceController extends Controller
         return response()->json($ressource, 201);
     }
 
-    public function destroy($id)
+    public function destroy($ressourceId)
     {
-        $ressource = Ressource::find($id);
+        $ressource = Ressource::find($ressourceId);
 
         if (!$ressource) {
             return response()->json([
