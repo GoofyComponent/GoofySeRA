@@ -29,8 +29,6 @@ class SharedRessourceController extends Controller
 
     public function store(Request $request)
     {
-        // FRONT -> BACK -> BUCKET -> REPONSE au BACK -> REPONSE au FRONT
-
         $acceptedTypes = ['image','audio', 'document'];
 
         $this->validate($request, [
@@ -50,12 +48,30 @@ class SharedRessourceController extends Controller
         }
         $ressource = new Ressource();
 
-        /**
-        * Etape 1: stocker dans le modèle ce qu'on a déjà
-        * Etape 2: Créer le nom du fichier
-        * Etape 3: Stocker le fichier dans le bucket
-        * Etape 4: Stocker dans l'URL de notre ressource dans le modèle
-        */
+        $ressource->name = $request->name;
+        $ressource->type = $request->type;
+        $ressource->description = $request->description;
+        $ressource->project_id = $request->project_id;
+
+
+        $name = $request->name.'_'.$request->file->getClientOriginalName();
+        
+        $name = strtolower(str_replace(' ', '', $name));
+        
+        $path = $request->file->storeAs(
+            'ressource/project_'.$project->id.'/'.$request->type,
+            $name,
+            's3'
+        );
+
+        if (!$path) {
+            return response()->json([
+                'message' => 'Erreur lors de l\'upload du fichier'
+            ], 400);
+        }
+
+        $ressource->url = $path;
+        $ressource->save();
 
         return response()->json($ressource, 201);
 
@@ -63,16 +79,51 @@ class SharedRessourceController extends Controller
 
     public function show($id)
     {
+        $ressources = Ressource::find($id);
 
+        if (!$ressources) {
+            return response()->json([
+                'message' => 'La ressource n\'existe pas'
+            ], 400);
+        }
+
+        return response()->json($ressources, 201);
     }
 
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+        ]);
 
+        $ressource = Ressource::find($id);
+
+        if (!$ressource) {
+            return response()->json([
+                'message' => 'La ressource n\'existe pas'
+            ], 400);
+        }
+
+        $ressource->update($validatedData);
+
+        return response()->json($ressource, 201);
     }
 
-    public function destroy($id): void
+    public function destroy($id)
     {
+        $ressource = Ressource::find($id);
 
+        if (!$ressource) {
+            return response()->json([
+                'message' => 'La ressource n\'existe pas'
+            ], 400);
+        }
+
+        $ressource->delete();
+
+        return response()->json([
+            'message' => 'La ressource a bien été supprimée'
+        ], 200);
     }
 }
