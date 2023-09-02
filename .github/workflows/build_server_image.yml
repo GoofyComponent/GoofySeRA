@@ -15,5 +15,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           tag: ${{ github.ref_name }}
           tag_with_latest: true
-          path: ./sera-back/docker/
-          build_file: ./prod.Dockerfile
+          path: ./sera-back
+          build_file: ./docker/prod.Dockerfile
