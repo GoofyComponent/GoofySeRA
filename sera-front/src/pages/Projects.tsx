@@ -32,7 +32,7 @@ export const Projects = () => {
   } = useQuery({
     queryKey: ["projects", { page, status }],
     queryFn: async () => {
-      let requestUrl = `api/projects?page=${page}&sort=desc`;
+      let requestUrl = `api/projects?page=${page}&sort=desc&maxPerPage=12`;
       if (status != "0") requestUrl += `&status=${status}`;
 
       const projects = await axios.get(requestUrl);
@@ -78,7 +78,7 @@ export const Projects = () => {
             </TooltipProvider>
           </div>
           {!isLoading ? (
-            <div className="mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="xl:grid-col-4 mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
               {projectsData.data.map(
                 (project: {
                   id: string;
