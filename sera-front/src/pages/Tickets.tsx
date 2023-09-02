@@ -21,6 +21,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -198,26 +205,34 @@ export const Tickets = () => {
         <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
           <h2>Tickets</h2>
           <div className="flex justify-between">
-            <Select
-              defaultValue=""
-              name="status"
-              value={priority}
-              onValueChange={(value) => {
-                setPriority(value);
-                console.log(priority);
-              }}
-            >
-              <SelectTrigger className="mr-2 w-[180px]">
-                <SelectValue placeholder="Select a priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="0">All</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-              </SelectContent>
-            </Select>
-
+            <TooltipProvider>
+              <Tooltip>
+                <Select
+                  defaultValue=""
+                  name="status"
+                  value={priority}
+                  onValueChange={(value) => {
+                    setPriority(value);
+                    console.log(priority);
+                  }}
+                >
+                  <TooltipTrigger asChild>
+                    <SelectTrigger className="mr-2 w-[180px]">
+                      <SelectValue placeholder="Select a priority" />
+                    </SelectTrigger>
+                  </TooltipTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">All</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+                <TooltipContent className="rounded bg-popover ">
+                  <p>Sort by priority</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Dialog
               onOpenChange={() => {
                 setTicketDialogOpen(!ticketDialogOpen);
