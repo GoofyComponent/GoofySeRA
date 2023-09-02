@@ -1,0 +1,19 @@
+name: Build the webapp image
+
+on: workflow_call
+
+jobs:
+  build_server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          image: destcom/sera-web
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          tag: ${{ github.sha }}
+          tag_with_latest: true
+          path: ./sera-front/
+          build_file: ./prod.Dockerfile
