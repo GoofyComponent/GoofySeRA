@@ -80,5 +80,9 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
         /************************/
 
+    Route::resource('rooms', 'App\Http\Controllers\RoomController');
+
     /*********************************/
+    Route::resource('ressources', 'App\Http\Controllers\SharedRessourceController');
+
 });

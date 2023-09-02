@@ -39,4 +39,9 @@ class Project extends Model
     {
         return $this->hasOne(VideoReview::class);
     }
+
+    public function ressources()
+    {
+        return $this->hasMany(Ressource::class);
+    }
 }
