@@ -21,6 +21,9 @@ chmod -R ugo+rw /.composer
 chown -R sail:sail /root
 /root/minio-binaries/mc alias set myminio http://minio:9000 user password
 
+# /var/www/html create a bucket named sera
+/root/minio-binaries/mc mb --with-versioning --ignore-existing myminio/sera
+
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
 else
