@@ -213,7 +213,6 @@ export const Tickets = () => {
                   value={priority}
                   onValueChange={(value) => {
                     setPriority(value);
-                    console.log(priority);
                   }}
                 >
                   <TooltipTrigger asChild>
