@@ -84,11 +84,20 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
         /************************/
 
+        /***** Ressource *****/
 
+        Route::get('projects/{projectId}/ressources', 'App\Http\Controllers\SharedRessourceController@index')->name('ressources.index');
+        Route::get('ressources/{ressourceId}', 'App\Http\Controllers\SharedRessourceController@show')->name('ressources.show');
+        Route::post('projects/{projectId}/ressources', 'App\Http\Controllers\SharedRessourceController@store')->name('ressources.store');
+        Route::post('ressources/{ressourceId}/update', 'App\Http\Controllers\SharedRessourceController@update')->name('ressources.update');
+        Route::delete('ressources/{ressourceId}', 'App\Http\Controllers\SharedRessourceController@destroy')->name('ressources.destroy');
+
+        /************************/
 
     Route::resource('rooms', 'App\Http\Controllers\RoomController');
 
     /*********************************/
-    Route::resource('ressources', 'App\Http\Controllers\SharedRessourceController');
+
+
 
 });
