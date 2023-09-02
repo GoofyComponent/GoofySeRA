@@ -10,9 +10,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { axios } from "@/lib/axios";
 
 import { BigLoader } from "./skeletons/BigLoader";
+import { useDispatch } from "react-redux";
+import { setLastSeenProjectId } from "@/helpers/slices/AppSlice";
+import { useEffect } from "react";
 
 export const Project = () => {
   const { ProjectId: id } = useParams<{ ProjectId: string }>();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setLastSeenProjectId(id));
+  }, []);
 
   const {
     data: projectData,
