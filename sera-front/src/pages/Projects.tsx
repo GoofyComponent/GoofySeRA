@@ -33,8 +33,7 @@ export const Projects = () => {
     queryKey: ["projects", { page, status }],
     queryFn: async () => {
       let requestUrl = `api/projects?page=${page}&sort=desc`;
-      if (status != "0")
-        requestUrl = `api/projects?page=1&sort=desc&status=${status}`;
+      if (status != "0") requestUrl += `&status=${status}`;
 
       const projects = await axios.get(requestUrl);
       return projects.data;
