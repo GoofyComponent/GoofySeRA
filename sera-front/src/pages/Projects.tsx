@@ -32,7 +32,7 @@ export const Projects = () => {
   } = useQuery({
     queryKey: ["projects", { page, status }],
     queryFn: async () => {
-      let requestUrl = `api/projects?page=${page}&sort=desc&maxPerPage=12`;
+      let requestUrl = `api/projects?page=${page}&sort=desc&maxPerPage=16`;
       if (status != "0") requestUrl += `&status=${status}`;
 
       const projects = await axios.get(requestUrl);
