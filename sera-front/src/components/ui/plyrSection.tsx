@@ -1,7 +1,8 @@
 import "plyr-react/plyr.css";
 
 import { Loader2 } from "lucide-react";
-import Plyr from "plyr-react";
+import Plyr, { APITypes, PlyrProps, usePlyr } from "plyr-react";
+import React from "react";
 import { useSelector } from "react-redux";
 
 export const PlyrSection = ({ videoData, plyrRef }: any) => {
@@ -36,3 +37,17 @@ export const PlyrSection = ({ videoData, plyrRef }: any) => {
     </div>
   );
 };
+
+export const RaptorPlyr = React.forwardRef<APITypes, PlyrProps>(
+  (props, ref) => {
+    const { source, options = null } = props;
+    const raptorRef = usePlyr(ref, {
+      source,
+      options,
+    }) as React.MutableRefObject<HTMLVideoElement>;
+
+    // eslint-disable-next-line jsx-a11y/media-has-caption
+    return <video ref={raptorRef} className="plyr-react plyr" />;
+  }
+);
+RaptorPlyr.displayName;
