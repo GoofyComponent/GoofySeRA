@@ -28,19 +28,15 @@ const paths = [
         children: [
           {
             path: ":roomId",
-            element: <Tickets />,
             children: [
               {
                 path: "infos",
-                element: <Tickets />,
               },
               {
                 path: "edit",
-                element: <Tickets />,
               },
               {
                 path: "delete",
-                element: <Tickets />,
               },
             ],
           },
@@ -52,15 +48,12 @@ const paths = [
         children: [
           {
             path: ":TicketId",
-            element: <Tickets />,
             children: [
               {
                 path: "validate",
-                element: <Tickets />,
               },
               {
                 path: "delete",
-                element: <Tickets />,
               },
             ],
           },
