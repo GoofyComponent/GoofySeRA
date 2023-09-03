@@ -46,6 +46,9 @@ import {
 } from "@/components/ui/tooltip";
 import { axios } from "@/lib/axios";
 import { TicketsEntity } from "@/lib/types/types";
+import { formatDate } from "@/lib/utils";
+import clsx from "clsx";
+import { Badge } from "@/components/ui/badge";
 
 export const Tickets = () => {
   const ticketStatus = "pending";
@@ -155,6 +158,11 @@ export const Tickets = () => {
     addTicket.mutate(formData);
     return;
   };
+
+  function trigerCloseDialog() {
+    setOpen(false);
+    navigate(`/dashboard/tickets`);
+  }
 
   useEffect(() => {
     if (ticketsData) {
@@ -354,25 +362,78 @@ export const Tickets = () => {
                   "Are you sure you want to validate this ticket ?"}
                 {searchParams.get("action") === "delete" &&
                   "Are you sure you want to delete this ticket ?"}
+                {searchParams.get("action") === "infos" &&
+                  ticketsData.data.map((ticket: TicketsEntity) => (
+                    <React.Fragment key={ticket.id}>
+                      {ticket.id === Number(TicketId) && (
+                        <>
+                          <div className="mb-4">
+                            <p className="font-bold">Description :</p>
+                            <p>{ticket.description}</p>
+                          </div>
+                          <div className="mb-4 flex">
+                            <div className=" flex pr-5">
+                              <p className="my-auto font-bold">Priority :</p>
+                              <Badge
+                                className={clsx(
+                                  ticket.priority === "high" &&
+                                    "bg-red-500 hover:bg-red-500",
+                                  ticket.priority === "medium" &&
+                                    "bg-yellow-200 hover:bg-yellow-200",
+                                  ticket.priority === "low" &&
+                                    "bg-lime-200 hover:bg-lime-200 ",
+                                  "my-auto ml-2 rounded px-2 py-1 text-sera-jet"
+                                )}
+                              >
+                                {ticket.priority.charAt(0).toUpperCase() +
+                                  ticket.priority.slice(1)}
+                              </Badge>
+                            </div>
+                            <div className="my-auto flex">
+                              <p className="font-bold">created at :</p>
+                              <p> {formatDate(ticket.created_at)}</p>
+                            </div>
+                          </div>
+                          <div className="flex justify-end">
+                            <p className="font-bold ">by :</p>
+                            <p>{ticket.user.lastname}</p>
+                          </div>
+                        </>
+                      )}
+                    </React.Fragment>
+                  ))}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <Link to="/dashboard/tickets">
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-              </Link>
-              <Link
-                to={
-                  searchParams.get("action") === "validate"
-                    ? `/dashboard/tickets/${TicketId}/validate`
-                    : `/dashboard/tickets/${TicketId}/delete`
-                }
-              >
-                <AlertDialogAction>
-                  {searchParams.get("action") === "validate"
-                    ? "Validate"
-                    : "Delete"}
-                </AlertDialogAction>
-              </Link>
+              {/* si action = infos, on affiche uniquement le bouton close sinon
+              on affiche les boutons cancel et action */}
+              {searchParams.get("action") === "infos" ? (
+                <Link to="/dashboard/tickets">
+                  <AlertDialogAction>Close</AlertDialogAction>
+                </Link>
+              ) : (
+                <AlertDialogCancel
+                  onClick={() => {
+                    trigerCloseDialog();
+                  }}
+                >
+                  Cancel
+                </AlertDialogCancel>
+              )}
+              {searchParams.get("action") === "validate" ? (
+                <Link to={`/dashboard/tickets/${TicketId}/validate`}>
+                  <AlertDialogAction>Validate</AlertDialogAction>
+                </Link>
+              ) : (
+                ""
+              )}
+              {searchParams.get("action") === "delete" ? (
+                <Link to={`/dashboard/tickets/${TicketId}/delete`}>
+                  <AlertDialogAction>Delete</AlertDialogAction>
+                </Link>
+              ) : (
+                ""
+              )}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

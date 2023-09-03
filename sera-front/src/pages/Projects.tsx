@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Card } from "@/components/ui/card-project";
 import { Pagination } from "@/components/ui/pagination";
@@ -23,6 +23,8 @@ import { BigLoader } from "./skeletons/BigLoader";
 export const Projects = () => {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("0");
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     data: projectsData,
@@ -39,6 +41,13 @@ export const Projects = () => {
       return projects.data;
     },
   });
+
+  useEffect(() => {
+    if (projectsData) {
+      setTotalPages(projectsData.last_page);
+      setCurrentPage(projectsData.current_page);
+    }
+  }, [projectsData]);
 
   if (error) return <>{error}</>;
 
@@ -108,14 +117,12 @@ export const Projects = () => {
             />
           )}
         </div>
-        {!isLoading ? (
-          <Pagination
-            totalPages={projectsData.last_page}
-            currentPage={projectsData.current_page}
-            setNextPage={setPage}
-            isCurrentlyLoading={isLoading}
-          />
-        ) : null}
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setNextPage={setPage}
+          isCurrentlyLoading={isLoading}
+        />
       </div>
     </>
   );
