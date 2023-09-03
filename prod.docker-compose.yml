@@ -9,6 +9,8 @@ services:
     networks:
       - monolith
       - hosted
+    depends_on:
+      - sera-server
   sera-server:
     container_name: sera-server
     image: destcom/sera-server
