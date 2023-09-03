@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Check, ChevronsUpDown, /* Edit, */ Trash } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -31,6 +31,7 @@ export const TicketsTable = ({
       setSort("desc");
     }
   }
+  const pageUrl = useLocation();
 
   return (
     <>
@@ -38,23 +39,37 @@ export const TicketsTable = ({
         <TableHeader>
           <TableRow className="bg-sera-periwinkle/50 hover:odd:bg-sera-periwinkle/50 ">
             <TableHead className="text-xl font-semibold text-sera-jet">
-              <p>Name</p>
+              <p className="md:w-80">Name</p>
             </TableHead>
-            <TableHead
-              className="flex cursor-pointer text-xl font-semibold text-sera-jet "
-              onClick={() => trigerSortByDate(sort, setSort)}
-            >
-              <p className="my-auto">Date</p>
-              <ChevronsUpDown size={16} className="my-auto" />
-            </TableHead>
+            {pageUrl.pathname === "/dashboard/tickets" ? (
+              <TableHead
+                className="flex cursor-pointer text-xl font-semibold text-sera-jet"
+                onClick={() => trigerSortByDate(sort, setSort)}
+              >
+                <p className="my-auto mr-2 flex select-none md:w-56">
+                  Date
+                  <ChevronsUpDown
+                    className={clsx(
+                      sort === "desc" && "rotate-0 ",
+                      sort === "asc" && "rotate-180 ",
+                      "my-auto transform transition-all duration-500"
+                    )}
+                  />
+                </p>
+              </TableHead>
+            ) : (
+              <TableHead className="text-xl font-semibold text-sera-jet">
+                <p className="md:w-56">Date</p>
+              </TableHead>
+            )}
             <TableHead className="my-auto text-xl font-semibold text-sera-jet">
-              <p>Owner</p>
+              <p className="md:w-56">Owner</p>
             </TableHead>
             <TableHead className="text-xl font-semibold text-sera-jet">
-              <p>Priority</p>
+              <p className="">Priority</p>
             </TableHead>
             <TableHead className="text-right text-xl font-semibold text-sera-jet">
-              <p>Action</p>
+              <p className="">Action</p>
             </TableHead>
           </TableRow>
         </TableHeader>
