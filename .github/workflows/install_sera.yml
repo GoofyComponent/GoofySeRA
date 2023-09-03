@@ -20,10 +20,6 @@ jobs:
         run: |
           echo "${{ secrets.PROD_ENV_FILE }}" >> .env
 
-      - name: DEBUG LS REPO
-        run: |
-          ls -la
-
       - name: Pull new images
         run: |
           docker-compose -f ./prod.docker-compose.yml -p "prod-sera" pull
@@ -43,6 +39,11 @@ jobs:
       - name: Writes the .env file
         run: |
           docker exec sera-server echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
+
+      - name: DEBUG LS REPO
+        run: |
+          ls -la
+          docker exec sera-server ls -la
 
       - name: Execute laravel configs
         run: |
