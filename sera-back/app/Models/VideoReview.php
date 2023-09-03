@@ -13,4 +13,9 @@ class VideoReview extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function ressource()
+    {
+        return $this->belongsTo(Ressource::class);
+    }
 }
