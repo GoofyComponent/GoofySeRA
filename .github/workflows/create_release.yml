@@ -9,13 +9,24 @@ on:
         required: true
 
 jobs:
+  tag_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tag release
+        uses: K-Phoen/semver-release-action@master
+        with:
+          release_branch: prod
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   launch_release:
+    needs: tag_release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           generate_release_notes: true
-          tag_name: ${{ github.event.inputs.tag || github.ref }}
+          tag_name: ${{ github.ref }}
