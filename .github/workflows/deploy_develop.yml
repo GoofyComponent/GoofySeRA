@@ -12,12 +12,12 @@ jobs:
     uses: ./.github/workflows/rebuild-containers.yml
 
   deploy:
-    runs-on: self-hosted
+    runs-on: develop
     needs: cleaning
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
           clean: false
@@ -74,7 +74,7 @@ jobs:
 
       - name: Launch the containers
         run: |
-          docker-compose -f ./develop.docker-compose.yml up -d --build
+          docker-compose -f ./develop.docker-compose.yml -p "develop-sera" up -d --build
 
       - name: Wait till all containers has started
         run: |
@@ -98,13 +98,17 @@ jobs:
           docker exec develop-sera-back-laravel-test php artisan storage:link
           docker exec develop-sera-back-laravel-test php artisan l5-swagger:generate
 
-      - name: Run migrations$
+      - name: Run migrations
         # get all my env from secrets.DEVELOP_LARAVEL_ENV_FILE
 
         run: |
           sleep 10
           docker exec develop-sera-back-laravel-test php artisan config:cache
           docker exec develop-sera-back-laravel-test php artisan config:clear
+          docker exec develop-sera-back-laravel-test chown -R www-data:www-data /root
+          docker exec develop-sera-back-laravel-test /root/minio-binaries/mc alias set myminio http://minio:9000 user password
+          docker exec develop-sera-back-laravel-test /root/minio-binaries/mc mb --with-versioning --ignore-existing myminio/sera
+          docker exec develop-sera-back-laravel-test /root/minio-binaries/mc cp /var/www/html/public/videos/topfreddy.mp4 myminio/sera
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
