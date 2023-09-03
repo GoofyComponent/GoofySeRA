@@ -40,6 +40,10 @@ jobs:
         run: |
           sleep 2
 
+      - name: Writes the .env file
+        run: |
+          docker exec sera-server echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
+
       - name: Execute laravel configs
         run: |
           docker exec sera-server php artisan cache:clear 
