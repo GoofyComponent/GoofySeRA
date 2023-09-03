@@ -1,7 +1,5 @@
 version: "3"
 
-name: develop-sera
-
 
 services:
   laravel.test:
