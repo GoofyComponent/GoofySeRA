@@ -3412,6 +3412,62 @@
                     }
                 }
             }
+        },
+        "/api/projects/{projectId}/videos/{version}": {
+            "post": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Add a comment to a video review",
+                "operationId": "749dc5fbfb87eaa226b835bfc89c2f5a",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "description": "Version of the video review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Comment object that needs to be added to the video review",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "example": "test"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Comment created"
+                    },
+                    "404": {
+                        "description": "Video review not found"
+                    }
+                }
+            }
         }
     }
 }

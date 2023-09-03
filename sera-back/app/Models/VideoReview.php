@@ -18,4 +18,9 @@ class VideoReview extends Model
     {
         return $this->belongsTo(Ressource::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(CommentReview::class);
+    }
 }

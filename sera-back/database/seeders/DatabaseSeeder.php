@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             RoomSeeder::class,
             RoomReservationSeeder::class,
             // RessourceSeeder::class,
-            // VideoReviewSeeder::class,
+            VideoReviewSeeder::class,
         ]);
     }
 }
