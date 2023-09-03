@@ -21,6 +21,7 @@ jobs:
           endpoint: ${{ secrets.PORTAINER_URL }}
           access_token: ${{ secrets.PORTAINER_TOKEN }}
           stack_name: ${{ secrets.PROD_STACK_NAME }}
+          file_path: './prod.docker-compose.yml'
           pull: true
           prune: false
       - name: Wait till the stack is created
