@@ -1,5 +1,7 @@
 version: "3"
 
+name: sera-app
+
 services:
   webapp:
     container_name: sera-webapp
