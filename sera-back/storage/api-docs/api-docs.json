@@ -3281,188 +3281,134 @@
                 }
             }
         },
-        "/api/projects/{projectId}/video-reviews": {
+        "/api/projects/{projectId}/videos": {
             "get": {
                 "tags": [
                     "Video Review"
                 ],
-                "summary": "Get reviews by project id",
-                "description": "Returns reviews by project id",
-                "operationId": "getReviewsByProjectId",
+                "summary": "Get all video reviews of a project",
+                "operationId": "fcd490f02968989ee213153dc79ebc27",
                 "parameters": [
                     {
                         "name": "projectId",
                         "in": "path",
-                        "description": "Project id",
+                        "description": "Id of the project",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "format": "int64"
                         }
                     },
                     {
                         "name": "version",
                         "in": "query",
-                        "description": "Version of the review",
+                        "description": "Version of the video review",
                         "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "format": "int64"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": "1"
-                                        },
-                                        "project_id": {
-                                            "type": "integer",
-                                            "example": "1"
-                                        },
-                                        "reviews": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "version": {
-                                                        "type": "integer",
-                                                        "example": "1"
-                                                    },
-                                                    "video": {
-                                                        "properties": {
-                                                            "type": {
-                                                                "type": "string",
-                                                                "example": "video"
-                                                            },
-                                                            "title": {
-                                                                "type": "string",
-                                                                "example": "Fuji"
-                                                            },
-                                                            "sources": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "size": {
-                                                                            "type": "integer",
-                                                                            "example": "1440"
-                                                                        },
-                                                                        "provider": {
-                                                                            "type": "string",
-                                                                            "example": "html"
-                                                                        },
-                                                                        "src": {
-                                                                            "type": "string",
-                                                                            "example": "http://localhost/storage/videos-example/fuji-1440.mp4"
-                                                                        },
-                                                                        "type": {
-                                                                            "type": "string",
-                                                                            "example": "video/mp4"
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                }
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    },
-                                                    "comments": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "properties": {
-                                                                "author": {
-                                                                    "properties": {
-                                                                        "nickname": {
-                                                                            "type": "string",
-                                                                            "example": "user1"
-                                                                        },
-                                                                        "avatar": {
-                                                                            "type": "string",
-                                                                            "example": "https://i.pravatar.cc/300"
-                                                                        },
-                                                                        "job": {
-                                                                            "type": "string",
-                                                                            "example": "Software Engineer"
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "message": {
-                                                                    "type": "string",
-                                                                    "example": "hello"
-                                                                },
-                                                                "timestamp": {
-                                                                    "type": "string",
-                                                                    "example": "2021-05-01 12:00:00"
-                                                                }
-                                                            },
-                                                            "type": "object"
-                                                        }
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "example": "2021-05-01 12:00:00"
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "example": "2021-05-01 12:00:00"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Video reviews found"
                     },
                     "404": {
-                        "description": "No reviews found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No reviews found"
-                                        }
+                        "description": "No video reviews found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Create a video review",
+                "operationId": "32aeabc020ba14054c0ab65b08fe400d",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Video review object that needs to be added to the project",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "provider": {
+                                        "type": "string",
+                                        "example": "html5"
                                     },
-                                    "type": "object"
-                                }
+                                    "type": {
+                                        "type": "string",
+                                        "example": "video"
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "example": "1080"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "/test.mkv"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "test"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "test"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Video review created"
                     },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "version": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The version must be an integer."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
+                    "404": {
+                        "description": "Project not found"
+                    }
+                }
+            }
+        },
+        "/api/videos/{version}": {
+            "delete": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Delete a video review",
+                "operationId": "621be293d9a3b1e349ab265495f4e2d3",
+                "parameters": [
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "description": "Version of the video review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video review deleted"
+                    },
+                    "404": {
+                        "description": "Video review not found"
                     }
                 }
             }
