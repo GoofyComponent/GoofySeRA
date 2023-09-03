@@ -9,17 +9,7 @@ on:
         required: true
 
 jobs:
-  tag_release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Tag release
-        uses: K-Phoen/semver-release-action@master
-        with:
-          release_branch: prod
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   launch_release:
-    needs: tag_release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
