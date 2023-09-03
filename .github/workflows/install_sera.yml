@@ -38,7 +38,7 @@ jobs:
 
       - name: Writes the .env file
         run: |
-          docker exec sera-server echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
+          docker exec sera-server sh -c 'echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env'
 
       - name: DEBUG LS REPO
         run: |
