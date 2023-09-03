@@ -22,6 +22,7 @@ jobs:
           access_token: ${{ secrets.PORTAINER_TOKEN }}
           stack_name: ${{ secrets.PROD_STACK_NAME }}
           pull: true
+          prune: false
       - name: Wait till the stack is created
         run: |
           sleep 30
