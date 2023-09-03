@@ -19,7 +19,6 @@ jobs:
         with:
           strategy: regex 
           root: "./version.txt"
-          regex_pattern: "version=([0-9\.])"
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           min_version: "0.0.1"
       - name: Get Latest Tag
