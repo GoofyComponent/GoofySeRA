@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Check, /* Edit, */ Trash } from "lucide-react";
+import { Check, ChevronsUpDown, /* Edit, */ Trash } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
@@ -15,26 +15,46 @@ import { TicketsEntity } from "@/lib/types/types";
 import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
-export const TicketsTable = ({ tickets }: { tickets: any }) => {
+export const TicketsTable = ({
+  tickets,
+  sort,
+  setSort,
+}: {
+  tickets: any;
+  sort: string;
+  setSort: any;
+}) => {
+  function trigerSortByDate(sort: string, setSort: any) {
+    if (sort == "desc") {
+      setSort("asc");
+    } else {
+      setSort("desc");
+    }
+  }
+
   return (
     <>
       <Table>
         <TableHeader>
           <TableRow className="bg-sera-periwinkle/50 hover:odd:bg-sera-periwinkle/50 ">
             <TableHead className="text-xl font-semibold text-sera-jet">
-              Name
+              <p>Name</p>
             </TableHead>
-            <TableHead className="text-xl font-semibold text-sera-jet ">
-              Date
+            <TableHead
+              className="flex cursor-pointer text-xl font-semibold text-sera-jet "
+              onClick={() => trigerSortByDate(sort, setSort)}
+            >
+              <p className="my-auto">Date</p>
+              <ChevronsUpDown size={16} className="my-auto" />
             </TableHead>
             <TableHead className="my-auto text-xl font-semibold text-sera-jet">
-              Owner
+              <p>Owner</p>
             </TableHead>
             <TableHead className="text-xl font-semibold text-sera-jet">
-              Priority
+              <p>Priority</p>
             </TableHead>
             <TableHead className="text-right text-xl font-semibold text-sera-jet">
-              Action
+              <p>Action</p>
             </TableHead>
           </TableRow>
         </TableHeader>
