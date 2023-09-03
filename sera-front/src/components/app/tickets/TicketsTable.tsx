@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Check, ChevronsUpDown, /* Edit, */ Trash } from "lucide-react";
+import { Check, ChevronsUpDown, Info, /* Edit, */ Trash } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
@@ -114,14 +114,14 @@ export const TicketsTable = ({
                     </Badge>
                   </TableCell>
                   <TableCell className="flex justify-end">
+                    <Link to={`/dashboard/tickets/${ticket.id}?action=infos`}>
+                      <Info className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
+                    </Link>
                     <Link
                       to={`/dashboard/tickets/${ticket.id}?action=validate`}
                     >
-                      <Check className="mr-2 hover:cursor-pointer hover:text-sera-jet" />
+                      <Check className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
                     </Link>
-                    {/* <Link to={`/dashboard/tickets/${ticket.id}?action=validate`}>
-                    <Edit className="mr-2 hover:cursor-pointer hover:text-sera-jet" />
-                  </Link> */}
                     <Link to={`/dashboard/tickets/${ticket.id}?action=delete`}>
                       <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
                     </Link>
