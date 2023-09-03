@@ -1,4 +1,8 @@
 version: "3"
+
+name: develop-sera
+
+
 services:
   laravel.test:
     container_name: develop-sera-back-laravel-test
