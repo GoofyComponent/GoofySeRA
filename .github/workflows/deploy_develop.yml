@@ -74,7 +74,7 @@ jobs:
 
       - name: Launch the containers
         run: |
-          docker-compose -f ./develop.docker-compose.yml up -d --build
+          docker-compose -f ./develop.docker-compose.yml -p "develop-sera" up -d --build
 
       - name: Wait till all containers has started
         run: |
