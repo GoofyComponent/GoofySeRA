@@ -24,12 +24,18 @@ jobs:
         run: |
           ls -la
 
-      - name: Create/Update sera prod
+      - name: Pull new images
         run: |
           docker-compose -f ./prod.docker-compose.yml -p "prod-sera" pull
+             
+      - name: Update the prod
+        run: |
           docker-compose -f ./prod.docker-compose.yml -p "prod-sera" up -d
-          docker image prune -f
 
+      - name: Remove unused images
+        run: |
+          docker image prune -f
+          
       - name: Wait till the stack is created
         run: |
           sleep 2
