@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { TicketsTable } from "@/components/app/tickets/TicketsTable";
 import { Button } from "@/components/ui/button";
 import { axios } from "@/lib/axios";
+import { useState } from "react";
 
 export const RecentTicketTable = () => {
   const recentTicket = useQuery({
@@ -15,7 +16,7 @@ export const RecentTicketTable = () => {
       return tickets.data;
     },
   });
-
+  const [sort, setSort] = useState("desc");
   return (
     <div className="m-6 overflow-hidden rounded-lg bg-sera-grey-bg pt-2">
       <div className="flex justify-between py-2">
@@ -36,6 +37,8 @@ export const RecentTicketTable = () => {
 
       <TicketsTable
         tickets={recentTicket.isLoading ? undefined : recentTicket.data.data}
+        sort={sort}
+        setSort={setSort}
       />
     </div>
   );
