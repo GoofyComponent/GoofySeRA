@@ -15,17 +15,30 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Update stack on Portainer
-        uses: luminos-company/portami@v1.2
-        with:
-          endpoint: ${{ secrets.PORTAINER_URL }}
-          access_token: ${{ secrets.PORTAINER_TOKEN }}
-          stack_name: ${{ secrets.PROD_STACK_NAME }}
-          pull: true
-          prune: false
+          sparse-checkout: |
+            prod.docker-compose.yml
+          sparse-checkout-cone-mode: false
+
+      - name: Set env vars
+        run: |
+          echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
+          echo "${{ secrets.DEVELOP_LARAVEL_ENV_FILE }}" > .env
+          echo "${{ secrets.DEVELOP_FRONT_ENV_FILE }}" > .env
+
+      - name: DEBUG LS REPO
+        run: |
+          ls -la
+
+      - name: Create/Update sera prod
+        run: |
+          docker-compose -f ./prod.docker-compose.yml pull
+          docker-compose -f ./prod.docker-compose.yml up -d
+          docker image prune -f
+
       - name: Wait till the stack is created
         run: |
-          sleep 30
+          sleep 2
+
       - name: Execute laravel configs
         run: |
-          sleep 30
+          sleep 2
