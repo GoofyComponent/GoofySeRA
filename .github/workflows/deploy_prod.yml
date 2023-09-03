@@ -18,6 +18,10 @@ jobs:
     needs: build_webapp
     uses: ./.github/workflows/create_release.yml
     secrets: inherit
+  update_sera_app:
+    needs: deploy_release
+    uses: ./.github/workflows/install_sera.yml
+    secrets: inherit
   notify:
     needs: deploy_release
     runs-on: ubuntu-latest
