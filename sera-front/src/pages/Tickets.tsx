@@ -61,6 +61,7 @@ export const Tickets = () => {
   const [open, setOpen] = useState(false);
   const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [sort, setSort] = useState("desc");
   const [priority, setPriority] = useState("0");
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,9 +78,9 @@ export const Tickets = () => {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["tickets", { page, priority }],
+    queryKey: ["tickets", { page, priority, sort }],
     queryFn: async () => {
-      let requestUrl = `api/projects-requests?page=${page}&status=${ticketStatus}&sort=desc`;
+      let requestUrl = `api/projects-requests?page=${page}&status=${ticketStatus}&sort=${sort}`;
       if (priority != "0") requestUrl += `&priority=${priority}`;
 
       const tickets = await axios.get(requestUrl);
@@ -314,7 +315,11 @@ export const Tickets = () => {
           </div>
         </div>
 
-        <TicketsTable tickets={isLoading ? undefined : ticketsData.data} />
+        <TicketsTable
+          tickets={isLoading ? undefined : ticketsData.data}
+          sort={sort}
+          setSort={setSort}
+        />
       </div>
 
       <Pagination

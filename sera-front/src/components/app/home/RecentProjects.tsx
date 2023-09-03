@@ -41,7 +41,7 @@ const RecentProjects = () => {
           {!isLoading
             ? recentprojectsData.data && (
                 <span className="text-sm font-normal italic">
-                  This is the last 3 recent projects
+                  This is the last 4 recent projects
                 </span>
               )
             : null}
