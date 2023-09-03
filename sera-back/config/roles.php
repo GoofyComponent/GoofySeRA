@@ -9,7 +9,7 @@ return [
         "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId","store","destroy"],
+        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"]
     ],
     "project_manager" => [
@@ -18,7 +18,7 @@ return [
         "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve","unreserve","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId","store","destroy"],
+        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
     ],
     "professor" => [
@@ -26,7 +26,7 @@ return [
         "projects" => ["show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId"],
+        "video-reviews" => ["getReviewsByProjectId","addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
     ],
     "video_team" => [
@@ -34,7 +34,7 @@ return [
         "projects" => ["show", "index","stepsGet","addLink"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId"],
+        "video-reviews" => ["getReviewsByProjectId","addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
     ],
     "video_editor" => [
@@ -42,7 +42,7 @@ return [
         "projects" => ["show", "index"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId","store","destroy"],
+        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
     ],
     "transcription_team" => [
@@ -50,7 +50,7 @@ return [
         "projects" => ["show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
-        "video-reviews" => [],
+        "video-reviews" => ["addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
     ],
     "traduction_team" => [
@@ -58,7 +58,7 @@ return [
         "projects" => ["show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
-        "video-reviews" => [],
+        "video-reviews" => ["addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
     ],
     "editorial_team" => [
@@ -66,7 +66,7 @@ return [
         "projects" => ["show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
-        "video-reviews" => [],
+        "video-reviews" => ["addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
     ],
 ];
