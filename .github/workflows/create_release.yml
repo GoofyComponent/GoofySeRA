@@ -3,10 +3,6 @@ name: Create a release
 on:
   workflow_call:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: "Tag name"
-        required: true
 
 jobs:
   launch_release:
@@ -16,6 +12,16 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Push new Tag
+        uses: butlerlogic/action-autotag@stable
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          strategy: regex 
+          root: "./version.txt"
+          regex_pattern: "version=([0-9\.])"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          min_version: "0.0.1"
       - name: Get Latest Tag
         id: latest_tag
         uses: WyriHaximus/github-action-get-previous-tag@v1
