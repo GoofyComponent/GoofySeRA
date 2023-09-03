@@ -7,6 +7,8 @@ import { axios } from "@/lib/axios";
 import { useState } from "react";
 
 export const RecentTicketTable = () => {
+  const [sort, setSort] = useState("desc");
+
   const recentTicket = useQuery({
     queryKey: ["recentTicket"],
     queryFn: async () => {
@@ -16,7 +18,7 @@ export const RecentTicketTable = () => {
       return tickets.data;
     },
   });
-  const [sort, setSort] = useState("desc");
+
   return (
     <div className="m-6 overflow-hidden rounded-lg bg-sera-grey-bg pt-2">
       <div className="flex justify-between py-2">
