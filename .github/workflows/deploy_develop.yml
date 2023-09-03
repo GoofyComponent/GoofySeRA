@@ -105,6 +105,10 @@ jobs:
           sleep 10
           docker exec develop-sera-back-laravel-test php artisan config:cache
           docker exec develop-sera-back-laravel-test php artisan config:clear
+          docker exec develop-sera-back-laravel-test chown -R www-data:www-data /root
+          docker exec develop-sera-back-laravel-test /root/minio-binaries/mc alias set myminio http://minio:9000 user password
+          docker exec develop-sera-back-laravel-test /root/minio-binaries/mc mb --with-versioning --ignore-existing myminio/sera
+          docker exec develop-sera-back-laravel-test /root/minio-binaries/mc cp /var/www/html/public/videos/topfreddy.mp4 myminio/sera
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done
