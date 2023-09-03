@@ -1,6 +1,7 @@
 import Axios from "axios";
 import Cookies from "universal-cookie";
 
+import { toast } from "@/components/ui/use-toast";
 import { reset } from "@/helpers/slices/AppSlice";
 import store from "@/helpers/store";
 
@@ -43,10 +44,30 @@ axios.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config;
 
+    let errormessage = "";
+
     if (error.message) {
-      store.dispatch(reset());
-      router.navigate("/login");
+      /* store.dispatch(reset());
+      router.navigate("/login"); */
+      errormessage = error.message;
     }
+
+    if (error.response && error.response.data && error.response.data.message) {
+      errormessage = error.response.data.message;
+    }
+
+    if (error.response && error.response.data && error.response.data.errors) {
+      errormessage = error.response.data.errors;
+    }
+
+    if (error.response && error.response.data && error.response.data.error) {
+      errormessage = error.response.data.error;
+    }
+
+    toast({
+      title: "A error occured.",
+      description: `${errormessage}`,
+    });
 
     if (
       error.response &&

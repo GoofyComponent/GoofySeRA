@@ -21,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <PersistGate loading={null} persistor={persistor}>
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
-          {import.meta.env.VITE_ENV_MODE === "dev" && (
+          {import.meta.env.VITE_ENV_MODE === "development" && (
             <ReactQueryDevtools initialIsOpen={false} />
           )}
         </QueryClientProvider>

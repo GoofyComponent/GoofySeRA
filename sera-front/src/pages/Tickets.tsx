@@ -38,8 +38,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { axios } from "@/lib/axios";
-import { TicketsEntity } from "@/lib/types";
+import { TicketsEntity } from "@/lib/types/types";
 
 export const Tickets = () => {
   const ticketStatus = "pending";
@@ -55,6 +61,7 @@ export const Tickets = () => {
   const [open, setOpen] = useState(false);
   const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const [priority, setPriority] = useState("0");
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [addTicketData, setAddTicketData] = useState({
@@ -70,11 +77,12 @@ export const Tickets = () => {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["tickets", { page }],
+    queryKey: ["tickets", { page, priority }],
     queryFn: async () => {
-      const tickets = await axios.get(
-        `api/projects-requests?page=${page}&status=${ticketStatus}&sort=desc`
-      );
+      let requestUrl = `api/projects-requests?page=${page}&status=${ticketStatus}&sort=desc`;
+      if (priority != "0") requestUrl += `&priority=${priority}`;
+
+      const tickets = await axios.get(requestUrl);
       return tickets.data;
     },
   });
@@ -100,7 +108,7 @@ export const Tickets = () => {
       return tickets;
     },
     onSuccess: (data) => {
-      const dataCleaned = data.data.original;
+      const dataCleaned = data.data;
       navigate(`/dashboard/projects/${dataCleaned.id}`);
     },
     onError: () => {
@@ -194,88 +202,116 @@ export const Tickets = () => {
       <div>
         <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
           <h2>Tickets</h2>
-
-          <Dialog
-            onOpenChange={() => {
-              setTicketDialogOpen(!ticketDialogOpen);
-            }}
-            open={ticketDialogOpen}
-          >
-            <Button
-              onClick={() => setTicketDialogOpen(true)}
-              className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-            >
-              Add a ticket
-            </Button>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create a new ticket ?</DialogTitle>
-              </DialogHeader>
-              <div>
-                <div className="flex flex-col">
-                  <Label htmlFor="title">Title</Label>
-                  <Input
-                    type="text"
-                    id="title"
-                    value={addTicketData.title}
-                    className="col-span-3"
-                    onChange={(e) =>
-                      setAddTicketData({
-                        ...addTicketData,
-                        title: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Input
-                    type="textarea"
-                    id="description"
-                    value={addTicketData.description}
-                    className="col-span-3"
-                    onChange={(e) =>
-                      setAddTicketData({
-                        ...addTicketData,
-                        description: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="status">Status</Label>
-                  <Select
-                    name="priority"
-                    value={addTicketData.priority}
-                    onValueChange={(value) => {
-                      setAddTicketData({
-                        ...addTicketData,
-                        priority: value,
-                      });
-                    }}
-                  >
-                    <SelectTrigger className="w-[180px]">
+          <div className="flex justify-between">
+            <TooltipProvider>
+              <Tooltip>
+                <Select
+                  defaultValue=""
+                  name="status"
+                  value={priority}
+                  onValueChange={(value) => {
+                    setPriority(value);
+                  }}
+                >
+                  <TooltipTrigger asChild>
+                    <SelectTrigger className="mr-2 w-[180px]">
                       <SelectValue placeholder="Select a priority" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Low</SelectItem>
-                      <SelectItem value="2">Medium</SelectItem>
-                      <SelectItem value="3">High</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  </TooltipTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">All</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectContent>
+                </Select>
+                <TooltipContent className="rounded bg-popover ">
+                  <p>Sort by priority</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <Dialog
+              onOpenChange={() => {
+                setTicketDialogOpen(!ticketDialogOpen);
+              }}
+              open={ticketDialogOpen}
+            >
+              <Button
+                onClick={() => setTicketDialogOpen(true)}
+                className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+              >
+                Add a ticket
+              </Button>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create a new ticket ?</DialogTitle>
+                </DialogHeader>
+                <div>
+                  <div className="flex flex-col">
+                    <Label htmlFor="title">Title</Label>
+                    <Input
+                      type="text"
+                      id="title"
+                      value={addTicketData.title}
+                      className="col-span-3"
+                      onChange={(e) =>
+                        setAddTicketData({
+                          ...addTicketData,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="description">Description</Label>
+                    <Input
+                      type="textarea"
+                      id="description"
+                      value={addTicketData.description}
+                      className="col-span-3"
+                      onChange={(e) =>
+                        setAddTicketData({
+                          ...addTicketData,
+                          description: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="status">Status</Label>
+                    <Select
+                      name="priority"
+                      value={addTicketData.priority}
+                      onValueChange={(value) => {
+                        setAddTicketData({
+                          ...addTicketData,
+                          priority: value,
+                        });
+                      }}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">Low</SelectItem>
+                        <SelectItem value="2">Medium</SelectItem>
+                        <SelectItem value="3">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  type="submit"
-                  className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                  onClick={() => onSubmitAddTicketForm(addTicketData)}
-                >
-                  Create ticket
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+                <DialogFooter>
+                  <Button
+                    type="submit"
+                    className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                    onClick={() => onSubmitAddTicketForm(addTicketData)}
+                  >
+                    Create ticket
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         <TicketsTable tickets={isLoading ? undefined : ticketsData.data} />

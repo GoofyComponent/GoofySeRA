@@ -17,7 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { setAppError } from "@/helpers/slices/AppSlice";
 import { updateInfos } from "@/helpers/slices/UserSlice";
 import { axios } from "@/lib/axios";
-import { selectRoleDisplay } from "@/lib/utils";
+import { formatName, getInitials, selectRoleDisplay } from "@/lib/utils";
 
 import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
@@ -71,9 +71,7 @@ function App() {
                 <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
                   {!userData.lastname && !userData.firstname
                     ? "USR"
-                    : `${userData.firstname[0].toUpperCase() as string}.${
-                        userData.lastname[0].toUpperCase() as string
-                      }`}
+                    : getInitials(userData.lastname, userData.firstname)}
                 </AvatarFallback>
               </Avatar>
             </PopoverTrigger>
@@ -81,15 +79,10 @@ function App() {
               {userData ? (
                 <div>
                   <div className="flex justify-start text-base">
-                    <p className="mr-2 w-1/2 truncate">
+                    <p className="w-full truncate">
                       {userData.lastname &&
-                        (userData.lastname[0].toUpperCase() as string) +
-                          userData.lastname.slice(1)}
-                    </p>
-                    <p className="ml-2 w-1/2 truncate">
-                      {userData.firstname &&
-                        (userData.firstname[0].toUpperCase() as string) +
-                          userData.firstname.slice(1)}
+                        userData.firstname &&
+                        formatName(userData.lastname, userData.firstname)}
                     </p>
                   </div>
 

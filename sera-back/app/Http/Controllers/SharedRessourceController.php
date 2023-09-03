@@ -9,41 +9,141 @@ use App\Models\Project;
 class SharedRessourceController extends Controller
 {
 
-    public function index(Request $request)
+    public function index($projectId)
     {
-        $this->validate($request, [
-            'project_id' => 'required|integer'
-        ]);
 
-        $project = Project::find($request->project_id);
+        $project = Project::find($projectId);
 
         if (!$project) {
-            throw new \Exception("Le projet n'existe pas");
+            return response()->json([
+                'message' => 'La ressource n\'existe pas'
+            ], 400);
         }
 
-        $ressources = $project->getSharedRessources();
+        $ressources = $project->ressources();
 
         return response()->json($ressources);
 
     }
 
-    public function store(Request $request)
+    public function store(Request $request,$projectId)
     {
+        $acceptedTypes = ['image','audio', 'document'];
+
+        $this->validate($request, [
+            'name' => 'required|string',
+            'type' => 'required|string|in:'.implode(',', $acceptedTypes),
+            'description' => 'required|string',
+            'file' => 'required|file'
+        ]);
+
+        $project = Project::find($projectId);
+
+        if (!$project) {
+            return response()->json([
+                'message' => 'Le projet n\'existe pas'
+            ], 400);
+        }
+
+        $ressource = new Ressource();
+        $ressource->name = $request->name;
+        $ressource->type = $request->type;
+        $ressource->description = $request->description;
+        $ressource->project_id = $projectId;
+
+
+        $name = $request->name.'_'.$request->file->getClientOriginalName();
+        $name = strtolower(str_replace(' ', '', $name));
+
+        $extension = $request->file->getClientOriginalExtension();
+        echo $extension;
+
+        if ($extension == 'jpeg' || $extension == 'png' || $extension == 'webp' || $extension == 'gif') {
+            if ($request->type != 'image') {
+                return response()->json([
+                    'message' => 'Le type de fichier ne correspond pas'
+                ], 400);
+            }
+        } else if ($extension == 'mp3') {
+            if ($request->type != 'audio') {
+                return response()->json([
+                    'message' => 'Le type de fichier ne correspond pas'
+                ], 400);
+            }
+        } else if ($extension == 'pdf' || $extension == 'docx' || $extension == 'xlsx' || $extension == 'pptx') {
+            if ($request->type != 'document') {
+                return response()->json([
+                    'message' => 'Le type de fichier ne correspond pas'
+                ], 400);
+            }
+        }
+
+        $path = $request->file->storeAs(
+            'ressource/project_'.$project->id.'/'.$request->type,
+            $name,
+            's3'
+        );
+
+        if (!$path) {
+            return response()->json([
+                'message' => 'Erreur lors de l\'upload du fichier'
+            ], 400);
+        }
+
+        $ressource->url = $path;
+        $ressource->save();
+
+        return response()->json($ressource, 201);
 
     }
 
-    public function show($id)
+    public function show($ressourceId)
     {
+        $ressources = Ressource::find($ressourceId);
 
+        if (!$ressources) {
+            return response()->json([
+                'message' => 'La ressource n\'existe pas'
+            ], 400);
+        }
+
+        return response()->json($ressources, 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $ressourceId)
     {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+        ]);
 
+        $ressource = Ressource::find($ressourceId);
+
+        if (!$ressource) {
+            return response()->json([
+                'message' => 'La ressource n\'existe pas'
+            ], 400);
+        }
+
+        $ressource->update($validatedData);
+
+        return response()->json($ressource, 201);
     }
 
-    public function destroy($id): void
+    public function destroy($ressourceId)
     {
+        $ressource = Ressource::find($ressourceId);
 
+        if (!$ressource) {
+            return response()->json([
+                'message' => 'La ressource n\'existe pas'
+            ], 400);
+        }
+
+        $ressource->delete();
+
+        return response()->json([
+            'message' => 'La ressource a bien été supprimée'
+        ], 200);
     }
 }

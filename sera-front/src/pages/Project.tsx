@@ -1,26 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { BadgeHelp, ChevronLeft, ChevronRight } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
+import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
+import { SharedContainer } from "@/components/app/project/SharedRessources/SharedContainer";
+import { StepsIndicatorContainer } from "@/components/app/project/StepsIndicator/StepsIndicatorContainer";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { axios } from "@/lib/axios";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
-// import { SharedRessources } from "../components/ui/sharedRessources";
-
 export const Project = () => {
-  const params = useParams();
-  const id = params.ProjectId;
+  const { ProjectId: id } = useParams<{ ProjectId: string }>();
+
   const {
     data: projectData,
     isLoading,
@@ -34,83 +27,73 @@ export const Project = () => {
     },
   });
 
-  if (error) return <>{error} . Erreur </>;
+  if (error) return <> Erreur </>;
+
+  if (isLoading)
+    return (
+      <BigLoader loaderSize={42} bgColor="transparent" textColor="sera-jet" />
+    );
+
+  if (!projectData) return <>No project found</>;
 
   return (
     <>
-      <div>
-        {!isLoading ? (
-          <>
-            <div className="m-6 flex items-center">
-              <Button variant="title" size="title" className="mr-4" asChild>
-                <Link
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  to={-1}
-                >
-                  <ChevronLeft size={50} strokeWidth={3} />
-                </Link>
-              </Button>
-              <span className="ml-4 text-4xl">Projet</span>
-              <ChevronRight size={48} className="ml-2" />
-              <h3 className="text-4xl font-bold">{projectData.title}</h3>
+      <HeaderTitle
+        title={projectData.title && projectData.title}
+        previousTitle="Projet"
+      />
+      <div className="flex justify-between">
+        <Tabs defaultValue="resume" className="ml-6 w-8/12">
+          <TabsList className="bg-transparent p-0">
+            <TabsTrigger
+              value="resume"
+              className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+            >
+              Résumé
+            </TabsTrigger>
+            <TabsTrigger
+              value="ressources"
+              className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+            >
+              Ressources partagées
+            </TabsTrigger>
+            {projectData.team && (
+              <TabsTrigger
+                value="members"
+                className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+              >
+                Membres
+              </TabsTrigger>
+            )}
+          </TabsList>
+
+          <Separator className="mb-2 h-0.5 w-full bg-sera-jet"></Separator>
+
+          <TabsContent value="resume">
+            <div className="flex justify-start">
+              <h3 className="text-xl font-semibold">Project name :</h3>
+              <p className="mt-auto">{projectData.title}</p>
             </div>
-            <div className="mx-6 mt-10">
-              <h3 className="text-4xl">Description :</h3>
-              <p className="mt-2 text-xl">{projectData.description}</p>
+            <h3 className="text-xl font-semibold">Description :</h3>
+            <p className="text-normal mt-2">{projectData.description}</p>
+            <div>
+              <h3 className="text-xl font-semibold">What&apos;s next ?</h3>
+              <p className="text-normal mt-2">
+                BLABLABLA VOUS DEVEZ ENCORE FAIRE CA POUR VALIDERR LETAPE
+              </p>
             </div>
-            <div className="mx-6 mt-10">
-              <div className="flex items-center justify-between">
-                <h3 className="text-4xl">Shared ressources :</h3>
-                <Dialog>
-                  <DialogTrigger>
-                    <Button className="bg-sera-periwinkle">
-                      {" "}
-                      Add ressource
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        <div className="flex items-center">
-                          <BadgeHelp size={44} />
-                          <span className="ml-2"> Add ressource </span>
-                        </div>
-                      </DialogTitle>
-                      <DialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                      <DialogTrigger>Cancel</DialogTrigger>
-                      <Button>Continue</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </div>
-              {/* <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {project.ressources.map((ressource, index) => (
-                <SharedRessources
-                  key={index}
-                  skeleton={project.skeleton}
-                  name={ressource.name}
-                  description={ressource.description}
-                  date={ressource.Date}
-                  url={ressource.url}
-                />
-              ))}
-            </div> */}
-            </div>
-          </>
-        ) : (
-          <BigLoader
-            loaderSize={42}
-            bgColor="transparent"
-            textColor="sera-jet"
-          />
-        )}
+          </TabsContent>
+          <TabsContent value="ressources">
+            <SharedContainer />
+          </TabsContent>
+          <TabsContent value="members" className="text-sera-jet">
+            <section id="project-team">
+              <MembersContainer />
+            </section>
+          </TabsContent>
+        </Tabs>
+
+        <StepsIndicatorContainer />
       </div>
     </>
   );

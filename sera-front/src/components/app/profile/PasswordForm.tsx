@@ -1,6 +1,6 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -14,22 +14,39 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { axios } from "@/lib/axios";
 
-/* import { phoneRegex } from "@/lib/utils";
- */
 const FormSchema = z
   .object({
-    currentPassword: z.string().min(2, {
-      message: "Your password must be at least 2 characters.",
-    }),
-    newPassword: z.string().min(2, {
-      message: "Your password must be at least 2 characters.",
-    }),
-    confirmNewPassword: z.string(),
+    currentPassword: z
+      .string()
+      .min(1, {
+        message: "Your password is required.",
+      })
+      .min(2, {
+        message: "Your password must be at least 2 characters.",
+      }),
+    newPassword: z
+      .string()
+      .min(1, {
+        message: "Your password is required.",
+      })
+      .min(5, {
+        message: "Your password must be at least 5 characters.",
+      }),
+    confirmNewPassword: z
+      .string()
+      .min(1, {
+        message: "Your password is required.",
+      })
+      .min(2, {
+        message: "Your password must be at least 2 characters.",
+      }),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
+    path: ["confirmNewPassword"],
     message: "Passwords don't match",
-    path: ["confirm"],
   });
 
 export const PasswordForm = () => {
@@ -43,8 +60,40 @@ export const PasswordForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log("Change password submitted", data);
+    if (data.newPassword !== data.confirmNewPassword) {
+      return;
+    }
+
+    if (
+      !data.currentPassword ||
+      !data.newPassword ||
+      !data.confirmNewPassword
+    ) {
+      return;
+    }
+
+    updateUserPassword.mutate(data);
   };
+
+  const updateUserPassword = useMutation({
+    mutationFn: async (data: z.infer<typeof FormSchema>) => {
+      const formData = new FormData();
+
+      formData.append("current_password", data.currentPassword);
+      formData.append("new_password", data.newPassword);
+      formData.append("new_confirm_password", data.confirmNewPassword);
+
+      return await axios.post("/api/users/password", formData);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Password updated",
+        description: `Your password has been updated.`,
+      });
+
+      form.reset();
+    },
+  });
 
   return (
     <Form {...form}>
@@ -91,11 +140,18 @@ export const PasswordForm = () => {
             </FormItem>
           )}
         />
+
         <Button
           type="submit"
           className="ml-auto flex border-2 bg-sera-jet text-base text-sera-periwinkle hover:border-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet md:w-1/12"
+          /*           disabled={updateUserPassword.isLoading || !form.formState.isValid}
+           */
         >
-          Save
+          {updateUserPassword.isLoading ? (
+            <Loader2 className={`m-auto animate-spin`} size={12} />
+          ) : (
+            "Save"
+          )}
         </Button>
       </form>
     </Form>

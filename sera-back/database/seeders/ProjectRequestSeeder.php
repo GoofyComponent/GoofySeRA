@@ -13,12 +13,15 @@ class ProjectRequestSeeder extends Seeder
      */
     public function run(): void
     {
+        $projectRequestName = "Project Request ";
+
         // get the first user with cursus_director role
         $cursus_director = User::where('role', 'cursus_director')->first();
         $priorityArray = ["low", "medium", "high"];
         for ($i = 0; $i < 60; $i++) {
             $priority = $priorityArray[$i % 3];
             \App\Models\ProjectRequest::factory()->create([
+                'title' => $projectRequestName.$i,
                 'user_id' => $cursus_director->id,
                 'priority' => $priorityArray[$i % 3],
                 'status' => 'pending',

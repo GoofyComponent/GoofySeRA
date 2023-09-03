@@ -35,16 +35,13 @@ class Project extends Model
         return $this->hasMany(RoomReservation::class);
     }
 
+    public function videoReviews()
+    {
+        return $this->hasOne(VideoReview::class);
+    }
+
     public function ressources()
     {
         return $this->hasMany(Ressource::class);
-    }
-
-    /**
-    * @return Ressource[]|\Illuminate\Database\Eloquent\Collection
-    */
-    public function getSharedRessources()
-    {
-        return $this->ressources()->where('type', 'shared')->get();
     }
 }

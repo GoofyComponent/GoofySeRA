@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('lastname')->nullable(false);
             $table->string('role')->nullable(false);
             $table->string('avatar_filename')->nullable(true);
+            $table->json('s3_credentials')->nullable(false);
             $table->rememberToken();
             $table->timestamps();
         });
