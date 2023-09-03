@@ -10,6 +10,41 @@ use Illuminate\Support\Facades\Storage;
 class VideoReviewController extends Controller
 {
 
+    /**
+    * @OA\Get(
+    *     path="/api/projects/{projectId}/videos",
+    *     summary="Get all video reviews of a project",
+    *     tags={"Video Review"},
+    *     @OA\Parameter(
+    *         name="projectId",
+    *         in="path",
+    *         description="Id of the project",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         name="version",
+    *         in="query",
+    *         description="Version of the video review",
+    *         required=false,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Video reviews found"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="No video reviews found"
+    *     ),
+    * )
+    */
     function getReviewsByProjectId(Request $request, $id)
     {
         $request->validate([
@@ -33,6 +68,43 @@ class VideoReviewController extends Controller
         return response()->json($videos);
     }
 
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{projectId}/videos",
+    *     summary="Create a video review",
+    *     tags={"Video Review"},
+    *     @OA\Parameter(
+    *         name="projectId",
+    *         in="path",
+    *         description="Id of the project",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="Video review object that needs to be added to the project",
+    *         required=true,
+    *         @OA\JsonContent(
+    *             @OA\Property(property="provider", type="string", example="html5"),
+    *             @OA\Property(property="type", type="string", example="video"),
+    *             @OA\Property(property="resolution", type="string", example="1080"),
+    *             @OA\Property(property="url", type="string", example="/test.mkv"),
+    *             @OA\Property(property="name", type="string", example="test"),
+    *             @OA\Property(property="description", type="string", example="test"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Video review created"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Project not found"
+    *     ),
+    * )
+    */
     function store(Request $request, $projectId)
     {
         $request->validate([
@@ -79,13 +151,38 @@ class VideoReviewController extends Controller
         ], 201);
     }
 
+    /**
+    * @OA\Delete(
+    *     path="/api/videos/{version}",
+    *     summary="Delete a video review",
+    *     tags={"Video Review"},
+    *     @OA\Parameter(
+    *         name="version",
+    *         in="path",
+    *         description="Version of the video review",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Video review deleted"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Video review not found"
+    *     ),
+    * )
+    */
     function destroy($version)
     {
         $videoReview = VideoReview::where('version', $version)->first();
 
         if (!$videoReview) {
             return response()->json([
-                'message' => 'Video review not found',
+                'message' => 'Video version not found',
             ], 404);
         }
 
@@ -105,5 +202,9 @@ class VideoReviewController extends Controller
 
         $ressource->delete();
         $videoReview->delete();
+
+        return response()->json([
+            'message' => 'Video review deleted',
+        ], 200);
     }
 }
