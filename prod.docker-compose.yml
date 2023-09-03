@@ -1,0 +1,78 @@
+version: "3"
+
+services:
+  webapp:
+    container_name: sera-webapp
+    image: destcom/sera-web
+    ports:
+      - "6663:80"
+    networks:
+      - monolith
+      - hosted
+  sera-server:
+    container_name: sera-server
+    image: destcom/sera-server
+    user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
+    ports:
+      - "6664:80"
+    networks:
+      - sail
+      - monolith
+      - hosted
+    depends_on:
+      - mariadb
+      - soketi
+  mariadb:
+    container_name: sera-mariadb
+    image: "mariadb:10"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: "${DB_DATABASE}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    networks:
+      - sail
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - "-p${DB_PASSWORD}"
+      retries: 3
+      timeout: 5s
+  soketi:
+    container_name: sera-soketi
+    image: "quay.io/soketi/soketi:latest-16-alpine"
+    environment:
+      SOKETI_DEBUG: "${SOKETI_DEBUG:-1}"
+      SOKETI_METRICS_SERVER_PORT: "9601"
+      SOKETI_DEFAULT_APP_ID: "${PUSHER_APP_ID}"
+      SOKETI_DEFAULT_APP_KEY: "${PUSHER_APP_KEY}"
+      SOKETI_DEFAULT_APP_SECRET: "${PUSHER_APP_SECRET}"
+    networks:
+      - sail
+      - monolith
+  minio:
+    container_name: sera-minio
+    image: docker.io/bitnami/minio:2023
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER:-user}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:-password}"
+    networks:
+      - monolith
+      - hosted
+
+networks:
+  sail:
+    driver: bridge
+  monolith:
+    driver: bridge
+  hosted:
+    external: true
+volumes:
+  sail-mariadb:
+    driver: local
+  sail-minio:
+    driver: local

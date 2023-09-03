@@ -1,6 +1,12 @@
 name: Build the server image
 
-on: workflow_call
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to use for the image"
+        required: true
 
 jobs:
   build_server:
@@ -13,7 +19,7 @@ jobs:
           image: destcom/sera-server
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          tag: ${{ github.ref_name }}
+          tag: ${{ github.event.inputs.tag || github.ref_name }}
           tag_with_latest: true
           path: ./sera-back
           build_file: ./docker/prod.Dockerfile
