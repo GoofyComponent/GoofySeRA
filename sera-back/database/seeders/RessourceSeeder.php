@@ -12,6 +12,7 @@ class RessourceSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Ressource::factory()->count(10)->create();
+        // Create one ressource with name 'video' and one with name 'image'
+
     }
 }
