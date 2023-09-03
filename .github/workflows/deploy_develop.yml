@@ -63,14 +63,14 @@ jobs:
       #node:lts \
       #npm install && npm run lint-autofix
 
-      #- name: Execute composer install
-      #run: |
-      #docker run --rm \
-      #-u "$(id -u):$(id -g)" \
-      #-v $(pwd)/sera-back:/opt \
-      #-w /opt \
-      #laravelsail/php81-composer \
-      #composer install --ignore-platform-reqs
+      - name: Execute composer install
+        run: |
+          docker run --rm \
+          -u "$(id -u):$(id -g)" \
+          -v $(pwd)/sera-back:/opt \
+          -w /opt \
+          laravelsail/php81-composer \
+          composer install --ignore-platform-reqs
 
       - name: Launch the containers
         run: |
