@@ -7,7 +7,7 @@ services:
     #- ./sera-back:/var/www/html
     build:
       context: ./sera-back
-      dockerfile: ./docker/prod.Dockerfile
+      dockerfile: ./docker/develop.Dockerfile
       args:
         WWWGROUP: "${WWWGROUP:-1000}"
     user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
