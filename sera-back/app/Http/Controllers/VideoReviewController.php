@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ressource;
 use App\Models\VideoReview;
 use Illuminate\Http\Request;
+use App\Models\CommentReview;
 use Illuminate\Support\Facades\Storage;
 
 class VideoReviewController extends Controller
@@ -52,9 +53,9 @@ class VideoReviewController extends Controller
         ]);
 
         // take VideoReview with ressource loaded sorted by version
-        $videos = VideoReview::where('project_id', $id)->with('ressource')->orderBy('version', 'asc');
+        $videos = VideoReview::where('project_id', $id)->with('ressource','comments')->orderBy('version', 'desc');
         if ($request->version) {
-            $videos = $videos->where('version', $request->version)->first();
+            $videos = $videos->where('version', $request->version)->get();
         }else{
             $videos = $videos->get();
         }
@@ -65,7 +66,37 @@ class VideoReviewController extends Controller
             ], 404);
         }
 
-        return response()->json($videos);
+        $formattedVideos = [];
+
+        foreach ($videos as $video) {
+            $formattedVideo = [];
+            $formattedVideo['version'] = $video->version;
+            $formattedVideo['video'] = [];
+            $formattedVideo['video']['type'] = $video->ressource->type;
+            $formattedVideo['video']['title'] = $video->ressource->name;
+            $formattedVideo['video']['sources'] = [];
+            $formattedVideo['video']['sources'][0] = [];
+            $formattedVideo['video']['sources'][0]['size'] = $video->resolution;
+            $formattedVideo['video']['sources'][0]['provider'] = $video->provider;
+            $formattedVideo['video']['sources'][0]['src'] = Storage::disk('s3')->url($video->ressource->url);
+            $formattedVideo['video']['sources'][0]['type'] = $video->type;
+            $formattedVideo['comments'] = [];
+
+            foreach ($video->comments as $comment) {
+                $formattedComment = [];
+                $formattedComment['author'] = [];
+                $formattedComment['author']['nickname'] = $comment->user->lastname . ' ' . $comment->user->firstname;
+                $formattedComment['author']['avatar'] = $comment->user->avatar_filename;
+                $formattedComment['author']['job'] = ucwords(str_replace('_', ' ', $comment->user->role));
+                $formattedComment['message'] = $comment->message;
+                $formattedComment['timestamp'] = $comment->created_at;
+                $formattedVideo['comments'][] = $formattedComment;
+            }
+
+            $formattedVideos[] = $formattedVideo;
+        }
+
+        return response()->json($formattedVideos, 200);
     }
 
     /**
@@ -206,5 +237,73 @@ class VideoReviewController extends Controller
         return response()->json([
             'message' => 'Video review deleted',
         ], 200);
+    }
+
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{projectId}/videos/{version}",
+    *     summary="Add a comment to a video review",
+    *     tags={"Video Review"},
+    *     @OA\Parameter(
+    *         name="projectId",
+    *         in="path",
+    *         description="Id of the project",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         name="version",
+    *         in="path",
+    *         description="Version of the video review",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="Comment object that needs to be added to the video review",
+    *         required=true,
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="test"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Comment created"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Video review not found"
+    *     ),
+    * )
+    */
+    function addAComment(Request $request, $projectId, $version)
+    {
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        $videoReview = VideoReview::where('project_id', $projectId)->where('version', $version)->first();
+
+        if (!$videoReview) {
+            return response()->json([
+                'message' => 'Video review not found',
+            ], 404);
+        }
+
+        $comment = new CommentReview();
+        $comment->user_id = $request->user()->id;
+        $comment->video_review_id = $videoReview->id;
+        $comment->message = $request->message;
+        $comment->save();
+
+        return response()->json([
+            'message' => 'Comment created',
+            'comment' => $comment,
+        ], 201);
     }
 }
