@@ -1,6 +1,12 @@
 name: Create a release
 
-on: workflow_call
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag name"
+        required: true
 
 jobs:
   launch_release:
@@ -12,3 +18,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
+          tag_name: ${{ github.event.inputs.tag || github.ref }}
