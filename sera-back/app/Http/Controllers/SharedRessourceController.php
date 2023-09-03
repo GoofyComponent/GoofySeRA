@@ -44,8 +44,8 @@ class SharedRessourceController extends Controller
                 'message' => 'Le projet n\'existe pas'
             ], 400);
         }
+        
         $ressource = new Ressource();
-
         $ressource->name = $request->name;
         $ressource->type = $request->type;
         $ressource->description = $request->description;
@@ -53,8 +53,30 @@ class SharedRessourceController extends Controller
 
 
         $name = $request->name.'_'.$request->file->getClientOriginalName();
-
         $name = strtolower(str_replace(' ', '', $name));
+
+        $extension = $request->file->getClientOriginalExtension();
+        echo $extension;
+
+        if ($extension == 'jpeg' || $extension == 'png' || $extension == 'webp' || $extension == 'gif') {
+            if ($request->type != 'image') {
+                return response()->json([
+                    'message' => 'Le type de fichier ne correspond pas'
+                ], 400);
+            }
+        } else if ($extension == 'mp3') {
+            if ($request->type != 'audio') {
+                return response()->json([
+                    'message' => 'Le type de fichier ne correspond pas'
+                ], 400);
+            }
+        } else if ($extension == 'pdf' || $extension == 'docx' || $extension == 'xlsx' || $extension == 'pptx') {
+            if ($request->type != 'document') {
+                return response()->json([
+                    'message' => 'Le type de fichier ne correspond pas'
+                ], 400);
+            }
+        }
 
         $path = $request->file->storeAs(
             'ressource/project_'.$project->id.'/'.$request->type,
