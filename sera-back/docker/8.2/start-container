@@ -24,6 +24,9 @@ chown -R sail:sail /root
 # /var/www/html create a bucket named sera
 /root/minio-binaries/mc mb --with-versioning --ignore-existing myminio/sera
 
+# there is a video named topfreddy.mp4 into the public/videos folder from laravel. Upload it to minio
+/root/minio-binaries/mc cp /var/www/html/public/videos/topfreddy.mp4 myminio/sera
+
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
 else
