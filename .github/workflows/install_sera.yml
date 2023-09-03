@@ -39,7 +39,6 @@ jobs:
       - name: Writes the .env file
         run: |
           docker exec sera-server sh -c 'echo "${{ secrets.PROD_ENV_FILE }}" > .env'
-          docker exec sera-webapp sh -c 'echo "${{ secrets.PROD_ENV_FILE }}" > .env'
 
       - name: DEBUG LS REPO
         run: |
