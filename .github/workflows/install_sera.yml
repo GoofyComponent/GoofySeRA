@@ -56,3 +56,4 @@ jobs:
           docker exec sera-server php artisan optimize
           docker exec sera-server php artisan storage:link
           docker exec sera-server chown -R www-data:www-data /root
+          docker exec sera-server php artisan migrate --force
