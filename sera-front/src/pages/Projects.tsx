@@ -108,14 +108,12 @@ export const Projects = () => {
             />
           )}
         </div>
-        {!isLoading ? (
-          <Pagination
-            totalPages={projectsData.last_page}
-            currentPage={projectsData.current_page}
-            setNextPage={setPage}
-            isCurrentlyLoading={isLoading}
-          />
-        ) : null}
+        <Pagination
+          totalPages={projectsData.last_page}
+          currentPage={projectsData.current_page}
+          setNextPage={setPage}
+          isCurrentlyLoading={isLoading}
+        />
       </div>
     </>
   );
