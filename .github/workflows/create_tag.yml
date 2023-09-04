@@ -17,14 +17,14 @@ jobs:
           fetch-depth: 0
       - name: Get last commit message
         id: commit_message
-        run: echo "::set-output name=message::$(git log -1 --pretty=format:'%s')"
+        run: echo "COMMIT_MSG=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
       - name: Echo env
-        run: echo ${{ steps.commit_message.outputs.message }}
+        run: echo ${{ env.COMMIT_MSG }}
       - name: Create or update major version
         uses: joutvhu/create-tag@v1
         with:
-          tag_name: ${{ steps.commit_message.outputs.message }}
-          message: ${{ steps.commit_message.outputs.message }}
+          tag_name: ${{ env.COMMIT_MSG }}
+          message: ${{ env.COMMIT_MSG }}
           on_tag_exists: update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
