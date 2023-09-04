@@ -433,4 +433,100 @@ class StepController extends Controller
         return $project->steps;
     }
 
+
+    /**
+    *  @OA\Post(
+    *     path="/api/projects/{project_id}/validate/postproduction",
+    *     tags={"Step"},
+    *     summary="Validate postproduction",
+    *     description="Validate postproduction",
+    *     operationId="ValidatePostProd",
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         required=true,
+    *         description="Validate postproduction",
+    *         @OA\JsonContent(
+    *             required={"version"},
+    *             @OA\Property(property="version", type="integer", example="1"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Video review",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="version", type="integer", example="1"),
+    *             @OA\Property(property="link", type="string", example="https://www.youtube.com/watch?v=1"),
+    *             @OA\Property(property="validated", type="boolean", example="false"),
+    *             @OA\Property(property="project_id", type="integer", example="1"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Bad request",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="Post-Production is not ongoing."),
+    *         ),
+    *     ),
+    * )
+    */
+    public function validatePostProd(Request $request, $project_id){
+
+        $request->validate([
+            'version' => 'required|integer',
+        ]);
+
+
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        // si dans steps -> Post-Production -> status not ongoing return 400
+        if(!isset($steps->{'Post-Production'}) || $steps->{'Post-Production'}->status !== 'ongoing'){
+            return response()->json(['error' => 'Post-Production is not ongoing.'], 400);
+        }
+
+        $review = $project->videoReviews;
+
+        if($review === null){
+            return response()->json(['error' => 'Project has no video review.'], 400);
+        }
+
+        // on cherche la review avec la version
+        $review = $review->where('version', $request->version)->first();
+
+        if($review === null){
+            return response()->json(['error' => 'Project has no video review with this version.'], 400);
+        }
+
+        $review->validated = true;
+        $review->save();
+
+        // on mets Post-Production en done
+        $steps->{'Post-Production'}->status = 'done';
+        $steps->{'Transcription'}->status = 'ongoing';
+        $steps->{'Subtitling'}->status = 'ongoing';
+
+        $project->steps = json_encode($steps);
+        $project->save();
+
+
+        return response()->json($review, 200);
+
+    }
 }

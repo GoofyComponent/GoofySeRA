@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('provider')->nullable(false);
             $table->string('type')->nullable(false);
             $table->string('resolution')->nullable(false);
+            $table->boolean('validated')->nullable(false)->default(false);
             $table->timestamps();
         });
     }
