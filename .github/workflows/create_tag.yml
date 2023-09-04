@@ -1,0 +1,26 @@
+name: Create new tag based on last commit message
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        env:
+          commitmsg: ${{ github.event.head_commit.message }}
+        with:
+          fetch-depth: 0
+      - name: Create or update major version
+        uses: joutvhu/create-tag@v1
+        with:
+          tag_name: $commitmsg
+          message: $commitmsg
+          on_tag_exists: update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
