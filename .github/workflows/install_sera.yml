@@ -14,20 +14,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          ref: prod
           fetch-depth: 0
 
       - name: Set env vars
         run: |
           echo "${{ secrets.PROD_ENV_FILE }}" >> .env
 
-      - name: DEBUG LS REPO
-        run: |
-          ls -la
-
       - name: Pull new images
         run: |
           docker-compose -f ./prod.docker-compose.yml -p "prod-sera" pull
-             
+
       - name: Update the prod
         run: |
           docker-compose -f ./prod.docker-compose.yml -p "prod-sera" up -d
@@ -35,14 +32,10 @@ jobs:
       - name: Remove unused images
         run: |
           docker image prune -f
-          
-      - name: Wait till the stack is created
-        run: |
-          sleep 2
 
       - name: Writes the .env file
         run: |
-          docker exec sera-server echo "${{ secrets.DEVELOP_ROOT_ENV_FILE }}" > .env
+          docker exec sera-server sh -c 'echo "${{ secrets.PROD_ENV_FILE }}" > .env'
 
       - name: Execute laravel configs
         run: |

@@ -87,7 +87,7 @@ export const Projects = () => {
             </TooltipProvider>
           </div>
           {!isLoading ? (
-            <div className="xl:grid-col-4 mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+            <div className=" mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {projectsData.data.map(
                 (project: {
                   id: string;
