@@ -7,8 +7,8 @@ WORKDIR /app
 
 ARG VITE_BACKEND_URL
 ARG VITE_ENV_MODE
-ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
-ENV VITE_ENV_MODE=$VITE_ENV_MODE
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+ENV VITE_ENV_MODE=${VITE_ENV_MODE}
 
 # Copier les fichiers de configuration de l'application
 COPY package.json .
@@ -30,8 +30,8 @@ FROM nginx:alpine as runner
 
 ARG VITE_BACKEND_URL
 ARG VITE_ENV_MODE
-ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
-ENV VITE_ENV_MODE=$VITE_ENV_MODE
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+ENV VITE_ENV_MODE=${VITE_ENV_MODE}
 
 # Copier les fichiers de construction de l'étape précédente dans le répertoire de contenu par défaut de Nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
