@@ -441,37 +441,3 @@ export const Tickets = () => {
     </section>
   );
 };
-
-//               {searchParams.get("action") === "infos" ? (
-//                 <Link to="/dashboard/tickets">
-//                   <AlertDialogAction>Close</AlertDialogAction>
-//                 </Link>
-//               ) : (
-//                 <AlertDialogCancel
-//                   onClick={() => {
-//                     setOpen(false);
-//                   }}
-//                 >
-//                   Cancel
-//                 </AlertDialogCancel>
-//               )}
-//               <Link
-//                 to={
-//                   searchParams.get("action") === "validate"
-//                     ? `/dashboard/tickets/${TicketId}/validate`
-//                     : `/dashboard/tickets/${TicketId}/delete`
-//                 }
-//               >
-//                 <AlertDialogAction>
-//                   {searchParams.get("action") === "validate"
-//                     ? "Validate"
-//                     : "Delete"}
-//                 </AlertDialogAction>
-//               </Link>
-//             </AlertDialogFooter>
-//           </AlertDialogContent>
-//         </AlertDialog>
-//       )}
-//     </section>
-//   );
-// };

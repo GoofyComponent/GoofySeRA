@@ -53,6 +53,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::post('projects/{project_id}/planification-to-captation', 'App\Http\Controllers\StepController@planificationToCaptation')->name('projects.planificationToCaptation');
     Route::post('projects/{project_id}/add-link', 'App\Http\Controllers\ProjectController@addLinkToCaptation')->name('projects.addLink');
     Route::post('projects/{project_id}/captation-to-postproduction', 'App\Http\Controllers\StepController@captationToPostProd')->name('projects.captationToPostproduction');
+    Route::post('projects/{project_id}/validate/postproduction', 'App\Http\Controllers\StepController@validatePostProd')->name('projects.validatePostProd');
 
         /****TEAM ****/
 
@@ -82,6 +83,8 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         Route::delete('videos/{version}', 'App\Http\Controllers\VideoReviewController@destroy')->name('video-reviews.destroy');
 
         /************************/
+
+
 
     Route::resource('rooms', 'App\Http\Controllers\RoomController');
 

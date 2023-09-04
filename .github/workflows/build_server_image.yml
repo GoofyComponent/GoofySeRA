@@ -13,13 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - name: Get Latest Tag
+        id: latest_tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+      - name: Echo latest tag
+        run: echo '${{ steps.latest_tag.outputs.tag }}'
       - name: Kaniko build
         uses: aevea/action-kaniko@master
         with:
           image: destcom/sera-server
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          tag: ${{ github.event.inputs.tag || github.ref_name }}
+          tag: ${{ github.event.inputs.tag || steps.latest_tag.outputs.tag }}
           tag_with_latest: true
           path: ./sera-back
           build_file: ./docker/prod.Dockerfile
