@@ -15,8 +15,6 @@ jobs:
       - uses: actions/checkout@master
       - name: Kaniko build
         uses: aevea/action-kaniko@master
-        env:
-          BACKEND_ENV: ${{secrets.PRODUCTION_LARAVEL_API}}
         with:
           image: destcom/sera-web
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -25,4 +23,4 @@ jobs:
           tag_with_latest: true
           path: ./sera-front/
           build_file: ./prod.Dockerfile
-          extra_args: --build-arg port=80 --build-arg VITE_BACKEND_URL=$BACKEND_ENV --build-arg VITE_ENV_MODE=production
+          extra_args: --build-arg port=80 --build-arg VITE_BACKEND_URL=https://sera-api.destcom.website --build-arg VITE_ENV_MODE=production
