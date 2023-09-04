@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ressource;
 use App\Models\Project;
+use Illuminate\Support\Facades\Storage;
 
 class SharedRessourceController extends Controller
 {
@@ -49,7 +50,6 @@ class SharedRessourceController extends Controller
         $ressource->type = $request->type;
         $ressource->description = $request->description;
         $ressource->project_id = $projectId;
-
 
         $name = $request->name.'_'.$request->file->getClientOriginalName();
         $name = strtolower(str_replace(' ', '', $name));
@@ -117,11 +117,12 @@ class SharedRessourceController extends Controller
     public function update(Request $request, $ressourceId)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string',
-            'description' => 'required|string',
+            'name' => 'string',
+            'description' => 'string',
+            'file' => 'file'
         ]);
 
-        $ressource = Ressource::find($ressourceId);
+        $ressource = Ressource::find($ressourceId)->first();
 
         if (!$ressource) {
             return response()->json([
@@ -129,7 +130,60 @@ class SharedRessourceController extends Controller
             ], 400);
         }
 
-        $ressource->update($validatedData);
+        if($request->filled('name')){
+            $ressource->name = $request->name;
+        }
+
+        $name = $ressource->name.'_'.$request->file->getClientOriginalName();
+        $name = strtolower(str_replace(' ', '', $name));
+
+        if($request->filled('description')){
+            $ressource->description = $request->description;
+        }
+
+        if ($request->file) {
+            $previousPath = $ressource->url;
+            $extension = $request->file->getClientOriginalExtension();
+
+            if ($ressource->type == 'image'){
+                if (!in_array($extension, ['jpeg', 'jpg', 'png', 'webp', 'gif'])) {
+                    return response()->json([
+                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers jpeg, pjg, png, webp et gif sont acceptés'
+                    ], 400);
+                }
+            }else if ($ressource->type == 'audio'){
+                if ($extension != 'mp3') {
+                    return response()->json([
+                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers mp3 sont acceptés'
+                    ], 400);
+                }
+            }else if ($ressource->type == 'document'){
+                if (!in_array($extension, ['pdf', 'docx', 'xlsx', 'pptx'])) {
+                    return response()->json([
+                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers pdf, docx, xlsx et pptx sont acceptés'
+                    ], 400);
+                }
+            }else{
+                return response()->json([
+                    'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers image, audio et document sont acceptés'
+                ], 400);
+            }
+
+            Storage::disk('s3')->delete($previousPath);
+            $path = $request->file->storeAs(
+                'ressource/project_'.$ressource->project_id.'/'.$ressource->type,
+                $name,
+                's3'
+            );
+            if (!$path) {
+                return response()->json([
+                    'message' => 'Erreur lors de l\'upload du fichier'
+                ], 400);
+            }
+            $ressource->url = $path;
+        }
+
+        $ressource->save();
 
         return response()->json($ressource, 201);
     }
