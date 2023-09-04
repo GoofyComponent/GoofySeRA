@@ -23,7 +23,7 @@ jobs:
     uses: ./.github/workflows/create_release.yml
     secrets: inherit
   update_sera_app:
-    needs: deploy_release
+    needs: [build_server, build_webapp]
     uses: ./.github/workflows/install_sera.yml
     secrets: inherit
   notify:
