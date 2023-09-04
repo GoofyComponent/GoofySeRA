@@ -13,14 +13,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         env:
-          commitmsg: ${{ github.event.head_commit.message }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         with:
           fetch-depth: 0
       - name: Create or update major version
         uses: joutvhu/create-tag@v1
         with:
-          tag_name: $commitmsg
-          message: $commitmsg
+          tag_name: ${{ env.COMMIT_MESSAGE }}
+          message: ${{ env.COMMIT_MESSAGE }}
           on_tag_exists: update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Echo env
+        run: echo ${{ env.COMMIT_MESSAGE }}
