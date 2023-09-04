@@ -54,24 +54,6 @@ jobs:
             exit 1
           fi
 
-      #- name: Check if the front does not have lint errors
-      #run: |
-      #docker run --rm \
-      #-u "$(id -u):$(id -g)" \
-      #-v $(pwd)/sera-front:/opt \
-      #-w /opt \
-      #node:lts \
-      #npm install && npm run lint-autofix
-
-      #- name: Execute composer install
-      #run: |
-      #docker run --rm \
-      #-u "$(id -u):$(id -g)" \
-      #-v $(pwd)/sera-back:/opt \
-      #-w /opt \
-      #laravelsail/php81-composer \
-      #composer install --ignore-platform-reqs
-
       - name: Launch the containers
         run: |
           docker-compose -f ./develop.docker-compose.yml -p "develop-sera" up -d --build
@@ -99,8 +81,6 @@ jobs:
           docker exec develop-sera-back-laravel-test php artisan l5-swagger:generate
 
       - name: Run migrations
-        # get all my env from secrets.DEVELOP_LARAVEL_ENV_FILE
-
         run: |
           sleep 10
           docker exec develop-sera-back-laravel-test php artisan config:cache
