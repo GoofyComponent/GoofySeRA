@@ -15,14 +15,15 @@ class UserProdSeeder extends Seeder
      */
     public function run(): void
     {
-        $s3_credentials = (new CreateMinioUser())->create();
-        $s3_credentials['secretkey'] = Crypt::encrypt($s3_credentials['secretkey']);
-        $s3_credentials['accesskey'] = Crypt::encrypt($s3_credentials['accesskey']);
 
         // on search si l'utilisateur existe déjà
         if (\App\Models\User::where('email', 'admin@sera.com')->exists()) {
             return;
         }
+
+        $s3_credentials = (new CreateMinioUser())->create();
+        $s3_credentials['secretkey'] = Crypt::encrypt($s3_credentials['secretkey']);
+        $s3_credentials['accesskey'] = Crypt::encrypt($s3_credentials['accesskey']);
 
         // adapted for production and use only model and not factory
         $user = \App\Models\User::firstOrCreate([
