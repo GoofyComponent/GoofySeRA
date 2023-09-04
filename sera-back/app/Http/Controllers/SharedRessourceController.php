@@ -50,7 +50,6 @@ class SharedRessourceController extends Controller
     */
     public function index($projectId)
     {
-
         $project = Project::find($projectId);
 
         if (!$project) {
@@ -59,9 +58,8 @@ class SharedRessourceController extends Controller
             ], 400);
         }
 
-        $ressources = $project->ressources();
+        $ressources = $project->ressources()->get();
         return response()->json($ressources);
-
     }
 
         /**
