@@ -7,15 +7,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  create_tag:
+    uses: ./.github/workflows/create_tag.yml
+    secrets: inherit
   build_server:
+    needs: create_tag
     uses: ./.github/workflows/build_server_image.yml
     secrets: inherit
   build_webapp:
-    needs: build_server
+    needs: create_tag
     uses: ./.github/workflows/build_web_image.yml
     secrets: inherit
   deploy_release:
-    needs: build_webapp
+    needs: [build_server, build_webapp]
     uses: ./.github/workflows/create_release.yml
     secrets: inherit
   update_sera_app:
@@ -23,7 +27,7 @@ jobs:
     uses: ./.github/workflows/install_sera.yml
     secrets: inherit
   notify:
-    needs: deploy_release
+    needs: update_sera_app
     runs-on: ubuntu-latest
     steps:
       - name: Notify production build & published
@@ -31,4 +35,4 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "A new release just been created on SERA, images pushed to dockerhub."
+          args: "New production just build, see the new git release !"
