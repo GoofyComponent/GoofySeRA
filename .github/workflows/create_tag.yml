@@ -17,7 +17,10 @@ jobs:
           fetch-depth: 0
       - name: Get last commit message
         id: commit_message
-        run: echo "COMMIT_MSG=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+        run: |
+          MESSAGE=$(git log -1 --pretty=format:'%s')
+          CLEANED_MESSAGE=$(echo "$MESSAGE" | sed -e 's/[^a-zA-Z0-9.-]/_/g')
+          echo "COMMIT_MSG=${CLEANED_MESSAGE}" >> $GITHUB_ENV
       - name: Echo env
         run: echo ${{ env.COMMIT_MSG }}
       - name: Create or update major version
