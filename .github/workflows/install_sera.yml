@@ -33,18 +33,9 @@ jobs:
         run: |
           docker image prune -f
 
-      - name: Wait till the stack is created
-        run: |
-          sleep 2
-
       - name: Writes the .env file
         run: |
           docker exec sera-server sh -c 'echo "${{ secrets.PROD_ENV_FILE }}" > .env'
-
-      - name: DEBUG LS REPO
-        run: |
-          ls -la
-          docker exec sera-server ls -la
 
       - name: Execute laravel configs
         run: |

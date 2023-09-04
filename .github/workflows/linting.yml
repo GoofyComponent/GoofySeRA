@@ -3,10 +3,8 @@ name: Linting
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  #push:
-  #branches:
-  #- develop
-  #workflow_call:
+  push:
+    branches: [develop]
 
 jobs:
   lint:
