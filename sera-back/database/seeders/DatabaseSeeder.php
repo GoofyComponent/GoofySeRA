@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             RoomReservationSeeder::class,
             // RessourceSeeder::class,
             VideoReviewSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }
