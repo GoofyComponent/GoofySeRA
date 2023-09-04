@@ -6,6 +6,9 @@ import { MembersContainer } from "@/components/app/project/Members/MembersContai
 import { SharedContainer } from "@/components/app/project/SharedRessources/SharedContainer";
 import { StepsIndicatorContainer } from "@/components/app/project/StepsIndicator/StepsIndicatorContainer";
 import { Separator } from "@/components/ui/separator";
+import { useDispatch } from "react-redux";
+import { setLastSeenProjectId } from "@/helpers/slices/AppSlice";
+import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { axios } from "@/lib/axios";
 
@@ -13,6 +16,11 @@ import { BigLoader } from "./skeletons/BigLoader";
 
 export const Project = () => {
   const { ProjectId: id } = useParams<{ ProjectId: string }>();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setLastSeenProjectId(id));
+  }, [id]);
 
   const {
     data: projectData,

@@ -63,4 +63,9 @@ class User extends Authenticatable
             return $team->project;
         });
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

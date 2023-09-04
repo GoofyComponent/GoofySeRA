@@ -10,6 +10,44 @@ use Illuminate\Support\Facades\Storage;
 class SharedRessourceController extends Controller
 {
 
+    /**
+    * @OA\Get(
+    *     path="/api/projects/{projectId}/ressources",
+    *     summary="Get all ressources of a project",
+    *     tags={"Ressources"},
+    *     @OA\Parameter(
+    *         name="projectId",
+    *         in="path",
+    *         description="Id of the project",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Ressources of the project",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1" ),
+    *             @OA\Property(property="name", type="string", example="Ressource 1" ),
+    *             @OA\Property(property="type", type="string", example="image" ),
+    *             @OA\Property(property="description", type="string", example="Description de la ressource 1" ),
+    *             @OA\Property(property="url", type="string", example="https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg" ),
+    *             @OA\Property(property="project_id", type="integer", example="1" ),
+    *             @OA\Property(property="created_at", type="string", example="2021-03-30T14:00:00.000000Z" ),
+    *             @OA\Property(property="updated_at", type="string", example="2021-03-30T14:00:00.000000Z" ),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="The project doesn't exist",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="La ressource n'existe pas" ),
+    *         )
+    *     ),
+    * )
+    */
     public function index($projectId)
     {
 
@@ -22,11 +60,58 @@ class SharedRessourceController extends Controller
         }
 
         $ressources = $project->ressources();
-
         return response()->json($ressources);
 
     }
 
+        /**
+    * @OA\Post(
+    *     path="/api/projects/{projectId}/ressources",
+    *     summary="Create a ressource",
+    *     tags={"Ressources"},
+    *     @OA\Parameter(
+    *         name="projectId",
+    *         in="path",
+    *         description="Id of the project",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="Ressource object that needs to be added to the project",
+    *         required=true,
+    *         @OA\JsonContent(
+    *             @OA\Property(property="name", type="string", example="Ressource 1" ),
+    *             @OA\Property(property="type", type="string", example="image" ),
+    *             @OA\Property(property="description", type="string", example="Description de la ressource 1" ),
+    *             @OA\Property(property="file", type="file", example="ressource1_image.jpg" ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Ressource created",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1" ),
+    *             @OA\Property(property="name", type="string", example="Ressource 1" ),
+    *             @OA\Property(property="type", type="string", example="image" ),
+    *             @OA\Property(property="description", type="string", example="Description de la ressource 1" ),
+    *             @OA\Property(property="url", type="string", example="https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg" ),
+    *             @OA\Property(property="project_id", type="integer", example="1" ),
+    *             @OA\Property(property="created_at", type="string", example="2021-03-30T14:00:00.000000Z" ),
+    *             @OA\Property(property="updated_at", type="string", example="2021-03-30T14:00:00.000000Z" ),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="The project doesn't exist",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="Le projet n'existe pas" ),
+    *         )
+    *     ),
+    * )
+    */
     public function store(Request $request,$projectId)
     {
         $acceptedTypes = ['image','audio', 'document'];
@@ -102,6 +187,54 @@ class SharedRessourceController extends Controller
 
     }
 
+    /**
+    * @OA\Get(
+    *     path="/api/projects/{projectId}/ressources/{ressourceId}",
+    *     summary="Get a ressource",
+    *     tags={"Ressources"},
+    *     @OA\Parameter(
+    *         name="projectId",
+    *         in="path",
+    *         description="Id of the project",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Parameter(
+    *         name="ressourceId",
+    *         in="path",
+    *         description="Id of the ressource",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Ressource",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1" ),
+    *             @OA\Property(property="name", type="string", example="Ressource 1" ),
+    *             @OA\Property(property="type", type="string", example="image" ),
+    *             @OA\Property(property="description", type="string", example="Description de la ressource 1" ),
+    *             @OA\Property(property="url", type="string", example="https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg" ),
+    *             @OA\Property(property="project_id", type="integer", example="1" ),
+    *             @OA\Property(property="created_at", type="string", example="2021-03-30T14:00:00.000000Z" ),
+    *             @OA\Property(property="updated_at", type="string", example="2021-03-30T14:00:00.000000Z" ),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="The ressource doesn't exist",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="La ressource n'existe pas" ),
+    *         )
+    *     ),
+    * )
+    */
     public function show($ressourceId)
     {
         $ressources = Ressource::find($ressourceId);
@@ -115,6 +248,53 @@ class SharedRessourceController extends Controller
         return response()->json($ressources, 201);
     }
 
+    /**
+    * @OA\Post(
+    *     path="/api/ressources/{ressourceId}/update",
+    *     summary="Update a ressource",
+    *     tags={"Ressources"},
+    *     @OA\Parameter(
+    *         name="ressourceId",
+    *         in="path",
+    *         description="Id of the ressource",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         description="Ressource object that needs to be updated",
+    *         required=true,
+    *         @OA\JsonContent(
+    *             @OA\Property(property="name", type="string", example="Ressource 1" ),
+    *             @OA\Property(property="description", type="string", example="Description de la ressource 1" ),
+    *             @OA\Property(property="file", type="file", example="ressource1_image.jpg" ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=201,
+    *         description="Ressource updated",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1" ),
+    *             @OA\Property(property="name", type="string", example="Ressource 1" ),
+    *             @OA\Property(property="type", type="string", example="image" ),
+    *             @OA\Property(property="description", type="string", example="Description de la ressource 1" ),
+    *             @OA\Property(property="url", type="string", example="https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg" ),
+    *             @OA\Property(property="project_id", type="integer", example="1" ),
+    *             @OA\Property(property="created_at", type="string", example="2021-03-30T14:00:00.000000Z" ),
+    *             @OA\Property(property="updated_at", type="string", example="2021-03-30T14:00:00.000000Z" ),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="The ressource doesn't exist",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="La ressource n'existe pas" ),
+    *         )
+    *     ),
+    * )
+    */
     public function update(Request $request, $ressourceId)
     {
         $validatedData = $request->validate([
@@ -189,6 +369,37 @@ class SharedRessourceController extends Controller
         return response()->json($ressource, 201);
     }
 
+    /**
+    * @OA\Delete(
+    *     path="/api/ressources/{ressourceId}/delete",
+    *     summary="Delete a ressource",
+    *     tags={"Ressources"},
+    *     @OA\Parameter(
+    *         name="ressourceId",
+    *         in="path",
+    *         description="Id of the ressource",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Ressource deleted",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="La ressource a bien été supprimée" ),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="The ressource doesn't exist",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="message", type="string", example="La ressource n'existe pas" ),
+    *         )
+    *     ),
+    * )
+    */
     public function destroy($ressourceId)
     {
         $ressource = Ressource::find($ressourceId);

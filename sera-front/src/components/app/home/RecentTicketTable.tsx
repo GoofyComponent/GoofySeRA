@@ -4,8 +4,11 @@ import { Link } from "react-router-dom";
 import { TicketsTable } from "@/components/app/tickets/TicketsTable";
 import { Button } from "@/components/ui/button";
 import { axios } from "@/lib/axios";
+import { useState } from "react";
 
 export const RecentTicketTable = () => {
+  const [sort, setSort] = useState("desc");
+
   const recentTicket = useQuery({
     queryKey: ["recentTicket"],
     queryFn: async () => {
@@ -36,6 +39,8 @@ export const RecentTicketTable = () => {
 
       <TicketsTable
         tickets={recentTicket.isLoading ? undefined : recentTicket.data.data}
+        sort={sort}
+        setSort={setSort}
       />
     </div>
   );

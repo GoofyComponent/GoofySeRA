@@ -53,6 +53,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::post('projects/{project_id}/planification-to-captation', 'App\Http\Controllers\StepController@planificationToCaptation')->name('projects.planificationToCaptation');
     Route::post('projects/{project_id}/add-link', 'App\Http\Controllers\ProjectController@addLinkToCaptation')->name('projects.addLink');
     Route::post('projects/{project_id}/captation-to-postproduction', 'App\Http\Controllers\StepController@captationToPostProd')->name('projects.captationToPostproduction');
+    Route::post('projects/{project_id}/validate/postproduction', 'App\Http\Controllers\StepController@validatePostProd')->name('projects.validatePostProd');
 
         /****TEAM ****/
 
@@ -76,7 +77,20 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
         /***** Video Review *****/
 
-        Route::get('projects/{projectId}/video-reviews', 'App\Http\Controllers\VideoReviewController@getReviewsByProjectId')->name('video-reviews.getReviewsByProjectId');
+        Route::get('projects/{projectId}/videos', 'App\Http\Controllers\VideoReviewController@getReviewsByProjectId')->name('video-reviews.getReviewsByProjectId');
+        Route::post('projects/{projectId}/videos', 'App\Http\Controllers\VideoReviewController@store')->name('video-reviews.store');
+        Route::post('projects/{projectId}/videos/{version}', 'App\Http\Controllers\VideoReviewController@addAComment')->name('video-reviews.addAComment');
+        Route::delete('videos/{version}', 'App\Http\Controllers\VideoReviewController@destroy')->name('video-reviews.destroy');
+
+        /************************/
+
+        /***** Ressource *****/
+
+        Route::get('projects/{projectId}/ressources', 'App\Http\Controllers\SharedRessourceController@index')->name('ressources.index');
+        Route::get('ressources/{ressourceId}', 'App\Http\Controllers\SharedRessourceController@show')->name('ressources.show');
+        Route::post('projects/{projectId}/ressources', 'App\Http\Controllers\SharedRessourceController@store')->name('ressources.store');
+        Route::post('ressources/{ressourceId}/update', 'App\Http\Controllers\SharedRessourceController@update')->name('ressources.update');
+        Route::delete('ressources/{ressourceId}', 'App\Http\Controllers\SharedRessourceController@destroy')->name('ressources.destroy');
 
         /************************/
 

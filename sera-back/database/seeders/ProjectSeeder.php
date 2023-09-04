@@ -12,7 +12,7 @@ class ProjectSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Project::factory()->count(15)->create();
+        \App\Models\Project::factory()->count(40)->create();
 
         // on prend le premier projet avec l'id 1
         $project = \App\Models\Project::find(1);
@@ -63,5 +63,6 @@ class ProjectSeeder extends Seeder
         $project->steps->{'Post-Production'}->status = 'ongoing';
         $project->steps = json_encode($project->steps);
         $project->save();
+
     }
 }

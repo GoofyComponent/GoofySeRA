@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('video_reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
-            $table->json('reviews')->nullable();
+            $table->foreignId('ressource_id')->constrained()->onDelete('cascade');
+            $table->integer('version')->nullable(false);
+            $table->string('provider')->nullable(false);
+            $table->string('type')->nullable(false);
+            $table->string('resolution')->nullable(false);
+            $table->boolean('validated')->nullable(false)->default(false);
             $table->timestamps();
         });
     }

@@ -17,6 +17,10 @@ class VideoReviewFactory extends Factory
     public function definition(): array
     {
         return [
+            'version' => 1,
+            'provider' => 'html5',
+            'type' => 'video/mp4',
+            'resolution' => '720',
         ];
     }
 }

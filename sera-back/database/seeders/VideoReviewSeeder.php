@@ -17,65 +17,31 @@ class VideoReviewSeeder extends Seeder
         $project1 = \App\Models\Project::find(3);
         $project2 = \App\Models\Project::find(4);
 
+        $ressource1 = \App\Models\Ressource::factory()->create([
+            'name' => 'Top 5 Freddy Fazbear',
+            'description' => 'Top 5 des meilleurs Freddy Fazbear de la saga Five Nights at Freddy\'s !',
+            'type' => 'video',
+            'url' => '/top5freddy.mp4',
+            'project_id' => $project1->id,
+        ]);
+
+        $ressource2 = \App\Models\Ressource::factory()->create([
+            'name' => 'Top 5 Freddy Fazbear',
+            'description' => 'Top 5 des meilleurs Freddy Fazbear de la saga Five Nights at Freddy\'s !',
+            'type' => 'video',
+            'url' => '/top5freddy.mp4',
+            'project_id' => $project2->id,
+        ]);
+
         // on va créer grace a la factory 1 table video pour chaque projet
         $video1 = \App\Models\VideoReview::factory()->create([
             'project_id' => $project1->id,
+            'ressource_id' => $ressource1->id,
         ]);
 
         $video2 = \App\Models\VideoReview::factory()->create([
             'project_id' => $project2->id,
+            'ressource_id' => $ressource2->id,
         ]);
-
-        // Video 1 sera comme si on venait de finir la capture et commencer l'editing
-
-        // Video 2 on aura déjà commencer
-
-        $jsonReview = [
-            [
-                "version" => 1,
-                "video" => [
-                    "type" => "video",
-                    "title" => "Fuji",
-                    "sources" => [
-                        [
-                            "size" => 1440,
-                            "provider" => "html",
-                            "src" => "http://localhost/storage/videos-example/fuji-1440.mp4",
-                            "type" => "video/mp4",
-                        ],
-                        [
-                            "size" => 720,
-                            "provider" => "html",
-                            "src" => "http://localhost/storage/videos-example/fuji-720.mp4",
-                            "type" => "video/mp4",
-                        ],
-                    ],
-                ],
-                "comments" => [
-                    [
-                        "author"=> [
-                            "nickname"=> "user1",
-                            "avatar"=> "https://i.pravatar.cc/300",
-                            "job"=> "Software Engineer"
-                        ],
-                        "message"=> "hello",
-                        "timestamp"=> "2021-05-01 12:00:00"
-                    ],
-                    [
-                        "author"=> [
-                            "nickname"=> "user2",
-                            "avatar"=> "https://i.pravatar.cc/300",
-                            "job"=> "Barista"
-                        ],
-                        "message"=> "hello in [[00:00:12]]",
-                        "timestamp"=> "2021-05-01 12:00:00"
-                    ],
-                ]
-            ],
-        ];
-
-        $video2->reviews = json_encode($jsonReview);
-
-        $video2->save();
     }
 }

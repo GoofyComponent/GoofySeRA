@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Card } from "@/components/ui/card-project";
 import { Pagination } from "@/components/ui/pagination";
@@ -23,6 +23,8 @@ import { BigLoader } from "./skeletons/BigLoader";
 export const Projects = () => {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("0");
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     data: projectsData,
@@ -32,13 +34,20 @@ export const Projects = () => {
   } = useQuery({
     queryKey: ["projects", { page, status }],
     queryFn: async () => {
-      let requestUrl = `api/projects?page=${page}&sort=desc`;
+      let requestUrl = `api/projects?page=${page}&sort=desc&maxPerPage=16`;
       if (status != "0") requestUrl += `&status=${status}`;
 
       const projects = await axios.get(requestUrl);
       return projects.data;
     },
   });
+
+  useEffect(() => {
+    if (projectsData) {
+      setTotalPages(projectsData.last_page);
+      setCurrentPage(projectsData.current_page);
+    }
+  }, [projectsData]);
 
   if (error) return <>{error}</>;
 
@@ -55,6 +64,7 @@ export const Projects = () => {
                   name="status"
                   value={status}
                   onValueChange={(value) => {
+                    setPage(1);
                     setStatus(value);
                   }}
                 >
@@ -77,7 +87,7 @@ export const Projects = () => {
             </TooltipProvider>
           </div>
           {!isLoading ? (
-            <div className="mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className=" mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {projectsData.data.map(
                 (project: {
                   id: string;
@@ -107,14 +117,12 @@ export const Projects = () => {
             />
           )}
         </div>
-        {!isLoading ? (
-          <Pagination
-            totalPages={projectsData.last_page}
-            currentPage={projectsData.current_page}
-            setNextPage={setPage}
-            isCurrentlyLoading={isLoading}
-          />
-        ) : null}
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          setNextPage={setPage}
+          isCurrentlyLoading={isLoading}
+        />
       </div>
     </>
   );

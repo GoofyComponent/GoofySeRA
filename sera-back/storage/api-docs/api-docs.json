@@ -1674,6 +1674,455 @@
                 }
             }
         },
+        "/api/projects/{projectId}/ressources": {
+            "get": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Get all ressources of a project",
+                "operationId": "f9d4f616a8d0f0825e9d9fed462f75a4",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ressources of the project",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ressource 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "image"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Description de la ressource 1"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The project doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Create a ressource",
+                "operationId": "7472509add9597e1a3026b976073199c",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Ressource object that needs to be added to the project",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ressource 1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "image"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Description de la ressource 1"
+                                    },
+                                    "file": {
+                                        "type": "file",
+                                        "example": "ressource1_image.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ressource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ressource 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "image"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Description de la ressource 1"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The project doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le projet n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects/{projectId}/ressources/{ressourceId}": {
+            "get": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Get a ressource",
+                "operationId": "cc2aafc6d852a6402fd7c22f69ac80b2",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "ressourceId",
+                        "in": "path",
+                        "description": "Id of the ressource",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Ressource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ressource 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "image"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Description de la ressource 1"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The ressource doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ressources/{ressourceId}/update": {
+            "post": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Update a ressource",
+                "operationId": "5c223f185042e69dd967f4d48e06bde0",
+                "parameters": [
+                    {
+                        "name": "ressourceId",
+                        "in": "path",
+                        "description": "Id of the ressource",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Ressource object that needs to be updated",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ressource 1"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Description de la ressource 1"
+                                    },
+                                    "file": {
+                                        "type": "file",
+                                        "example": "ressource1_image.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ressource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ressource 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "image"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Description de la ressource 1"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The ressource doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ressources/{ressourceId}/delete": {
+            "delete": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Delete a ressource",
+                "operationId": "68c30d12549a20346ddc43a2efaafc6c",
+                "parameters": [
+                    {
+                        "name": "ressourceId",
+                        "in": "path",
+                        "description": "Id of the ressource",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ressource deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource a bien été supprimée"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The ressource doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/projects/init": {
             "post": {
                 "tags": [
@@ -2099,6 +2548,106 @@
                                         "project_request_id": {
                                             "type": "integer",
                                             "example": "1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects/{project_id}/validate/postproduction": {
+            "post": {
+                "tags": [
+                    "Step"
+                ],
+                "summary": "Validate postproduction",
+                "description": "Validate postproduction",
+                "operationId": "ValidatePostProd",
+                "parameters": [
+                    {
+                        "name": "project_id",
+                        "in": "path",
+                        "description": "Project id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Validate postproduction",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "version"
+                                ],
+                                "properties": {
+                                    "version": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Video review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "version": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "link": {
+                                            "type": "string",
+                                            "example": "https://www.youtube.com/watch?v=1"
+                                        },
+                                        "validated": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Post-Production is not ongoing."
                                         }
                                     },
                                     "type": "object"
@@ -3281,188 +3830,190 @@
                 }
             }
         },
-        "/api/projects/{projectId}/video-reviews": {
+        "/api/projects/{projectId}/videos": {
             "get": {
                 "tags": [
                     "Video Review"
                 ],
-                "summary": "Get reviews by project id",
-                "description": "Returns reviews by project id",
-                "operationId": "getReviewsByProjectId",
+                "summary": "Get all video reviews of a project",
+                "operationId": "fcd490f02968989ee213153dc79ebc27",
                 "parameters": [
                     {
                         "name": "projectId",
                         "in": "path",
-                        "description": "Project id",
+                        "description": "Id of the project",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "format": "int64"
                         }
                     },
                     {
                         "name": "version",
                         "in": "query",
-                        "description": "Version of the review",
+                        "description": "Version of the video review",
                         "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "format": "int64"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "id": {
-                                            "type": "integer",
-                                            "example": "1"
-                                        },
-                                        "project_id": {
-                                            "type": "integer",
-                                            "example": "1"
-                                        },
-                                        "reviews": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "version": {
-                                                        "type": "integer",
-                                                        "example": "1"
-                                                    },
-                                                    "video": {
-                                                        "properties": {
-                                                            "type": {
-                                                                "type": "string",
-                                                                "example": "video"
-                                                            },
-                                                            "title": {
-                                                                "type": "string",
-                                                                "example": "Fuji"
-                                                            },
-                                                            "sources": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "properties": {
-                                                                        "size": {
-                                                                            "type": "integer",
-                                                                            "example": "1440"
-                                                                        },
-                                                                        "provider": {
-                                                                            "type": "string",
-                                                                            "example": "html"
-                                                                        },
-                                                                        "src": {
-                                                                            "type": "string",
-                                                                            "example": "http://localhost/storage/videos-example/fuji-1440.mp4"
-                                                                        },
-                                                                        "type": {
-                                                                            "type": "string",
-                                                                            "example": "video/mp4"
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                }
-                                                            }
-                                                        },
-                                                        "type": "object"
-                                                    },
-                                                    "comments": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "properties": {
-                                                                "author": {
-                                                                    "properties": {
-                                                                        "nickname": {
-                                                                            "type": "string",
-                                                                            "example": "user1"
-                                                                        },
-                                                                        "avatar": {
-                                                                            "type": "string",
-                                                                            "example": "https://i.pravatar.cc/300"
-                                                                        },
-                                                                        "job": {
-                                                                            "type": "string",
-                                                                            "example": "Software Engineer"
-                                                                        }
-                                                                    },
-                                                                    "type": "object"
-                                                                },
-                                                                "message": {
-                                                                    "type": "string",
-                                                                    "example": "hello"
-                                                                },
-                                                                "timestamp": {
-                                                                    "type": "string",
-                                                                    "example": "2021-05-01 12:00:00"
-                                                                }
-                                                            },
-                                                            "type": "object"
-                                                        }
-                                                    }
-                                                },
-                                                "type": "object"
-                                            }
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "example": "2021-05-01 12:00:00"
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "example": "2021-05-01 12:00:00"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Video reviews found"
                     },
                     "404": {
-                        "description": "No reviews found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "No reviews found"
-                                        }
+                        "description": "No video reviews found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Create a video review",
+                "operationId": "32aeabc020ba14054c0ab65b08fe400d",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Video review object that needs to be added to the project",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "provider": {
+                                        "type": "string",
+                                        "example": "html5"
                                     },
-                                    "type": "object"
-                                }
+                                    "type": {
+                                        "type": "string",
+                                        "example": "video"
+                                    },
+                                    "resolution": {
+                                        "type": "string",
+                                        "example": "1080"
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "example": "/test.mkv"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "test"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "test"
+                                    }
+                                },
+                                "type": "object"
                             }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Video review created"
+                    },
+                    "404": {
+                        "description": "Project not found"
+                    }
+                }
+            }
+        },
+        "/api/videos/{version}": {
+            "delete": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Delete a video review",
+                "operationId": "621be293d9a3b1e349ab265495f4e2d3",
+                "parameters": [
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "description": "Version of the video review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video review deleted"
+                    },
+                    "404": {
+                        "description": "Video review not found"
+                    }
+                }
+            }
+        },
+        "/api/projects/{projectId}/videos/{version}": {
+            "post": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Add a comment to a video review",
+                "operationId": "749dc5fbfb87eaa226b835bfc89c2f5a",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
                         }
                     },
-                    "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "version": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The version must be an integer."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "description": "Version of the video review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Comment object that needs to be added to the video review",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "example": "test"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Comment created"
+                    },
+                    "404": {
+                        "description": "Video review not found"
                     }
                 }
             }

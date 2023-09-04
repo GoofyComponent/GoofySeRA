@@ -1,12 +1,13 @@
 version: "3"
+
 services:
   laravel.test:
     container_name: develop-sera-back-laravel-test
-    volumes:
-      - ./sera-back:/var/www/html
+    #volumes:
+    #- ./sera-back:/var/www/html
     build:
       context: ./sera-back
-      dockerfile: ./docker/prod.Dockerfile
+      dockerfile: ./docker/develop.Dockerfile
       args:
         WWWGROUP: "${WWWGROUP:-1000}"
     user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
@@ -77,7 +78,8 @@ services:
       target: runner
       args:
         - port=${PORT_FRONT:-80}
-        - ENV_VARIABLE=${ENV_VARIABLE:-production_server_only_variable}
+        - VITE_BACKEND_URL=${ENV_VARIABLE:-https://develop-sera-back.destcom.website}
+        - VITE_ENV_MODE=${VITE_ENV_MODE:-dev}
     networks:
       - monolith
       - hosted
