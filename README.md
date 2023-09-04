@@ -1,5 +1,7 @@
 # GoofySeRA
 
+[![Deploy in production](https://github.com/GoofyComponent/GoofySeRA/actions/workflows/deploy_prod.yml/badge.svg?branch=prod)](https://github.com/GoofyComponent/GoofySeRA/actions/workflows/deploy_prod.yml) [![Deploy develop branch](https://github.com/GoofyComponent/GoofySeRA/actions/workflows/deploy_develop.yml/badge.svg?branch=develop)](https://github.com/GoofyComponent/GoofySeRA/actions/workflows/deploy_develop.yml)[![CodeQL](https://github.com/GoofyComponent/GoofySeRA/actions/workflows/github-code-scanning/codeql/badge.svg?branch=develop)](https://github.com/GoofyComponent/GoofySeRA/actions/workflows/github-code-scanning/codeql)
+
 Webapp for managing online music course production in the case of Saline Royale Academy requirements.
 
 ---
