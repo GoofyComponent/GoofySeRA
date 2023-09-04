@@ -27,7 +27,7 @@ jobs:
     uses: ./.github/workflows/install_sera.yml
     secrets: inherit
   notify:
-    needs: update_sera_app
+    needs: [deploy_release, update_sera_app]
     runs-on: ubuntu-latest
     steps:
       - name: Notify production build & published

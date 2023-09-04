@@ -10,9 +10,6 @@ ARG VITE_ENV_MODE
 ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 ENV VITE_ENV_MODE=${VITE_ENV_MODE}
 
-RUN echo "$VITE_BACKEND_URL - $VITE_ENV_MODE"
-RUN printenv VITE_BACKEND_URL && printenv VITE_ENV_MODE
-
 # Copier les fichiers de configuration de l'application
 COPY package.json .
 COPY package-lock.json .
