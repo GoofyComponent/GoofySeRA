@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      #- SERA-58
   workflow_dispatch:
 
 jobs:
