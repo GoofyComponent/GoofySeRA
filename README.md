@@ -4,6 +4,8 @@ Webapp for managing online music course production in the case of Saline Royale 
 
 ---
 
+> :warning: **About git commits**: An interactive rebase has been executed at some point in the development process, so it's best to rely on the _commits authors_ before the commits executors.
+
 ## Deploys
 
 ### Deploy on localhost
