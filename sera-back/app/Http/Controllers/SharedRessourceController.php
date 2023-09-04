@@ -55,26 +55,31 @@ class SharedRessourceController extends Controller
         $name = strtolower(str_replace(' ', '', $name));
 
         $extension = $request->file->getClientOriginalExtension();
-        echo $extension;
 
-        if ($extension == 'jpeg' || $extension == 'png' || $extension == 'webp' || $extension == 'gif') {
-            if ($request->type != 'image') {
-                return response()->json([
-                    'message' => 'Le type de fichier ne correspond pas'
-                ], 400);
+        if ($request->type == 'image' || $request->type == 'audio' || $request->type == 'document') {
+            if ($request->type == 'image') {
+                if (!in_array($extension, ['jpeg', 'jpg', 'png', 'webp', 'gif'])) {
+                    return response()->json([
+                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers jpeg, pjg, png, webp et gif sont acceptés'
+                    ], 400);
+                }
+            } else if ($request->type == 'audio') {
+                if ($extension != 'mp3') {
+                    return response()->json([
+                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers mp3 sont acceptés'
+                    ], 400);
+                }
+            } else if ($request->type == 'document') {
+                if (!in_array($extension, ['pdf', 'docx', 'xlsx', 'pptx'])) {
+                    return response()->json([
+                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers pdf, docx, xlsx et pptx sont acceptés'
+                    ], 400);
+                }
             }
-        } else if ($extension == 'mp3') {
-            if ($request->type != 'audio') {
-                return response()->json([
-                    'message' => 'Le type de fichier ne correspond pas'
-                ], 400);
-            }
-        } else if ($extension == 'pdf' || $extension == 'docx' || $extension == 'xlsx' || $extension == 'pptx') {
-            if ($request->type != 'document') {
-                return response()->json([
-                    'message' => 'Le type de fichier ne correspond pas'
-                ], 400);
-            }
+        } else {
+            return response()->json([
+                'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers image, audio et document sont acceptés'
+            ], 400);
         }
 
         $path = $request->file->storeAs(
