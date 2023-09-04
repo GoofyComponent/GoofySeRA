@@ -19,7 +19,7 @@ jobs:
         id: commit_message
         run: |
           MESSAGE=$(git log -1 --pretty=format:'%s')
-          CLEANED_MESSAGE=$(echo "$MESSAGE" | sed -e 's/[^a-zA-Z0-9.-]/_/g')
+          CLEANED_MESSAGE=$(echo "$MESSAGE" | sed -e 's/[^a-zA-Z0-9.-]/ /g')
           echo "COMMIT_MSG=${CLEANED_MESSAGE}" >> $GITHUB_ENV
       - name: Echo env
         run: echo ${{ env.COMMIT_MSG }}
