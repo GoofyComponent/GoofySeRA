@@ -2109,6 +2109,106 @@
                 }
             }
         },
+        "/api/projects/{project_id}/validate/postproduction": {
+            "post": {
+                "tags": [
+                    "Step"
+                ],
+                "summary": "Validate postproduction",
+                "description": "Validate postproduction",
+                "operationId": "ValidatePostProd",
+                "parameters": [
+                    {
+                        "name": "project_id",
+                        "in": "path",
+                        "description": "Project id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Validate postproduction",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "version"
+                                ],
+                                "properties": {
+                                    "version": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Video review",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "version": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "link": {
+                                            "type": "string",
+                                            "example": "https://www.youtube.com/watch?v=1"
+                                        },
+                                        "validated": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Post-Production is not ongoing."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/teams": {
             "get": {
                 "tags": [

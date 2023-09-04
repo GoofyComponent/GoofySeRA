@@ -63,5 +63,6 @@ class ProjectSeeder extends Seeder
         $project->steps->{'Post-Production'}->status = 'ongoing';
         $project->steps = json_encode($project->steps);
         $project->save();
+
     }
 }
