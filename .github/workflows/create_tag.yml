@@ -12,17 +12,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        env:
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         with:
+          ref: prod
           fetch-depth: 0
+      - name: Get last commit message
+        id: commit_message
+        run: echo "::set-output name=message::$(git log -1 --pretty=format:'%s')"
       - name: Echo env
-        run: echo ${{ env.COMMIT_MESSAGE }}
+        run: echo ${{ steps.commit_message.outputs.message }}
       - name: Create or update major version
         uses: joutvhu/create-tag@v1
         with:
-          tag_name: ${{ env.COMMIT_MESSAGE }}
-          message: ${{ env.COMMIT_MESSAGE }}
+          tag_name: ${{ steps.commit_message.outputs.message }}
+          message: ${{ steps.commit_message.outputs.message }}
           on_tag_exists: update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
