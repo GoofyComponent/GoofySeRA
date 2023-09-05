@@ -104,6 +104,12 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
         /************************/
 
+        /***** Transcription *****/
+        Route::get('projects/{projectId}/transcriptions', 'App\Http\Controllers\TranscriptionController@index')->name('transcriptions.index');
+        Route::post('projects/{projectId}/transcriptions', 'App\Http\Controllers\TranscriptionController@store')->name('transcriptions.store');
+        Route::delete('projects/{projectId}/transcriptions', 'App\Http\Controllers\TranscriptionController@destroy')->name('transcriptions.destroy');
+        /************************/
+
     Route::resource('rooms', 'App\Http\Controllers\RoomController');
 
     /*********************************/

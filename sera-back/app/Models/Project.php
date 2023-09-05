@@ -44,4 +44,9 @@ class Project extends Model
     {
         return $this->hasMany(Ressource::class);
     }
+
+    public function transcriptions()
+    {
+        return $this->hasMany(Transcription::class);
+    }
 }

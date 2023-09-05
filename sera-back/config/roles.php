@@ -10,7 +10,8 @@ return [
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment"],
-        "ressources" => ["show", "index", "store", "update", "destroy"]
+        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "transcriptions" => ["index", "store", "destroy"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
@@ -20,6 +21,7 @@ return [
         "rooms" => ["show", "index", "reserve","unreserve","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
+        "transcriptions" => ["index", "store", "destroy"],
     ],
     "professor" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
@@ -52,6 +54,7 @@ return [
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["addAComment"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
+        "transcriptions" => ["index", "store", "destroy"],
     ],
     "traduction_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
