@@ -2,9 +2,8 @@ name: Linting
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-  push:
-    branches: [develop]
+    branches:
+      - develop
 
 jobs:
   lint:
