@@ -1,4 +1,4 @@
-import { /* Check, */ /* Edit, */ Edit, Trash } from "lucide-react";
+import { Edit, Trash } from "lucide-react";
 import React from "react";
 import { UsersEntity } from "@/lib/types/types";
 import { Link } from "react-router-dom";
@@ -47,15 +47,15 @@ export const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
                 className="odd:bg-sera-periwinkle/25 even:bg-sera-periwinkle/50 hover:odd:bg-sera-periwinkle/25 hover:even:bg-sera-periwinkle/50"
               >
                 <TableCell className="text-base text-black">
-                  <p className="w-12 truncate md:w-80">
+                  <p className="w-8 truncate md:w-56">
                     {user.firstname} {user.lastname}
                   </p>
                 </TableCell>
                 <TableCell className="text-base text-black">
-                  <p className="w-12 truncate md:w-56">{user.email}</p>
+                  <p className="w-16 truncate md:w-80">{user.email}</p>
                 </TableCell>
                 <TableCell className="text-base text-black">
-                  <p className="w-12 truncate md:w-56">{user.role}</p>
+                  <p className="w-12 truncate md:w-40">{user.role}</p>
                 </TableCell>
                 <TableCell className="flex justify-end">
                   <Link to={`/dashboard/users/${user.id}?action=edit`}>

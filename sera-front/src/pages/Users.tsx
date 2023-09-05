@@ -48,14 +48,13 @@ export const Users = () => {
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
   const { UserId } = useParams<{ UserId: string }>();
-  // const [previousMail, setPreviousMail] = useState("");
   const [userDialogOpen, setUserDialogOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const [openDelete, setOpenDelete] = useState(false);
   const isDelete = useMatch("/dashboard/users/:UserId/delete");
   const [openEdit, setOpenEdit] = useState(false);
   const isEdit = useMatch("/dashboard/users/:UserId/edit");
-  const [editedUserData, setEditedUserData] = useState<UsersEntity>();
+  const [editedUserData] = useState<UsersEntity>();
   const [UserData, setUserData] = useState({
     firstname: "",
     lastname: "",
@@ -74,12 +73,12 @@ export const Users = () => {
     queryFn: async () => {
       let call = `/api/users?page=${page}&`;
       if (role && role !== "all") call = call + `role=${role}&`;
-      if (searchInput && searchInput !== "")
-        call = call + `name=${searchInput}`;
+      if (searchInput && searchInput.trim() !== "") {
+        const noSpaceInput = searchInput.trim().replace(/\s+/g, "");
+        call = call + `name=${encodeURIComponent(noSpaceInput)}`;
+      }
       const users = await axios.get(call);
       const data = users.data;
-      console.log(users);
-      console.log(data);
       return data;
     },
   });
@@ -192,8 +191,6 @@ export const Users = () => {
   };
 
   useEffect(() => {
-    //DEBUG
-    console.log(setEditedUserData);
     if (users) {
       setTotalPages(users.last_page);
       setCurrentPage(users.current_page);
@@ -232,59 +229,21 @@ export const Users = () => {
             open={userDialogOpen}
           >
             <div className="mx-6 flex justify-between text-4xl font-semibold text-sera-jet">
-              <Input
-                className="mr-2 w-[360px]"
-                type="text"
-                placeholder="Search (Firstname, Lastname, Email)"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-              />
-              <Select
-                onValueChange={(value) => setRole(value as string)}
-                defaultValue={role}
-              >
-                <SelectTrigger className="mr-2 w-[180px]">
-                  <SelectValue placeholder="All Role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Role</SelectItem>
-                  <SelectItem value="cursus_director">
-                    Cursus Director
-                  </SelectItem>
-                  <SelectItem value="project_manager">
-                    Project Manager
-                  </SelectItem>
-                  <SelectItem value="professor">Professor</SelectItem>
-                  <SelectItem value="video_team">Video Team</SelectItem>
-                  <SelectItem value="video_editor">Video Editor</SelectItem>
-                  <SelectItem value="transcription_team">
-                    Transcription Team
-                  </SelectItem>
-                  <SelectItem value="traduction_team">
-                    Traduction Team
-                  </SelectItem>
-                  <SelectItem value="editorial_team">Editorial Team</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button
-                onClick={() => refetchUsers(users)}
-                className="mr-6 justify-end bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-              >
-                Search
-              </Button>
               <Button
                 onClick={() => setUserDialogOpen(true)}
-                className="justify-end bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                className="mr-6 justify-end bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
               >
                 Add User
               </Button>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Add new user</DialogTitle>
+                  <DialogTitle className="mb-6">Add new user</DialogTitle>
                 </DialogHeader>
-                <div>
-                  <div className="flex flex-col">
-                    <Label htmlFor="firstname">Firstname</Label>
+                <div className="mb-4 flex flex-col">
+                  <div className="mb-4 flex flex-col">
+                    <Label className="mb-2" htmlFor="firstname">
+                      Firstname
+                    </Label>
                     <Input
                       type="text"
                       id="firstname"
@@ -298,8 +257,10 @@ export const Users = () => {
                       }
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="lastname">Lastname</Label>
+                  <div className="mb-4 flex flex-col">
+                    <Label className="mb-2" htmlFor="lastname">
+                      Lastname
+                    </Label>
                     <Input
                       type="text"
                       id="lastname"
@@ -313,8 +274,10 @@ export const Users = () => {
                       }
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
+                  <div className="mb-4 flex flex-col">
+                    <Label className="mb-2" htmlFor="email">
+                      Email
+                    </Label>
                     <Input
                       type="text"
                       id="email"
@@ -328,8 +291,10 @@ export const Users = () => {
                       }
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="password">Password</Label>
+                  <div className="mb-4 flex flex-col">
+                    <Label className="mb-2" htmlFor="password">
+                      Password
+                    </Label>
                     <Input
                       type="password"
                       id="password"
@@ -343,8 +308,8 @@ export const Users = () => {
                       }
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="password_confirmation">
+                  <div className="mb-4 flex flex-col">
+                    <Label className="mb-2" htmlFor="password_confirmation">
                       Confirm Password
                     </Label>
                     <Input
@@ -360,8 +325,10 @@ export const Users = () => {
                       }
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="role">Role</Label>
+                  <div className="mb-4 flex flex-col">
+                    <Label className="mb-2" htmlFor="role">
+                      Role
+                    </Label>
                     <Select
                       name="role"
                       value={UserData.role}
@@ -410,6 +377,52 @@ export const Users = () => {
                   </DialogFooter>
                 </div>
               </DialogContent>
+              <Input
+                className="mr-2 w-[360px]"
+                type="text"
+                placeholder="Search (Firstname, Lastname, Email)"
+                value={searchInput}
+                onChange={(e) => {
+                  const inputValue = e.target.value;
+                  setSearchInput(inputValue);
+                  if (inputValue.trim() === "") {
+                    refetchUsers(users);
+                  }
+                }}
+              />
+              <Select
+                onValueChange={(value) => setRole(value as string)}
+                defaultValue={role}
+              >
+                <SelectTrigger className="mr-2 w-[180px]">
+                  <SelectValue placeholder="All Role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Role</SelectItem>
+                  <SelectItem value="cursus_director">
+                    Cursus Director
+                  </SelectItem>
+                  <SelectItem value="project_manager">
+                    Project Manager
+                  </SelectItem>
+                  <SelectItem value="professor">Professor</SelectItem>
+                  <SelectItem value="video_team">Video Team</SelectItem>
+                  <SelectItem value="video_editor">Video Editor</SelectItem>
+                  <SelectItem value="transcription_team">
+                    Transcription Team
+                  </SelectItem>
+                  <SelectItem value="traduction_team">
+                    Traduction Team
+                  </SelectItem>
+                  <SelectItem value="editorial_team">Editorial Team</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                onClick={() => refetchUsers(users)}
+                className="ml-2 justify-end bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+              >
+                Search
+              </Button>
             </div>
           </Dialog>
         </div>
@@ -474,7 +487,7 @@ export const Users = () => {
           }}
         >
           <DialogContent className="max-w-5xl border-[#D3D4D5]">
-            <DialogTitle>
+            <DialogTitle className="mb-6">
               Edit -
               {users &&
                 users.data.map((user: UsersEntity) => (
@@ -491,8 +504,10 @@ export const Users = () => {
                 </React.Fragment>
               ))}
             <div>
-              <div className="flex flex-col">
-                <Label htmlFor="firstname">Firstname</Label>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="firstname">
+                  Firstname
+                </Label>
                 <Input
                   type="text"
                   id="firstname"
@@ -507,8 +522,10 @@ export const Users = () => {
                   }
                 />
               </div>
-              <div>
-                <Label htmlFor="lastname">Lastname</Label>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="lastname">
+                  Lastname
+                </Label>
                 <Input
                   type="text"
                   id="lastname"
@@ -523,8 +540,10 @@ export const Users = () => {
                   }
                 />
               </div>
-              <div>
-                <Label htmlFor="email">Email</Label>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="email">
+                  Email
+                </Label>
                 <Input
                   type="text"
                   id="email"
@@ -539,8 +558,10 @@ export const Users = () => {
                   }
                 />
               </div>
-              <div>
-                <Label htmlFor="password">Password</Label>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="password">
+                  Password
+                </Label>
                 <Input
                   type="password"
                   id="password"
@@ -554,8 +575,10 @@ export const Users = () => {
                   }
                 />
               </div>
-              <div>
-                <Label htmlFor="password_confirmation">Confirm Password</Label>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="password_confirmation">
+                  Confirm Password
+                </Label>
                 <Input
                   type="password"
                   id="password_confirmation"
@@ -569,8 +592,10 @@ export const Users = () => {
                   }
                 />
               </div>
-              <div>
-                <Label htmlFor="role">Role</Label>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="role">
+                  Role
+                </Label>
                 <Select
                   name="role"
                   value={UserData.role}
