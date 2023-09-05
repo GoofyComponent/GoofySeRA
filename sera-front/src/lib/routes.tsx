@@ -8,6 +8,7 @@ import { Knowledge } from "@/pages/Knowledge";
 import { Login } from "@/pages/Login";
 import { Logout } from "@/pages/Logout";
 import { Planning } from "@/pages/Planning";
+import { Editorial } from "@/pages/Editorial";
 import Profile from "@/pages/Profile";
 import { Project } from "@/pages/Project";
 import { Projects } from "@/pages/Projects";
@@ -138,6 +139,10 @@ const paths = [
       {
         path: "projects/:ProjectId/editing",
         element: <VideoReview />,
+      },
+      {
+        path: "projects/:ProjectId/editorial",
+        element: <Editorial />,
       },
       {
         path: "profile",
