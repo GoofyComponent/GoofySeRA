@@ -8,6 +8,7 @@ import { Project } from "@/pages/Project";
 import { Projects } from "@/pages/Projects";
 import { Rooms } from "@/pages/Rooms";
 import { Tickets } from "@/pages/Tickets";
+import { Users } from "@/pages/Users";
 
 import App from "../pages/App";
 import { Login } from "../pages/Login";
@@ -54,6 +55,26 @@ const paths = [
               },
               {
                 path: "delete",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: "users",
+        element: <Users />,
+        children: [
+          {
+            path: ":UserId",
+            element: <Users />,
+            children: [
+              {
+                path: "edit",
+                element: <Users />,
+              },
+              {
+                path: "delete",
+                element: <Users />,
               },
             ],
           },
