@@ -36,7 +36,7 @@ const FormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }).optional(),
 });
 
-export const EditorialForm = () => {
+export const BiofraohieForm = () => {
   const oldUserData = useSelector((state: any) => state.user.infos);
   const dispatch = useDispatch();
 

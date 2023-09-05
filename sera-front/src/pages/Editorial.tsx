@@ -1,5 +1,6 @@
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { EditorialForm } from "@/components/app/editorial/EditorialForm";
+import { BiofraohieForm } from "@/components/app/editorial/BiofraohieForm";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -96,6 +97,33 @@ export const Editorial = () => {
           </Slider>
         </div>
         <div className="ml-3 mr-6 flex w-1/2 flex-col justify-end space-y-2"></div>
+      </div>
+      <div className="mt-2 flex w-full flex-row">
+        <div className="ml-6 mr-3 flex w-1/2 flex-col justify-end space-y-2">
+          <div className="flex py-2">
+            <Label className="mr-2 align-middle text-lg">Biographie</Label>
+            <Dialog>
+              <DialogTrigger>
+                <Button className="mt-0 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
+                  Add biography
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add biography</DialogTitle>
+                  <DialogDescription>
+                    <BiofraohieForm />
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+        <div className="ml-3 mr-6 flex w-1/2 flex-col justify-end space-y-2">
+          <div className="py-2">
+            <Label className="text-lg">Réseaux sociaux</Label>
+          </div>
+        </div>
       </div>
     </>
   );
