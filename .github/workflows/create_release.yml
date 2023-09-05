@@ -1,5 +1,7 @@
 name: Create a release
 
+#Extract the release from develop to have the correct contributors & contributions
+
 on:
   workflow_call:
   workflow_dispatch:
@@ -14,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: prod
+          ref: develop
           fetch-depth: 0
       - name: Get Latest Tag
         id: latest_tag

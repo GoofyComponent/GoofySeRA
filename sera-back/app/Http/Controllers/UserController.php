@@ -110,7 +110,8 @@ class UserController extends Controller
 
             $usersQuery->where(function ($query) use ($name) {
                 $query->whereRaw('CONCAT(firstname, " ", lastname) LIKE ?', ['%' . $name . '%'])
-                    ->orWhereRaw('CONCAT(lastname, " ", firstname) LIKE ?', ['%' . $name . '%']);
+                    ->orWhereRaw('CONCAT(lastname, " ", firstname) LIKE ?', ['%' . $name . '%'])
+                    ->orWhereRaw('email LIKE ?', ['%' . $name . '%']);
             });
 
         }
