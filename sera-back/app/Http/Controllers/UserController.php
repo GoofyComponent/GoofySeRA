@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
-
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -610,15 +610,25 @@ class UserController extends Controller
         // Recuperation de l'utilisateur
         $user = User::find($id);
 
-        // Recuperation du fichier
-        $file = $request->file('image');
+        // si dans $user->avatar_filename il y a deja un nom de fichier, on le supprime dans s3
+        if($user->avatar_filename){
+            Storage::disk('s3')->delete($user->avatar_filename);
+        }
 
-        // Enregistrement du fichier dans le dossier storage/app/public/images
-        $filename = $user->id . '.' . time() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public/images', $filename);
+        $filename = $user->id . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
 
-        // Enregistrement du nom du fichier dans la base de donnees
-        $user->avatar_filename = $filename;
+        // Enregistrement sur le serveur minio
+        $path = $request->file('image')->storeAs(
+            'avatar'.'/'.$user->id,
+            $filename,
+            's3'
+        );
+        if(!$path){
+            return response()->json([
+                'message' => 'Erreur lors de l\'upload du fichier'
+            ], 400);
+        }
+        $user->avatar_filename = $path;
 
         // sauvegarde de l'utilisateur
         $user->update(['avatar_filename' => $filename]);
