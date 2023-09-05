@@ -101,7 +101,6 @@ export const Users = () => {
       });
       setUserDialogOpen(false);
     },
-    onError: () => {},
   });
 
   const deleteUser = useMutation({
