@@ -1,6 +1,13 @@
 import { Separator } from "@/components/ui/separator";
 import clsx from "clsx";
-import { BookOpen, DoorOpen, FolderOpen, Home, Ticket } from "lucide-react";
+import {
+  BookOpen,
+  DoorOpen,
+  FolderOpen,
+  Home,
+  Ticket,
+  User,
+} from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
 
@@ -49,6 +56,21 @@ export const Nav = () => {
           <Home size={32} className="my-auto mr-2" />
           <p className="my-auto hidden text-2xl font-semibold lg:block">
             Dashboard
+          </p>
+        </Link>
+        <Link
+          to="/dashboard/users"
+          className={clsx(
+            "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
+            "flex text-sera-jet",
+            matchPath(pathname.pathname, "/dashboard/users") &&
+              "bg-sera-jet text-sera-periwinkle",
+            "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
+          )}
+        >
+          <User size={32} className="my-auto mr-2" />
+          <p className="my-auto hidden text-2xl font-semibold lg:block">
+            Users
           </p>
         </Link>
         <Link

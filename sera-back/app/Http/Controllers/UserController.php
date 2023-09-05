@@ -81,6 +81,7 @@ class UserController extends Controller
             'maxPerPage' => 'integer',
             'sort' => 'string|in:asc,desc',
             'name' => 'string',
+            'role' => 'string|in:' . implode(',', array_keys(config('roles'))),
         ]);
 
         $usersQuery = User::query();
