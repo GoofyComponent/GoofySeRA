@@ -1674,6 +1674,455 @@
                 }
             }
         },
+        "/api/projects/{projectId}/ressources": {
+            "get": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Get all ressources of a project",
+                "operationId": "f9d4f616a8d0f0825e9d9fed462f75a4",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ressources of the project",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ressource 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "image"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Description de la ressource 1"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The project doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Create a ressource",
+                "operationId": "7472509add9597e1a3026b976073199c",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Ressource object that needs to be added to the project",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ressource 1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "image"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Description de la ressource 1"
+                                    },
+                                    "file": {
+                                        "type": "file",
+                                        "example": "ressource1_image.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ressource created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ressource 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "image"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Description de la ressource 1"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The project doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le projet n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects/{projectId}/ressources/{ressourceId}": {
+            "get": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Get a ressource",
+                "operationId": "cc2aafc6d852a6402fd7c22f69ac80b2",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "ressourceId",
+                        "in": "path",
+                        "description": "Id of the ressource",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Ressource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ressource 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "image"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Description de la ressource 1"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The ressource doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ressources/{ressourceId}/update": {
+            "post": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Update a ressource",
+                "operationId": "5c223f185042e69dd967f4d48e06bde0",
+                "parameters": [
+                    {
+                        "name": "ressourceId",
+                        "in": "path",
+                        "description": "Id of the ressource",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Ressource object that needs to be updated",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Ressource 1"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Description de la ressource 1"
+                                    },
+                                    "file": {
+                                        "type": "file",
+                                        "example": "ressource1_image.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ressource updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Ressource 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "image"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Description de la ressource 1"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://s3.eu-west-3.amazonaws.com/sera-bucket/ressource/project_1/image/ressource1_image.jpg"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-03-30T14:00:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The ressource doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ressources/{ressourceId}/delete": {
+            "delete": {
+                "tags": [
+                    "Ressources"
+                ],
+                "summary": "Delete a ressource",
+                "operationId": "68c30d12549a20346ddc43a2efaafc6c",
+                "parameters": [
+                    {
+                        "name": "ressourceId",
+                        "in": "path",
+                        "description": "Id of the ressource",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ressource deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource a bien été supprimée"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The ressource doesn't exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "La ressource n'existe pas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/projects/init": {
             "post": {
                 "tags": [

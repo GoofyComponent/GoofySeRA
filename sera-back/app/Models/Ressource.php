@@ -23,5 +23,4 @@ class Ressource extends Model
     {
         return $this->belongsTo(Project::class);
     }
-
 }
