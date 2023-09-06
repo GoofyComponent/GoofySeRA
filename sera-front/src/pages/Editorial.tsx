@@ -116,7 +116,7 @@ export const Editorial = () => {
             <Slider {...settings}>
               {images.map((image: any) => {
                 return (
-                  <Dialog>
+                  <Dialog key={image.nom}>
                     <DialogTrigger className="w-full">
                       <img
                         className="aspect-square w-full rounded object-cover p-1"
