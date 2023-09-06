@@ -13,6 +13,7 @@ class Transcription extends Model
         'ressource_id',
         'project_id',
         'version',
+        'file_type',
     ];
 
     public function ressource()

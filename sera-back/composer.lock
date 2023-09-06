@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "648df8551320b7de480aab4e99dd5758",
+    "content-hash": "136d3765644618b5bf41dcee9f0e7aa5",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2129,6 +2129,40 @@
                 }
             ],
             "time": "2022-04-17T13:12:02+00:00"
+        },
+        {
+            "name": "mantas-done/subtitles",
+            "version": "v1.0.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mantas-done/subtitles.git",
+                "reference": "748a82c99e645ffef7f007c8f903e021a8dd5a52"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mantas-done/subtitles/zipball/748a82c99e645ffef7f007c8f903e021a8dd5a52",
+                "reference": "748a82c99e645ffef7f007c8f903e021a8dd5a52",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Done\\Subtitles\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Subtitle converter and generator for PHP",
+            "support": {
+                "issues": "https://github.com/mantas-done/subtitles/issues",
+                "source": "https://github.com/mantas-done/subtitles/tree/v1.0.17"
+            },
+            "time": "2023-08-31T06:57:03+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -8627,5 +8661,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
