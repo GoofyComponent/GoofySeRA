@@ -90,9 +90,9 @@ class RoomController extends Controller
             $room->load('reservations');
         }
 
-        if ($rooms->isEmpty()) {
-            return response()->json(['error' => 'No rooms found.'], 404);
-        }
+        // if ($rooms->isEmpty()) {
+        //     return response()->json(['error' => 'No rooms found.'], 404);
+        // }
 
         return $rooms;
     }
