@@ -221,20 +221,22 @@ export const Users = () => {
     <section className="flex h-full flex-col justify-between">
       <div>
         <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
-          <h2>Users</h2>
-          <Dialog
-            onOpenChange={() => {
-              setUserDialogOpen(!userDialogOpen);
-            }}
-            open={userDialogOpen}
-          >
-            <div className="mx-6 flex justify-between text-4xl font-semibold text-sera-jet">
-              <Button
-                onClick={() => setUserDialogOpen(true)}
-                className="mr-6 justify-end bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-              >
-                Add User
-              </Button>
+          <div className="flex">
+            <h2>Users</h2>
+            <Button
+              onClick={() => setUserDialogOpen(true)}
+              className="ml-4 mt-1 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            >
+              Add User
+            </Button>
+          </div>
+          <div className="flex justify-between">
+            <Dialog
+              onOpenChange={() => {
+                setUserDialogOpen(!userDialogOpen);
+              }}
+              open={userDialogOpen}
+            >
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle className="mb-6">Add new user</DialogTitle>
@@ -377,19 +379,6 @@ export const Users = () => {
                   </DialogFooter>
                 </div>
               </DialogContent>
-              <Input
-                className="mr-2 w-[360px]"
-                type="text"
-                placeholder="Search (Firstname, Lastname, Email)"
-                value={searchInput}
-                onChange={(e) => {
-                  const inputValue = e.target.value;
-                  setSearchInput(inputValue);
-                  if (inputValue.trim() === "") {
-                    refetchUsers(users);
-                  }
-                }}
-              />
               <Select
                 onValueChange={(value) => setRole(value as string)}
                 defaultValue={role}
@@ -417,14 +406,27 @@ export const Users = () => {
                   <SelectItem value="editorial_team">Editorial Team</SelectItem>
                 </SelectContent>
               </Select>
+              <Input
+                className="mr-2 w-[360px]"
+                type="text"
+                placeholder="Search (Firstname, Lastname, Email)"
+                value={searchInput}
+                onChange={(e) => {
+                  const inputValue = e.target.value;
+                  setSearchInput(inputValue);
+                  if (inputValue.trim() === "") {
+                    refetchUsers(users);
+                  }
+                }}
+              />
               <Button
                 onClick={() => refetchUsers(users)}
-                className="ml-2 justify-end bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
               >
                 Search
               </Button>
-            </div>
-          </Dialog>
+            </Dialog>
+          </div>
         </div>
         <UsersTable users={isLoading ? undefined : users.data} />
         {users && users.data.length === 0 && (
