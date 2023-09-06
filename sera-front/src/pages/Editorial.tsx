@@ -83,19 +83,19 @@ export const Editorial = () => {
                   <DialogTrigger>
                     <div>
                       <Button className="mt-0 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
-                        Add Knowladge
+                        Add Knowlage
                       </Button>
                     </div>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Add Knowladge</DialogTitle>
+                      <DialogTitle>Add Knowlage</DialogTitle>
                       <DialogDescription>
                         <div className="flex">
                           <Input
                             className="mr-1 w-4/5 border border-sera-jet"
                             type="text"
-                            placeholder="Search knowladge"
+                            placeholder="Search knowlage"
                           />
                           <Button className="w-1/5 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
                             <Search size={24} />
@@ -117,9 +117,9 @@ export const Editorial = () => {
               {images.map((image: any) => {
                 return (
                   <Dialog>
-                    <DialogTrigger>
+                    <DialogTrigger className="w-full">
                       <img
-                        className="w-100 aspect-square rounded object-cover p-1"
+                        className="aspect-square w-full rounded object-cover p-1"
                         src={image.url}
                         alt={image.nom}
                       />
