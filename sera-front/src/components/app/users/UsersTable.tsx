@@ -2,6 +2,7 @@ import { Edit, Trash } from "lucide-react";
 import React from "react";
 import { UsersEntity } from "@/lib/types/types";
 import { Link } from "react-router-dom";
+import { selectRoleDisplay } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -55,7 +56,9 @@ export const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
                   <p className="w-16 truncate md:w-80">{user.email}</p>
                 </TableCell>
                 <TableCell className="text-base text-black">
-                  <p className="w-12 truncate md:w-40">{user.role}</p>
+                  <p className="w-12 truncate md:w-40">
+                    {selectRoleDisplay(user.role)}
+                  </p>
                 </TableCell>
                 <TableCell className="flex justify-end">
                   <Link to={`/dashboard/users/${user.id}?action=edit`}>
