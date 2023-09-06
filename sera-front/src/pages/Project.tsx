@@ -48,6 +48,7 @@ export const Project = () => {
     <>
       <HeaderTitle
         title={projectData.title && projectData.title}
+        porjectStatus={projectData.status && projectData.status}
         previousTitle="Projet"
       />
       <div className="flex justify-between">
