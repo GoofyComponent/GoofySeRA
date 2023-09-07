@@ -580,12 +580,6 @@ class UserController extends Controller
         // Recuperation de l'utilisateur
         $user = User::find($id);
 
-        // si dans $user->avatar_filename il y a deja un nom de fichier, on le supprime dans s3
-        // if($user->avatar_filename){
-        //     Storage::disk('s3')->delete($user->avatar_filename);
-        // }
-
-
         $filename = $user->id . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
 
         // Si la photo excede 720 par 720, on la redimensionne
