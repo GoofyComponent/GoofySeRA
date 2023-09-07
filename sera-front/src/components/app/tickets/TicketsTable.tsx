@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -16,10 +17,12 @@ import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
 export const TicketsTable = ({
+  loading,
   tickets,
   sort,
   setSort,
 }: {
+  loading: boolean;
   tickets: any;
   sort: string;
   setSort: any;
@@ -73,8 +76,9 @@ export const TicketsTable = ({
             </TableHead>
           </TableRow>
         </TableHeader>
-
-        {tickets && (
+        {tickets !== undefined &&
+        Array.isArray(tickets) &&
+        tickets.length > 0 ? (
           <TableBody>
             {tickets.map((ticket: TicketsEntity) => {
               if (ticket.status === "accepted" || ticket.status === "refused")
@@ -130,9 +134,17 @@ export const TicketsTable = ({
               );
             })}
           </TableBody>
+        ) : tickets !== undefined &&
+          Array.isArray(tickets) &&
+          tickets.length === 0 ? (
+          <TableCaption className="text-xl font-semibold text-sera-jet">
+            No tickets found
+          </TableCaption>
+        ) : (
+          <></>
         )}
       </Table>
-      {!tickets && (
+      {loading && (
         <BigLoader
           loaderSize={42}
           bgColor="sera-periwinkle/25"
