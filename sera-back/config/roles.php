@@ -9,7 +9,7 @@ return [
         "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment"],
+        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
@@ -20,7 +20,7 @@ return [
         "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve","unreserve","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment"],
+        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
@@ -39,7 +39,7 @@ return [
         "projects" => ["show", "index","stepsGet","addLink"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId","addAComment"],
+        "video-reviews" => ["getReviewsByProjectId","addAComment","getTemporaryUploadUrl"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
@@ -48,7 +48,7 @@ return [
         "projects" => ["show", "index"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
-        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment"],
+        "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl"],
         "ressources" => ["show", "index", "store", "update", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
