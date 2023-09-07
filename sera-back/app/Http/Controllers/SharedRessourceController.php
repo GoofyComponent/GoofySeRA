@@ -154,9 +154,9 @@ class SharedRessourceController extends Controller
                     ], 400);
                 }
             } else if ($request->type == 'document') {
-                if (!in_array($extension, ['pdf', 'docx', 'xlsx', 'pptx'])) {
+                if (!in_array($extension, ['pdf', 'docx', 'xlsx', 'pptx', 'txt'])) {
                     return response()->json([
-                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers pdf, docx, xlsx et pptx sont acceptés'
+                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers pdf, docx, xlsx, pptx et txt sont acceptés'
                     ], 400);
                 }
             }
@@ -337,9 +337,9 @@ class SharedRessourceController extends Controller
                     ], 400);
                 }
             }else if ($ressource->type == 'document'){
-                if (!in_array($extension, ['pdf', 'docx', 'xlsx', 'pptx'])) {
+                if (!in_array($extension, ['pdf', 'docx', 'xlsx', 'pptx', 'txt'])) {
                     return response()->json([
-                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers pdf, docx, xlsx et pptx sont acceptés'
+                        'message' => 'Le type de fichier ne correspond pas. Seuls les fichiers pdf, docx, xlsx, pptx et txt sont acceptés'
                     ], 400);
                 }
             }else{
