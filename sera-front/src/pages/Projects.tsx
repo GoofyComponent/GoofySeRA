@@ -86,7 +86,9 @@ export const Projects = () => {
               </Tooltip>
             </TooltipProvider>
           </div>
-          {!isLoading ? (
+          {!isLoading &&
+          Array.isArray(projectsData.data) &&
+          projectsData.data.length > 0 ? (
             <div className=" mx-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {projectsData.data.map(
                 (project: {
@@ -109,7 +111,18 @@ export const Projects = () => {
                 )
               )}
             </div>
+          ) : !isLoading &&
+            Array.isArray(projectsData.data) &&
+            projectsData.data.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center">
+              <p className="text-2xl font-semibold text-sera-jet">
+                No projects found
+              </p>
+            </div>
           ) : (
+            <></>
+          )}
+          {isLoading && (
             <BigLoader
               loaderSize={42}
               bgColor="transparent"
