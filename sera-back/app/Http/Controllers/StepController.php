@@ -419,11 +419,14 @@ class StepController extends Controller
         }
 
         // Il faut qu'on récupère la ressource du projet qui a comme type Captation url
-        $resources = $project->resources;
+        $ressources = $project->ressources()->get();
+        if($ressources === null){
+            return response()->json(['error' => 'Project has no ressources.'], 400);
+        }
         // on cherche la ressource avec le type Captation url
-        $resource = $resources->where('type', 'Captation url')->first();
+        $ressource = $ressources->where('type', 'Captation url')->first();
 
-        if($resource === null){
+        if($ressource === null){
             return response()->json(['error' => 'Project has no resource with type Captation url.'], 400);
         }
 

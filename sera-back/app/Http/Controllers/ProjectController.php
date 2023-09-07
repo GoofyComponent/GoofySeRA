@@ -605,18 +605,22 @@ class ProjectController extends Controller
             return response()->json(['message' => 'The Capture step is not ongoing.'], 400);
         }
 
-        $ressource = new Ressource();
-        $ressource->project_id = $project_id;
-        $ressource->url = $validated['link'];
-        $ressource->type = 'Captation url';
-        $ressource->description = 'Captation url';
+        //on regarde si la ressource existe déjà
+        $ressource = Ressource::where('project_id', $project_id)->where('type', 'Captation url')->first();
+        if ($ressource !== null) {
+            $ressource->url = $validated['link'];
+        }else{
+            $ressource = new Ressource();
+            $ressource->project_id = $project_id;
+            $ressource->name = 'Captation url';
+            $ressource->url = $validated['link'];
+            $ressource->type = 'Captation url';
+            $ressource->description = 'Captation url';
+        }
+
         $ressource->save();
 
-        $project->steps = json_encode($steps);
-
-        $project->save();
-
-        return response()->json($project->steps);
+        return response()->json($ressource, 201);
     }
 
 }
