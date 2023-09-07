@@ -418,9 +418,13 @@ class StepController extends Controller
             return response()->json(['error' => 'Capture is not ongoing.'], 400);
         }
 
-        // Il faut que Capture ait un link non null
-        if($steps->Capture->link === null){
-            return response()->json(['error' => 'Capture has no link.'], 400);
+        // Il faut qu'on récupère la ressource du projet qui a comme type Captation url
+        $resources = $project->resources;
+        // on cherche la ressource avec le type Captation url
+        $resource = $resources->where('type', 'Captation url')->first();
+
+        if($resource === null){
+            return response()->json(['error' => 'Project has no resource with type Captation url.'], 400);
         }
 
         // Sinon on passe son status à done et on mets Post-Production en ongoing

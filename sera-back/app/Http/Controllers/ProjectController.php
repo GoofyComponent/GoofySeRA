@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ressource;
 use Carbon\Carbon;
 use App\Models\Team;
 use App\Models\Project;
@@ -604,7 +605,12 @@ class ProjectController extends Controller
             return response()->json(['message' => 'The Capture step is not ongoing.'], 400);
         }
 
-        $steps->Capture->link = $validated['link'];
+        $ressource = new Ressource();
+        $ressource->project_id = $project_id;
+        $ressource->url = $validated['link'];
+        $ressource->type = 'Captation url';
+        $ressource->description = 'Captation url';
+        $ressource->save();
 
         $project->steps = json_encode($steps);
 
