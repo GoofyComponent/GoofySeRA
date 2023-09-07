@@ -15,6 +15,9 @@ interface Member {
   laravel_through_key: number;
 }
 
+export const SERA_JET_HEXA = "#413B41";
+export const SERA_PERIWINKLE_HEXA = "#E5D1FF";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -179,10 +182,6 @@ export const stepLinkExtractor = (step: number) => {
       break;
   }
 };
-
-export const SERA_JET_HEXA = "#413B41";
-
-export const SERA_PERIWINKLE_HEXA = "#E5D1FF";
 
 export const videoTimeSerializer = (seconds: number) => {
   //get rid of the decimal part

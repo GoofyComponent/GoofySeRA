@@ -109,7 +109,7 @@ class TranscriptionController extends Controller
             ], 404);
         }
 
-        $transcriptions = $project->transcriptions();
+        $transcriptions = $project->transcriptions()->with('ressource');
 
         if ($request->has('final') && $request->final == true) {
             $transcriptions = $transcriptions->where('is_valid', true);
