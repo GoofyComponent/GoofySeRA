@@ -27,6 +27,14 @@ class Ressource extends Model
 
     public function getUrlAttribute($value)
     {
+
+        if (app()->environment('local')) {
+            $config = config('filesystems.disks.s3');
+            $config['url'] = 'http://localhost:9000';
+            $config['endpoint'] = 'http://localhost:9000';
+            config(['filesystems.disks.s3' => $config]);
+        }
+
         $disk = Storage::disk('s3');
 
         $temporaryUrl = $disk->temporaryUrl(

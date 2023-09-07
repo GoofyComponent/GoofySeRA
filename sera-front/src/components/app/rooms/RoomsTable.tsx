@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -12,7 +13,13 @@ import {
 import { convertDate } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
-export const RoomsTable = ({ rooms }: { rooms: any }) => {
+export const RoomsTable = ({
+  rooms,
+  loading,
+}: {
+  rooms: any;
+  loading: boolean;
+}) => {
   return (
     <>
       <Table>
@@ -36,7 +43,7 @@ export const RoomsTable = ({ rooms }: { rooms: any }) => {
           </TableRow>
         </TableHeader>
 
-        {rooms && (
+        {rooms !== undefined && Array.isArray(rooms) && rooms.length > 0 ? (
           <TableBody>
             {rooms.map((room: any) => {
               return (
@@ -81,9 +88,17 @@ export const RoomsTable = ({ rooms }: { rooms: any }) => {
               );
             })}
           </TableBody>
+        ) : rooms !== undefined &&
+          Array.isArray(rooms) &&
+          rooms.length === 0 ? (
+          <TableCaption className="text-xl font-semibold text-sera-jet">
+            No Rooms found
+          </TableCaption>
+        ) : (
+          <></>
         )}
       </Table>
-      {!rooms && (
+      {loading && (
         <BigLoader
           loaderSize={42}
           bgColor="sera-periwinkle/25"

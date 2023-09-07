@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Ressource;
 use App\Models\VideoReview;
 use Illuminate\Http\Request;
@@ -305,5 +306,74 @@ class VideoReviewController extends Controller
             'message' => 'Comment created',
             'comment' => $comment,
         ], 201);
+    }
+
+    /**
+    * @OA\Get(
+    *     path="/api/projects/{projectId}/videos/getuploadurl",
+    *     summary="Get a temporary upload url for a video review",
+    *     tags={"Video Review"},
+    *     @OA\Parameter(
+    *         name="projectId",
+    *         in="path",
+    *         description="Id of the project",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Temporary upload url found"
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="User not connected"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Project not found"
+    *     ),
+    * )
+    */
+    function getTemporaryUploadUrl($projectId){
+        // On regarde que ça soit un User connecté
+        if(!auth()->user()){
+            return response()->json([
+                'message' => 'User not connected',
+            ], 401);
+        }
+
+        // On regarde que le projet existe
+        $project = Project::find($projectId);
+        if(!$project){
+            return response()->json([
+                'message' => 'Project not found',
+            ], 404);
+        }
+
+        // on get la dernière version de la video review
+        $version = VideoReview::where('project_id', $projectId)->orderBy('version', 'desc')->first()->version;
+
+        if (app()->environment('local')) {
+            $config = config('filesystems.disks.s3');
+            $config['url'] = 'http://localhost:9000';
+            $config['endpoint'] = 'http://localhost:9000';
+            config(['filesystems.disks.s3' => $config]);
+        }
+
+        ['url' => $url, 'headers' => $headers] = Storage::disk('s3')->temporaryUploadUrl(
+            'ressources/project_'.$projectId.'/video/version_'.$version.'/'.now()->timestamp.'.mp4',
+            now()->addHours(24), [
+            'Content-Type' => 'video/mp4',
+            'Cache-Control' => 'max-age=3600',
+        ]);
+
+        return response()->json([
+            'url' => $url,
+            'headers' => $headers,
+            'path' => 'ressources/project_'.$projectId.'/video/version_'.$version.'/'.now()->timestamp.'.mp4',
+        ], 200);
     }
 }

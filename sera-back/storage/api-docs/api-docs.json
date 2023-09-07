@@ -3490,10 +3490,6 @@
                                             "type": "string",
                                             "nullable": true
                                         },
-                                        "avatar_url": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
                                         "created_at": {
                                             "type": "string",
                                             "format": "date-time"
@@ -3592,10 +3588,6 @@
                                             "type": "string"
                                         },
                                         "avatar_filename": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
-                                        "avatar_url": {
                                             "type": "string",
                                             "nullable": true
                                         },
@@ -3741,10 +3733,6 @@
                                             "type": "string",
                                             "nullable": true
                                         },
-                                        "avatar_url": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
                                         "created_at": {
                                             "type": "string",
                                             "format": "date-time"
@@ -3834,10 +3822,6 @@
                                             "type": "string"
                                         },
                                         "avatar_filename": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
-                                        "avatar_url": {
                                             "type": "string",
                                             "nullable": true
                                         },
@@ -4241,6 +4225,38 @@
                     },
                     "404": {
                         "description": "Video review not found"
+                    }
+                }
+            }
+        },
+        "/api/projects/{projectId}/videos/getuploadurl": {
+            "get": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Get a temporary upload url for a video review",
+                "operationId": "3220387cb8d441455c9217516b75140a",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Temporary upload url found"
+                    },
+                    "401": {
+                        "description": "User not connected"
+                    },
+                    "404": {
+                        "description": "Project not found"
                     }
                 }
             }

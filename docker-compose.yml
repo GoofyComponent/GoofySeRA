@@ -23,7 +23,6 @@ services:
       - "./sera-back:/var/www/html"
     networks:
       - sail
-      - monolith
     depends_on:
       - mariadb
       - redis
@@ -84,7 +83,6 @@ services:
       - "${PUSHER_METRICS_PORT:-9601}:9601"
     networks:
       - sail
-      - monolith
   nextjs:
     container_name: sera-front-nextjs
     build:
@@ -97,7 +95,7 @@ services:
     #volumes:
     #- sera-front:/app
     networks:
-      - monolith
+      - sail
     #command: npm run dev
     ports:
       - "${PORT_FRONT:-3305}:80"
@@ -115,14 +113,13 @@ services:
       - 9000:9000
       - 9001:9001
     networks:
-      - monolith
       - sail
 
 networks:
   sail:
     driver: bridge
-  monolith:
-    driver: bridge
+    # I want to share my localhost with the containers
+    
 volumes:
   sail-mariadb:
     driver: local

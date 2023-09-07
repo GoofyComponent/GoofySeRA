@@ -87,6 +87,8 @@ export const Tickets = () => {
       if (priority != "0") requestUrl += `&priority=${priority}`;
 
       const tickets = await axios.get(requestUrl);
+
+      console.log(tickets.data.data);
       return tickets.data;
     },
   });
@@ -327,6 +329,7 @@ export const Tickets = () => {
           tickets={isLoading ? undefined : ticketsData.data}
           sort={sort}
           setSort={setSort}
+          loading={isLoading}
         />
       </div>
 

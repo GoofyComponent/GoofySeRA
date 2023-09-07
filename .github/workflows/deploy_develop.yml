@@ -88,6 +88,7 @@ jobs:
           docker exec develop-sera-back-laravel-test /root/minio-binaries/mc alias set myminio http://minio:9000 user password
           docker exec develop-sera-back-laravel-test /root/minio-binaries/mc mb --with-versioning --ignore-existing myminio/sera
           docker exec develop-sera-back-laravel-test /root/minio-binaries/mc cp /var/www/html/public/videos/topfreddy.mp4 myminio/sera
+          docker exec develop-sera-back-laravel-test /root/minio-binaries/mc cp /var/www/html/public/images/template.jpeg myminio/sera
           docker exec develop-sera-back-laravel-test php artisan migrate:fresh --seed --force
 
       - name: Displaying that it's done

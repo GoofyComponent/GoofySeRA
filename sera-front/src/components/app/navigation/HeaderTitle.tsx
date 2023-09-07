@@ -7,14 +7,14 @@ import clsx from "clsx";
 
 interface HeaderTitleProps {
   title?: string;
-  porjectStatus?: string;
+  projectStatus?: string;
   linkPath?: string | number;
   previousTitle?: string;
 }
 
 export const HeaderTitle = ({
   title,
-  porjectStatus,
+  projectStatus,
   linkPath = -1,
   previousTitle,
 }: HeaderTitleProps) => {
@@ -40,21 +40,18 @@ export const HeaderTitle = ({
         </>
       )}
       <h3 className="my-auto text-4xl font-semibold text-sera-jet">{title}</h3>
-      <span className="text-4xl font-semibold text-sera-jet">
-        {porjectStatus}
-      </span>
-      <Badge
-        className={clsx(
-          porjectStatus === "cancelled" && "bg-red-500 hover:bg-red-500",
-          porjectStatus === "ongoing" && "bg-yellow-200 hover:bg-yellow-200",
-          porjectStatus === "completed" && "bg-lime-200 hover:bg-lime-200 ",
-          "my-auto ml-auto rounded px-2 py-1 text-xl font-normal text-sera-jet"
-        )}
-      >
-        {porjectStatus
-          ? porjectStatus.charAt(0).toUpperCase() + porjectStatus.slice(1)
-          : ""}
-      </Badge>
+      {projectStatus ? (
+        <Badge
+          className={clsx(
+            projectStatus === "cancelled" && "bg-red-500 hover:bg-red-500",
+            projectStatus === "ongoing" && "bg-yellow-200 hover:bg-yellow-200",
+            projectStatus === "completed" && "bg-lime-200 hover:bg-lime-200 ",
+            "my-auto ml-auto rounded px-2 py-1 text-xl font-normal text-sera-jet"
+          )}
+        >
+          {projectStatus.charAt(0).toUpperCase() + projectStatus.slice(1)}
+        </Badge>
+      ) : null}
     </div>
   );
 };

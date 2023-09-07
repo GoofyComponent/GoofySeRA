@@ -1,4 +1,4 @@
-name: Linting
+name: Build checks
 
 on:
   pull_request:
@@ -29,4 +29,4 @@ jobs:
       - name: Verify & autofix linting errors if needed
         working-directory: ./sera-front
         run: |
-          npm run lint-autofix
+          npm run build

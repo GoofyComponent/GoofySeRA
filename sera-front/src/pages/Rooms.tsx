@@ -212,7 +212,10 @@ export const Rooms = () => {
           </Dialog>
         </div>
 
-        <RoomsTable rooms={isLoading ? undefined : roomsData.data} />
+        <RoomsTable
+          rooms={isLoading ? undefined : roomsData.data}
+          loading={isLoading}
+        />
       </div>
 
       <Pagination

@@ -32,7 +32,6 @@ const RecentProjects = () => {
       return recentprojects.data;
     },
   });
-
   return (
     <div className="m-6 rounded-lg bg-sera-grey-bg px-4 pb-4 pt-2">
       <div className="flex justify-between py-2">
@@ -52,7 +51,9 @@ const RecentProjects = () => {
           </Button>
         </Link>
       </div>
-      {!isLoading ? (
+      {!isLoading &&
+      Array.isArray(recentprojectsData.data) &&
+      recentprojectsData.data.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {recentprojectsData.data.map(
             (project: {
@@ -75,7 +76,18 @@ const RecentProjects = () => {
             )
           )}
         </div>
+      ) : !isLoading &&
+        Array.isArray(recentprojectsData.data) &&
+        recentprojectsData.length === 0 ? (
+        <div className="flex h-full min-h-[10rem] flex-col items-center justify-center">
+          <p className="text-2xl font-semibold text-sera-jet">
+            No projects found
+          </p>
+        </div>
       ) : (
+        <></>
+      )}
+      {isLoading && (
         <div className="flex max-h-[9em] w-full items-center">
           <BigLoader
             loaderSize={42}
