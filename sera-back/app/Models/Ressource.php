@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Ressource extends Model
 {
@@ -22,5 +23,17 @@ class Ressource extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function getUrlAttribute($value)
+    {
+        $disk = Storage::disk('s3');
+
+        $temporaryUrl = $disk->temporaryUrl(
+            $value,
+            now()->addHours(24)
+        );
+
+        return $temporaryUrl;
     }
 }
