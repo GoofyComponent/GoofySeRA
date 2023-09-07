@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->boolean('is_read')->default(false);
-            $table->boolean('is_deleted')->default(false);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->boolean('is_urgent')->default(false);
             $table->timestamps();

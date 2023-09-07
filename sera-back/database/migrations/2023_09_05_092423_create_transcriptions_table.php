@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('ressource_id')->constrained('ressources')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('version')->nullable(false);
+            $table->string('file_type')->nullable(false);
             $table->timestamps();
         });
     }

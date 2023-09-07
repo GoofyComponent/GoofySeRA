@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import React from "react";
 import {
@@ -20,6 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -47,8 +49,6 @@ import {
 import { axios } from "@/lib/axios";
 import { TicketsEntity } from "@/lib/types/types";
 import { formatDate } from "@/lib/utils";
-import clsx from "clsx";
-import { Badge } from "@/components/ui/badge";
 
 export const Tickets = () => {
   const ticketStatus = "pending";

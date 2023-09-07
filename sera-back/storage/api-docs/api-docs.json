@@ -3178,6 +3178,19 @@
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "file_type",
+                        "in": "query",
+                        "description": "Transcription file type",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "srt",
+                                "vtt"
+                            ]
+                        }
                     }
                 ],
                 "responses": {
@@ -3251,8 +3264,13 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
-                                    "file": {
-                                        "description": "File",
+                                    "srt": {
+                                        "description": "Srt file",
+                                        "type": "file",
+                                        "format": "file"
+                                    },
+                                    "vtt": {
+                                        "description": "Vtt file",
                                         "type": "file",
                                         "format": "file"
                                     }
@@ -3270,27 +3288,30 @@
                                 "schema": {
                                     "properties": {
                                         "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer"
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "ressource_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "project_id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "version": {
+                                                        "type": "integer"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string"
+                                                    }
                                                 },
-                                                "ressource_id": {
-                                                    "type": "integer"
-                                                },
-                                                "project_id": {
-                                                    "type": "integer"
-                                                },
-                                                "version": {
-                                                    "type": "integer"
-                                                },
-                                                "created_at": {
-                                                    "type": "string"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "type": "object"
+                                                "type": "object"
+                                            }
                                         }
                                     },
                                     "type": "object"
