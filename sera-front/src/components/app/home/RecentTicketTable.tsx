@@ -39,6 +39,7 @@ export const RecentTicketTable = () => {
 
       <TicketsTable
         tickets={recentTicket.isLoading ? undefined : recentTicket.data.data}
+        loading={recentTicket.isLoading}
         sort={sort}
         setSort={setSort}
       />

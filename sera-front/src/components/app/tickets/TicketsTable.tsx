@@ -137,7 +137,7 @@ export const TicketsTable = ({
         ) : tickets !== undefined &&
           Array.isArray(tickets) &&
           tickets.length === 0 ? (
-          <TableCaption className="text-xl font-semibold text-sera-jet">
+          <TableCaption className="h-full min-h-[15rem] text-xl font-semibold text-sera-jet">
             No tickets found
           </TableCaption>
         ) : (
