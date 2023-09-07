@@ -3,10 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Filesystem\FilesystemManager;
+
 
 class User extends Authenticatable
 {
@@ -68,5 +71,23 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    public function getAvatarFilenameAttribute($value)
+    {
+
+        // if value is null, return default avatar
+        if (!$value) {
+            return null;
+        }
+
+
+        $disk = Storage::disk('s3');
+        $temporaryUrl = $disk->temporaryUrl(
+            $value,
+            now()->addHours(24),
+        );
+
+        return $temporaryUrl;
     }
 }

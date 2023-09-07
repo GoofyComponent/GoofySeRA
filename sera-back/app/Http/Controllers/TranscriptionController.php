@@ -118,8 +118,21 @@ class TranscriptionController extends Controller
             $transcriptions = $transcriptions->where('file_type', $request->file_type);
         }
 
+        //for each transcription, load the ressource
+        $transcriptions = $transcriptions->with('ressource')->get();
+
+        $tranformTranscriptions = [];
+        // should be tried by version
+        // 1 => $trans1
+        // 2 => $trans2
+        // ect
+
+        foreach ($transcriptions as $transcription) {
+            $tranformTranscriptions[$transcription->version][$transcription->file_type] = $transcription;
+        }
+
         return response()->json([
-            'data' => $transcriptions->get()
+            'data' => $tranformTranscriptions
         ], 200);
     }
 
@@ -368,6 +381,9 @@ class TranscriptionController extends Controller
         }
 
         // return srt and vtt files
+        $transcriptionVTT->load('ressource');
+        $transcriptionSRT->load('ressource');
+
         return response()->json([
             'data' => [
                 'srt' => $transcriptionSRT ?? null,

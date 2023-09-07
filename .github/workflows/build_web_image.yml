@@ -31,4 +31,4 @@ jobs:
           tag_with_latest: true
           path: ./sera-front/
           build_file: ./prod.Dockerfile
-          extra_args: --build-arg port=80 --build-arg VITE_BACKEND_URL=https://sera-api.destcom.website --build-arg VITE_ENV_MODE=production
+          extra_args: --build-arg port=80 --build-arg VITE_BACKEND_URL=https://sera-api.stroyco.eu --build-arg VITE_ENV_MODE=production

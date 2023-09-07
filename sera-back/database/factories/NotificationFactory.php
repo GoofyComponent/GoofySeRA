@@ -20,7 +20,6 @@ class NotificationFactory extends Factory
             "title" => $this->faker->realText(50),
             "description" => $this->faker->realText(200),
             "is_read" => $this->faker->boolean(),
-            "is_deleted" => $this->faker->boolean(),
             "is_urgent" => $this->faker->boolean(),
         ];
     }

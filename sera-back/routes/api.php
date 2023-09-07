@@ -76,7 +76,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
 
         /***** Video Review *****/
-
+        Route::get('projects/{projectId}/videos/getuploadurl', 'App\Http\Controllers\VideoReviewController@getTemporaryUploadUrl')->name('video-reviews.getTemporaryUploadUrl');
         Route::get('projects/{projectId}/videos', 'App\Http\Controllers\VideoReviewController@getReviewsByProjectId')->name('video-reviews.getReviewsByProjectId');
         Route::post('projects/{projectId}/videos', 'App\Http\Controllers\VideoReviewController@store')->name('video-reviews.store');
         Route::post('projects/{projectId}/videos/{version}', 'App\Http\Controllers\VideoReviewController@addAComment')->name('video-reviews.addAComment');
@@ -94,13 +94,9 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
         /************************/
 
-        /***** Ressource *****/
+        /***** Notification *****/
 
-        Route::get('projects/{projectId}/ressources', 'App\Http\Controllers\SharedRessourceController@index')->name('ressources.index');
-        Route::get('ressources/{ressourceId}', 'App\Http\Controllers\SharedRessourceController@show')->name('ressources.show');
-        Route::post('projects/{projectId}/ressources', 'App\Http\Controllers\SharedRessourceController@store')->name('ressources.store');
-        Route::post('ressources/{ressourceId}/update', 'App\Http\Controllers\SharedRessourceController@update')->name('ressources.update');
-        Route::delete('ressources/{ressourceId}', 'App\Http\Controllers\SharedRessourceController@destroy')->name('ressources.destroy');
+        Route::resource('notifications', 'App\Http\Controllers\NotificationController');
 
         /************************/
 
