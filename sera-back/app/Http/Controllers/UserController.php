@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Intervention\Image\ImageManager;
+
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Services\CreateMinioUser;
-use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
@@ -123,13 +125,6 @@ class UserController extends Controller
         $maxPerPage = $validated['maxPerPage'] ?? 10; // Default to 10 if not specified
         $users = $usersQuery->paginate($maxPerPage);
 
-        // For each user, add a link to the avatar image if it's not null
-        $users->getCollection()->transform(function ($user) {
-            if ($user->avatar_filename !== null) {
-                $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
-            }
-            return $user;
-        });
 
         return response()->json($users);
     }
@@ -179,11 +174,6 @@ class UserController extends Controller
      *                 nullable=true,
      *             ),
      *             @OA\Property(
-     *                 property="avatar_url",
-     *                 type="string",
-     *                 nullable=true,
-     *             ),
-     *             @OA\Property(
      *                 property="created_at",
      *                 type="string",
      *                 format="date-time",
@@ -214,10 +204,6 @@ class UserController extends Controller
 
         if ($user === null) {
             return response()->json(['error' => 'User not found.'], 404);
-        }
-
-        if ($user->avatar_filename !== null) {
-            $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
         }
 
         return response()->json($user);
@@ -289,11 +275,6 @@ class UserController extends Controller
      *             ),
      *             @OA\Property(
      *                 property="avatar_filename",
-     *                 type="string",
-     *                 nullable=true,
-     *             ),
-     *             @OA\Property(
-     *                 property="avatar_url",
      *                 type="string",
      *                 nullable=true,
      *             ),
@@ -461,11 +442,6 @@ class UserController extends Controller
      *              nullable=true,
      *          ),
      *          @OA\Property(
-     *              property="avatar_url",
-     *              type="string",
-     *              nullable=true,
-     *          ),
-     *          @OA\Property(
      *              property="created_at",
      *              type="string",
      *              format="date-time",
@@ -498,9 +474,7 @@ class UserController extends Controller
         // on enlève les hash des credentials dans accesskey et secretkey
         $user->s3_credentials->accesskey = Crypt::decrypt($user->s3_credentials->accesskey);
         $user->s3_credentials->secretkey = Crypt::decrypt($user->s3_credentials->secretkey);
-        if ($user->avatar_filename !== null) {
-            $user->avatar_url = asset('storage/images/' . $user->avatar_filename);
-        }
+
         return response()->json($user);
     }
 
@@ -562,11 +536,6 @@ class UserController extends Controller
      *                 nullable=true,
      *             ),
      *             @OA\Property(
-     *                 property="avatar_url",
-     *                 type="string",
-     *                 nullable=true,
-     *             ),
-     *             @OA\Property(
      *                 property="created_at",
      *                 type="string",
      *                 format="date-time",
@@ -612,29 +581,25 @@ class UserController extends Controller
         $user = User::find($id);
 
         // si dans $user->avatar_filename il y a deja un nom de fichier, on le supprime dans s3
-        if($user->avatar_filename){
-            Storage::disk('s3')->delete($user->avatar_filename);
-        }
+        // if($user->avatar_filename){
+        //     Storage::disk('s3')->delete($user->avatar_filename);
+        // }
+
 
         $filename = $user->id . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
 
-        // Enregistrement sur le serveur minio
-        $path = $request->file('image')->storeAs(
-            'avatar'.'/'.$user->id,
-            $filename,
-            's3'
-        );
-        if(!$path){
-            return response()->json([
-                'message' => 'Erreur lors de l\'upload du fichier'
-            ], 400);
-        }
-        $user->avatar_filename = $path;
+        // Si la photo excede 720 par 720, on la redimensionne
+        $image = $request->file('image');
+        $manager = new ImageManager(['driver' => 'imagick']);
+        $image_resize = $manager->make($image->getRealPath())->resize(720, 720);
+        $image_resize->stream();
 
-        // sauvegarde de l'utilisateur
-        $user->update(['avatar_filename' => $filename]);
+        Storage::disk('s3')->put("/avatar/".$filename, $image_resize);
 
-        // Retour de la reponse avec le user
+        $user->avatar_filename = "/avatar/".$filename;
+
+        $user->save();
+
         return response()->json($user, 200);
     }
 
@@ -854,9 +819,4 @@ class UserController extends Controller
         return response()->json($reservations);
     }
 
-
-    // public function test(){
-    //     $createMinioUser = new CreateMinioUser();
-    //     return response()->json($createMinioUser->create());
-    // }
 }
