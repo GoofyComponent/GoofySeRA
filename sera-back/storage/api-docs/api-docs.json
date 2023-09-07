@@ -3490,10 +3490,6 @@
                                             "type": "string",
                                             "nullable": true
                                         },
-                                        "avatar_url": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
                                         "created_at": {
                                             "type": "string",
                                             "format": "date-time"
@@ -3592,10 +3588,6 @@
                                             "type": "string"
                                         },
                                         "avatar_filename": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
-                                        "avatar_url": {
                                             "type": "string",
                                             "nullable": true
                                         },
@@ -3741,10 +3733,6 @@
                                             "type": "string",
                                             "nullable": true
                                         },
-                                        "avatar_url": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
                                         "created_at": {
                                             "type": "string",
                                             "format": "date-time"
@@ -3834,10 +3822,6 @@
                                             "type": "string"
                                         },
                                         "avatar_filename": {
-                                            "type": "string",
-                                            "nullable": true
-                                        },
-                                        "avatar_url": {
                                             "type": "string",
                                             "nullable": true
                                         },

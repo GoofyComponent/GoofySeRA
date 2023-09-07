@@ -26,6 +26,7 @@ chown -R sail:sail /root
 
 # there is a video named topfreddy.mp4 into the public/videos folder from laravel. Upload it to minio
 /root/minio-binaries/mc cp /var/www/html/public/videos/topfreddy.mp4 myminio/sera
+/root/minio-binaries/mc cp /var/www/html/public/images/template.jpeg myminio/sera
 
 if [ $# -gt 0 ]; then
     exec gosu $WWWUSER "$@"
