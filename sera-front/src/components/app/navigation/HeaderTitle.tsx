@@ -2,15 +2,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import clsx from "clsx";
 
 interface HeaderTitleProps {
   title?: string;
+  projectStatus?: string;
   linkPath?: string | number;
   previousTitle?: string;
 }
 
 export const HeaderTitle = ({
   title,
+  projectStatus,
   linkPath = -1,
   previousTitle,
 }: HeaderTitleProps) => {
@@ -36,6 +40,18 @@ export const HeaderTitle = ({
         </>
       )}
       <h3 className="my-auto text-4xl font-semibold text-sera-jet">{title}</h3>
+      {projectStatus ? (
+        <Badge
+          className={clsx(
+            projectStatus === "cancelled" && "bg-red-500 hover:bg-red-500",
+            projectStatus === "ongoing" && "bg-yellow-200 hover:bg-yellow-200",
+            projectStatus === "completed" && "bg-lime-200 hover:bg-lime-200 ",
+            "my-auto ml-auto rounded px-2 py-1 text-xl font-normal text-sera-jet"
+          )}
+        >
+          {projectStatus.charAt(0).toUpperCase() + projectStatus.slice(1)}
+        </Badge>
+      ) : null}
     </div>
   );
 };
