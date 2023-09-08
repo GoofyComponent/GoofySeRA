@@ -362,7 +362,7 @@ class VideoReviewController extends Controller
             $version = $video->version + 1;
         }
 
-        if (app()->environment('local')) {
+        if (env('IS_LOCAL')) {
             $config = config('filesystems.disks.s3');
             $config['url'] = 'http://localhost:9000';
             $config['endpoint'] = 'http://localhost:9000';
