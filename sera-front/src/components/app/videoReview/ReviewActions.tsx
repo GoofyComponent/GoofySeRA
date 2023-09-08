@@ -11,21 +11,16 @@ import {
 
 export const ReviewActions = ({
   editingData,
-  activeVersion,
   setActiveVersion,
   setOpenAddVideo,
 }: any) => {
   const [searchParams] = useSearchParams();
-  console.log("◊reviewData", editingData);
-  console.log("◊activeVersion", activeVersion);
-
   const def = searchParams.get("version") || "0";
 
   return (
     <div className="my-6 ml-6 flex justify-between">
       <Select
         onValueChange={(value) => {
-          console.log("value", value);
           setActiveVersion(value);
         }}
         defaultValue={editingData.length > 0 ? def : "-1"}
