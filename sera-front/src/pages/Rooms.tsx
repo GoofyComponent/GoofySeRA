@@ -183,7 +183,7 @@ export const Rooms = () => {
                 </div>
                 <div>
                   <Label htmlFor="description" className="mb-2">
-                    Description
+                    Address
                   </Label>
                   <Input
                     type="textarea"
