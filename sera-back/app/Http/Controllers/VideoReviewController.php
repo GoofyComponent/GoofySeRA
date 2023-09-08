@@ -79,7 +79,7 @@ class VideoReviewController extends Controller
             $formattedVideo['video']['sources'][0] = [];
             $formattedVideo['video']['sources'][0]['size'] = $video->resolution;
             $formattedVideo['video']['sources'][0]['provider'] = $video->provider;
-            $formattedVideo['video']['sources'][0]['src'] = Storage::disk('s3')->url($video->ressource->url);
+            $formattedVideo['video']['sources'][0]['src'] = $video->ressource->url;
             $formattedVideo['video']['sources'][0]['type'] = $video->type;
             $formattedVideo['comments'] = [];
 
