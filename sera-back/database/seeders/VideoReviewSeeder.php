@@ -21,7 +21,7 @@ class VideoReviewSeeder extends Seeder
             'name' => 'Top 5 Freddy Fazbear',
             'description' => 'Top 5 des meilleurs Freddy Fazbear de la saga Five Nights at Freddy\'s !',
             'type' => 'video',
-            'url' => '/top5freddy.mp4',
+            'url' => '/topfreddy.mp4',
             'project_id' => $project1->id,
         ]);
 
@@ -29,7 +29,7 @@ class VideoReviewSeeder extends Seeder
             'name' => 'Top 5 Freddy Fazbear',
             'description' => 'Top 5 des meilleurs Freddy Fazbear de la saga Five Nights at Freddy\'s !',
             'type' => 'video',
-            'url' => '/top5freddy.mp4',
+            'url' => '/topfreddy.mp4',
             'project_id' => $project2->id,
         ]);
 
