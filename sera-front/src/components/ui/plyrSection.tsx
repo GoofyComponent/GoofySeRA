@@ -2,7 +2,6 @@ import "plyr-react/plyr.css";
 
 import { Loader2 } from "lucide-react";
 import Plyr from "plyr-react";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 export const PlyrSection = ({ videoData, plyrRef }: any) => {
@@ -10,18 +9,6 @@ export const PlyrSection = ({ videoData, plyrRef }: any) => {
   const isPlayerReady = useSelector(
     (state: any) => state.videoReview.isPlayerReady
   );
-
-  useEffect(() => {
-    console.log("◊plyrRef", plyrRef.current.plyr, plyrRef);
-    console.log("◊videoData", videoData);
-
-    console.log(
-      "◊!videoData.title || !videoData.sources",
-      !videoData.title || !videoData.sources
-    );
-    console.log(videoData.title);
-    console.log(videoData.sources);
-  }, [videoData, plyrRef]);
 
   if (!videoData)
     return (
@@ -31,7 +18,7 @@ export const PlyrSection = ({ videoData, plyrRef }: any) => {
     );
 
   return (
-    <div className="my-6 ml-6">
+    <div className="my-6 ml-6 overflow-hidden rounded-lg">
       {isPlayerReady ? (
         <Plyr
           ref={plyrRef}

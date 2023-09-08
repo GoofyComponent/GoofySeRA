@@ -1,9 +1,9 @@
+import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import clsx from "clsx";
+import { Button } from "@/components/ui/button";
 
 interface HeaderTitleProps {
   title?: string;

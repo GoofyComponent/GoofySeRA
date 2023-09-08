@@ -9,7 +9,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { setPlayerMarkers } from "@/helpers/slices/VideoReviewSlice";
 import { videoTimeDeserializer, videoTimeSerializer } from "@/lib/utils";
 
-export const ChatContainer = ({ chatData, plyrRef }: any) => {
+export const ChatContainer = ({
+  currentVideo,
+  plyrRef,
+  addCommentsMutation,
+}: any) => {
+  if (!currentVideo)
+    return (
+      <div className="h-[82vh] w-full overflow-x-hidden overflow-y-scroll py-2 pl-10 scrollbar scrollbar-track-transparent scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3">
+        <div className="m-auto flex h-full w-9/12 flex-col justify-center">
+          <p className="m-auto text-center text-sera-jet">
+            Upload a video first.
+          </p>
+        </div>
+      </div>
+    );
+
+  const chatData = currentVideo.comments;
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const messageContainerRef = useRef<HTMLDivElement>(null);
@@ -18,20 +34,14 @@ export const ChatContainer = ({ chatData, plyrRef }: any) => {
     dispatch(setPlayerMarkers(chatData));
   }, [chatData]);
 
-  useEffect(
-    () => {
-      if (messageContainerRef.current) {
-        messageContainerRef.current.scrollTop =
-          messageContainerRef.current.scrollHeight;
-      }
-    },
-    [
-      /* trigger */
-    ]
-  );
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, []);
 
   const setPlayerTime = (time: string) => {
-    console.log("◊time", time, videoTimeDeserializer(time));
     plyrRef.current.plyr.currentTime = videoTimeDeserializer(time);
   };
 
@@ -69,7 +79,7 @@ export const ChatContainer = ({ chatData, plyrRef }: any) => {
         ref={messageContainerRef}
       >
         {chatData.map((message: any, index: any) => (
-          <>
+          <div key={index}>
             <div key={index} className="flex justify-start">
               <Avatar className="mr-4 h-12 w-12">
                 <AvatarImage src={message.author.avatar} />
@@ -93,7 +103,7 @@ export const ChatContainer = ({ chatData, plyrRef }: any) => {
               </div>
             </div>
             <Separator className="my-4 h-px w-full rounded-lg bg-sera-jet/70" />
-          </>
+          </div>
         ))}
       </div>
       <div
@@ -124,7 +134,14 @@ export const ChatContainer = ({ chatData, plyrRef }: any) => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-          <Button className="mb-0 ml-2 mt-auto bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
+          <Button
+            className="mb-0 ml-2 mt-auto bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            onClick={(e) => {
+              e.preventDefault();
+              addCommentsMutation.mutate({ message });
+              setMessage("");
+            }}
+          >
             <SendHorizontal />
           </Button>
         </div>

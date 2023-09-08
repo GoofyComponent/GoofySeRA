@@ -39,19 +39,18 @@ export const VideoReviewSlice = createSlice({
       state.isPlayerReady = false;
 
       const regex = /\[\[(.*?)\]\]/g;
-      console.log("action.payload", action.payload);
       const messages = action.payload;
       messages.forEach((message: any) => {
-        if (message.message.match(regex)) {
-          console.log("match", message.message.match(regex));
-          const time = message.message
-            .match(regex)[0]
-            .replace("[[", "")
-            .replace("]]", "");
+        let match;
+        while ((match = regex.exec(message.message)) !== null) {
+          const time = match[0].replace("[[", "").replace("]]", "");
+          const updatedMessage = message.message
+            .replace(/\[\[.*?\]\]/g, "")
+            .trim();
 
           state.playerMarkers.points.push({
             time: videoTimeDeserializer(time),
-            label: message.message,
+            label: updatedMessage,
           });
         }
       });

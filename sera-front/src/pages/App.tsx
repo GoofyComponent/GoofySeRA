@@ -67,7 +67,7 @@ function App() {
           <Popover>
             <PopoverTrigger>
               <Avatar className="ml-2">
-                <AvatarImage src="" />
+                <AvatarImage src={userData.avatar_filename} />
                 <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
                   {!userData.lastname && !userData.firstname
                     ? "USR"
