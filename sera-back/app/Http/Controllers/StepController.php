@@ -329,11 +329,11 @@ class StepController extends Controller
         }
 
         // Il faut que chaque step ait une date de début et de fin
-        foreach ($steps as $step => $value) {
-            if($value->start_date === null || $value->end_date === null){
-                return response()->json(['error' => 'Step ' . $step . ' has no start date or end date.'], 400);
-            }
-        }
+        // foreach ($steps as $step => $value) {
+        //     if($value->start_date === null || $value->end_date === null){
+        //         return response()->json(['error' => 'Step ' . $step . ' has no start date or end date.'], 400);
+        //     }
+        // }
 
         // on regarde si le projet à une équipe
         if(!$project->team){

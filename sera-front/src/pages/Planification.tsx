@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Check, CheckSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
@@ -19,6 +19,7 @@ export const Planification = () => {
   const [teamIsValid, setTeamIsValid] = useState(false);
   const [reservationIsValid, setReservationIsValid] = useState(false);
   const [isPlanificationValid, setIsPlanificationValid] = useState(false);
+  const navigate = useNavigate();
 
   const {
     data: projectStepStatus,
@@ -42,6 +43,7 @@ export const Planification = () => {
       return moveStep.data;
     },
     onSuccess: (response: any) => {
+      navigate(`/app/projects/${ProjectId}/captation`);
       console.log("response", response);
     },
     onError: (error: any) => {
