@@ -51,7 +51,7 @@ function App() {
 
   return (
     <>
-      <header className="my-auto flex h-[10vh] justify-between p-6">
+      <header className="my-auto flex h-[100px] justify-between p-6">
         <div className="flex justify-start lg:w-5/12">
           <Link to={"/dashboard"}>
             <img src={logo} alt={"SeRA App"} className="hover:opacity-75" />
