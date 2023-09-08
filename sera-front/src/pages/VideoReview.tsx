@@ -28,7 +28,7 @@ export const VideoReview = () => {
   const [activeVersion, setActiveVersion] = useState<string>(
     searchParams.get("version") || "0"
   );
-  const [isPlanificationValid, setIsPlanificationValid] = useState(false);
+  const [isEditingValid, setIsEditingValid] = useState(false);
   const [openAddVideo, setOpenAddVideo] = useState(false);
   const addedVideoProvider = "html5";
   const addedVideoType = "video";
@@ -88,16 +88,11 @@ export const VideoReview = () => {
         `api/projects/${ProjectId}/videos/getuploadurl`
       );
 
-      console.log("preSignedUrl", preSignedUrl);
-
       if (!preSignedUrl.data.url || !addVideoFile) return;
 
       if (!data.name || data.name === "") return;
       if (!data.description || data.description === "") return;
       if (!data.resolution || data.resolution === "") return;
-
-      console.log("addVideoFile", addVideoFile);
-      console.log("VideoFileType", addVideoFile?.type);
 
       const fileUpload = await axios.put(preSignedUrl.data.url, addVideoFile, {
         headers: {
@@ -112,17 +107,12 @@ export const VideoReview = () => {
 
       if (!data.url || data.url === "") return;
 
-      console.log("dataaaaaaaaaaaaaaaa", data);
-
       const registerVideo = await axios.post(
         `/api/projects/${ProjectId}/videos`,
         data
       );
 
-      console.log("registerVideo", registerVideo);
-
-      /*       return project.data;
-       */
+      return registerVideo.data;
     },
     onSuccess: () => {
       editingRefetch();
@@ -150,6 +140,24 @@ export const VideoReview = () => {
     },
   });
 
+  const passToTranscription = useMutation({
+    mutationFn: async () => {
+      const moveStep = await axios.post(
+        `/api/projects/${ProjectId}/validate/postproduction`,
+        {
+          version: editingData[activeVersion].version,
+        }
+      );
+      return moveStep.data;
+    },
+    onSuccess: (response: any) => {
+      console.log("response", response);
+    },
+    onError: (error: any) => {
+      console.log("error", error);
+    },
+  });
+
   useEffect(() => {
     if (projectStepIsSuccess) {
       projectStepStatus === "ongoing" && editingRefetch();
@@ -157,13 +165,14 @@ export const VideoReview = () => {
   }, [projectStepIsSuccess]);
 
   useEffect(() => {
-    console.log("activeVersion", activeVersion);
     navigate(`?version=${activeVersion}`);
   }, [activeVersion]);
 
   useEffect(() => {
     console.log("editingData", editingData);
-    setIsPlanificationValid(false);
+    if (!editingData) return;
+    if (editingData.length === 0) return;
+    setIsEditingValid(true);
   }, [editingData]);
 
   if (
@@ -176,28 +185,45 @@ export const VideoReview = () => {
     <div className="flex justify-start">
       <section className="w-2/3">
         <HeaderTitle title="Review vidéo" previousTitle="Projet" />
-        <div className="mx-6 flex flex-col justify-end">
+        <div className="my-6 ml-6 flex flex-col justify-end">
           {projectStepIsLoading && !projectStepIsSuccess && (
-            <p className="text-center italic">Loading...</p>
+            <p className="w-full text-center italic">Loading...</p>
           )}
           {projectStepStatus != "done" && projectStepIsSuccess && (
             <>
               <Button
-                className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                disabled={!isPlanificationValid}
+                className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                disabled={!isEditingValid || passToTranscription.isLoading}
                 onClick={() => {
-                  if (isPlanificationValid) {
-                    console.log("passToCaptation");
+                  if (isEditingValid) {
+                    passToTranscription.mutate();
                   }
                 }}
               >
-                <Check />
-                <p className="ml-2">Validate this step</p>
+                {!passToTranscription.isLoading && (
+                  <>
+                    <Check />
+                    <p className="ml-2">Validate this version</p>
+                  </>
+                )}
+                {passToTranscription.isLoading && (
+                  <div className="flex justify-center">
+                    <BigLoader
+                      bgColor="transparent"
+                      textColor="sera-periwinkle"
+                    />
+                  </div>
+                )}
               </Button>
-              {!isPlanificationValid && (
+              {!isEditingValid ? (
                 <p className="my-auto text-gray-600">
                   You can&apos;t validate this step until your validate one
                   version of the video
+                </p>
+              ) : (
+                <p className="my-auto text-gray-600">
+                  You gonna validate the current edit your display on the
+                  player.
                 </p>
               )}
             </>
@@ -218,7 +244,6 @@ export const VideoReview = () => {
         {!editingIsLoading && editingIsSuccess && (
           <ReviewActions
             editingData={editingData}
-            activeVersion={activeVersion}
             setActiveVersion={setActiveVersion}
             setOpenAddVideo={setOpenAddVideo}
           />
@@ -300,8 +325,23 @@ export const VideoReview = () => {
                 addVideoMutation.mutate();
               }}
               className="my-2 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+              disabled={
+                !addedVideoName ||
+                !addedVideoDescription ||
+                !addedVideoResolution ||
+                !addVideoFile ||
+                addVideoMutation.isLoading
+              }
             >
-              Add video
+              {!addVideoMutation.isLoading && <p>Add video</p>}
+              {addVideoMutation.isLoading && (
+                <div className="flex justify-center">
+                  <BigLoader
+                    bgColor="transparent"
+                    textColor="sera-periwinkle"
+                  />
+                </div>
+              )}
             </Button>
           </div>
         </DialogContent>
