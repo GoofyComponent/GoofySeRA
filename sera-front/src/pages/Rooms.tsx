@@ -387,13 +387,13 @@ const DeleteModal = ({
   const deleteRoomQuery = useMutation({
     mutationFn: async (roomId: string) => {
       const room = await axios.delete(`api/rooms/${roomId}`);
-      roomsRefetch();
       return room;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       if (roomsData.data.length === 1) {
         setPage(page - 1);
       }
+      roomsRefetch();
       navigate(`/dashboard/rooms`);
     },
     onError: () => {
