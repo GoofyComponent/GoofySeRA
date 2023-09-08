@@ -21,6 +21,7 @@ export const HeaderTitle = ({
   if (title === "" || title === undefined || title === null) {
     title = document.title || "Sera";
   }
+  previousTitle = previousTitle || "Projet";
 
   return (
     <div className="m-6 flex items-center text-sera-jet">
