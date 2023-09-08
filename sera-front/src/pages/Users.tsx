@@ -119,6 +119,10 @@ export const Users = () => {
       return users;
     },
     onSuccess: () => {
+      if (users.data.length === 1) {
+        setPage(page - 1);
+      }
+      console.log(users.data);
       refetchUsers();
       navigate(`/dashboard/users`);
     },
