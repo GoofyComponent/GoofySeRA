@@ -307,7 +307,6 @@ const EditModal = ({ id, roomsRefecht }: { id: string; roomsRefecht: any }) => {
       return room;
     },
     onSuccess: () => {
-      console.log("success");
       editedRoomRefetch();
       roomsRefecht();
       navigate(`/dashboard/rooms/${id}?action=infos`);

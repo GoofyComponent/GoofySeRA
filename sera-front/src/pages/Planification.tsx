@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Check, CheckSquare } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
@@ -11,6 +12,10 @@ import { axios } from "@/lib/axios";
 
 export const Planification = () => {
   const { ProjectId } = useParams<{ ProjectId: string }>();
+  const lastSeenProjectName = useSelector(
+    (state: any) => state.app.lastSeenProjectName
+  );
+
   const [teamIsValid, setTeamIsValid] = useState(false);
   const [reservationIsValid, setReservationIsValid] = useState(false);
   const [isPlanificationValid, setIsPlanificationValid] = useState(false);
@@ -54,7 +59,7 @@ export const Planification = () => {
 
   return (
     <>
-      <HeaderTitle title="Planification" previousTitle="Projet" />
+      <HeaderTitle title="Planification" previousTitle={lastSeenProjectName} />
       <div className="mx-6 flex flex-col justify-end">
         {isLoading && !isSuccess && (
           <p className="text-center italic">Loading...</p>

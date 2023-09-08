@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
@@ -6,10 +8,11 @@ import { MembersContainer } from "@/components/app/project/Members/MembersContai
 import { SharedContainer } from "@/components/app/project/SharedRessources/SharedContainer";
 import { StepsIndicatorContainer } from "@/components/app/project/StepsIndicator/StepsIndicatorContainer";
 import { Separator } from "@/components/ui/separator";
-import { useDispatch } from "react-redux";
-import { setLastSeenProjectId } from "@/helpers/slices/AppSlice";
-import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  setLastSeenProjectId,
+  setLastSeenProjectName,
+} from "@/helpers/slices/AppSlice";
 import { axios } from "@/lib/axios";
 
 import { BigLoader } from "./skeletons/BigLoader";
@@ -31,6 +34,7 @@ export const Project = () => {
     queryKey: ["project", { id }],
     queryFn: async () => {
       const project = await axios.get(`/api/projects/${id}`);
+      dispatch(setLastSeenProjectName(project.data.title));
       return project.data;
     },
   });
@@ -49,7 +53,7 @@ export const Project = () => {
       <HeaderTitle
         title={projectData.title && projectData.title}
         projectStatus={projectData.status && projectData.status}
-        previousTitle="Projet"
+        previousTitle="Projects"
       />
       <div className="flex justify-between">
         <Tabs defaultValue="resume" className="ml-6 w-8/12">
