@@ -97,12 +97,19 @@ export const Tickets = () => {
     },
   });
 
+  useEffect(() => {
+    console.log(ticketsData);
+  }, [ticketsData]);
+
   const deleteTicket = useMutation({
     mutationFn: async (TicketId: string) => {
       const tickets = await axios.delete(`api/projects-requests/${TicketId}`);
       return tickets;
     },
     onSuccess: () => {
+      if (ticketsData.data.length < 1) {
+        setPage(page - 1);
+      }
       refetch();
       navigate(`/dashboard/tickets`);
     },
