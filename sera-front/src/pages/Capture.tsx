@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Check, CheckSquare, PenBox } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -43,6 +43,25 @@ export const Capture = () => {
       }
 
       return project.data[0];
+    },
+  });
+
+  const addVideoRushsDrive = useMutation({
+    mutationFn: async ({ link, type }: { link: string; type: string }) => {
+      let call;
+      if (type === "videos rushs")
+        call = await axios.post(`/api/projects/${ProjectId}/add-rushs`, {
+          link,
+        });
+
+      console.log(link, type);
+      return call;
+    },
+    onSuccess: () => {
+      refetchProjectStep();
+    },
+    onError: (error: any) => {
+      console.error(error);
     },
   });
 
@@ -159,6 +178,7 @@ export const Capture = () => {
           isFileUpdateModalOpen={isFileUpdateModalOpen}
           setIsFileUpdateModalOpen={setIsFileUpdateModalOpen}
           type={fileUpdateModalType}
+          mutation={addVideoRushsDrive}
         />
       </div>
     </>
@@ -169,11 +189,14 @@ const FileUpdateModal = ({
   isFileUpdateModalOpen,
   setIsFileUpdateModalOpen,
   type,
+  mutation,
 }: {
   isFileUpdateModalOpen: boolean;
   setIsFileUpdateModalOpen: (open: boolean) => void;
   type: string;
+  mutation: any;
 }) => {
+  const [link, setLink] = useState("");
   return (
     <Dialog
       open={isFileUpdateModalOpen}
@@ -193,8 +216,16 @@ const FileUpdateModal = ({
             name="link"
             id="link"
             placeholder={`Type the ${type} link here...`}
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
           />
-          <Button className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
+          <Button
+            className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            onClick={() => {
+              if (link === "") return;
+              mutation.mutate({ link, type });
+            }}
+          >
             Add the {type} link
           </Button>
         </div>
