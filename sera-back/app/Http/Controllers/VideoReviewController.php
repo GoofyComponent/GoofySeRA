@@ -354,7 +354,13 @@ class VideoReviewController extends Controller
         }
 
         // on get la dernière version de la video review
-        $version = VideoReview::where('project_id', $projectId)->orderBy('version', 'desc')->first()->version;
+        $video = VideoReview::where('project_id', $projectId)->orderBy('version', 'desc')->first();
+
+        if(!$video){
+            $version = 1;
+        }else{
+            $version = $video->version + 1;
+        }
 
         if (app()->environment('local')) {
             $config = config('filesystems.disks.s3');
