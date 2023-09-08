@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Check, CheckSquare } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
@@ -23,8 +24,12 @@ import { BigLoader } from "./skeletons/BigLoader";
 
 export const VideoReview = () => {
   const navigate = useNavigate();
+  const lastSeenProjectName = useSelector(
+    (state: any) => state.app.lastSeenProjectName
+  );
   const [searchParams] = useSearchParams();
   const { ProjectId } = useParams<{ ProjectId: string }>();
+
   const [activeVersion, setActiveVersion] = useState<string>(
     searchParams.get("version") || "0"
   );
@@ -184,7 +189,7 @@ export const VideoReview = () => {
   return (
     <div className="flex justify-start">
       <section className="w-2/3">
-        <HeaderTitle title="Review vidéo" previousTitle="Projet" />
+        <HeaderTitle title="Review vidéo" previousTitle={lastSeenProjectName} />
         <div className="my-6 ml-6 flex flex-col justify-end">
           {projectStepIsLoading && !projectStepIsSuccess && (
             <p className="w-full text-center italic">Loading...</p>
