@@ -4260,6 +4260,35 @@
                     }
                 }
             }
+        },
+        "/api/projects/{projectId}/videos/validated": {
+            "get": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Get the validated video review of a project",
+                "operationId": "154d11a501fe0ba16c38cf4d1bff08d3",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video review found"
+                    },
+                    "404": {
+                        "description": "Video review not found"
+                    }
+                }
+            }
         }
     }
 }

@@ -76,6 +76,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
 
         /***** Video Review *****/
+        Route::get('projects/{projectId}/videos/validated', 'App\Http\Controllers\VideoReviewController@getVideoValidated')->name('video-reviews.getVideoValidated');
         Route::get('projects/{projectId}/videos/getuploadurl', 'App\Http\Controllers\VideoReviewController@getTemporaryUploadUrl')->name('video-reviews.getTemporaryUploadUrl');
         Route::get('projects/{projectId}/videos', 'App\Http\Controllers\VideoReviewController@getReviewsByProjectId')->name('video-reviews.getReviewsByProjectId');
         Route::post('projects/{projectId}/videos', 'App\Http\Controllers\VideoReviewController@store')->name('video-reviews.store');
