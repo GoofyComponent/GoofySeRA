@@ -162,7 +162,7 @@ export const stepLinkExtractor = (step: number) => {
       return "captation";
       break;
     case 3:
-      return "review-video";
+      return "editing";
       break;
     case 4:
       return "transcription";
