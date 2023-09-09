@@ -42,24 +42,16 @@ export const UserForm = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      lastname: undefined,
-      firstname: undefined,
-      email: undefined,
+      lastname: oldUserData.lastname,
+      firstname: oldUserData.firstname,
+      email: oldUserData.email,
     },
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    if (
-      data.lastname === oldUserData.lastname &&
-      data.firstname === oldUserData.firstname &&
-      data.email === oldUserData.email
-    ) {
-      toast({
-        title: "No change",
-        description: `You entered the same infos as before. Please change at least one field.`,
-      });
-      return;
-    }
+    if (data.lastname === oldUserData.lastname) delete data.lastname;
+    if (data.firstname === oldUserData.firstname) delete data.firstname;
+    if (data.email === oldUserData.email) delete data.email;
 
     if (!data.lastname && !data.firstname && !data.email) {
       toast({
