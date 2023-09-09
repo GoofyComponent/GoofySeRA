@@ -20,23 +20,27 @@ import { useParams } from "react-router-dom";
 export const Project = () => {
   const { ProjectId: id } = useParams<{ ProjectId: string }>();
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setLastSeenProjectId(id));
-  }, [id]);
 
   const {
     data: projectData,
     isLoading,
     error,
-    // isFetching,
+    isSuccess,
   } = useQuery({
     queryKey: ["project", { id }],
     queryFn: async () => {
       const project = await axios.get(`/api/projects/${id}`);
-      dispatch(setLastSeenProjectName(project.data.title));
       return project.data;
     },
   });
+
+  useEffect(() => {
+    if (isSuccess && id && !isLoading && projectData) {
+      dispatch(setLastSeenProjectId(id));
+      dispatch(setLastSeenProjectName(projectData.title));
+    }
+  }, [isSuccess, id, projectData]);
+
   useEffect(() => {
     console.log(error);
   }, [error]);
