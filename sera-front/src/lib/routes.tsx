@@ -43,7 +43,7 @@ const paths = [
               },
               {
                 path: "*",
-                element: <Error404 />,
+                element: <Navigate to="/404" replace />,
               },
             ],
           },
@@ -64,7 +64,7 @@ const paths = [
               },
               {
                 path: "*",
-                element: <Error404 />,
+                element: <Navigate to="/404" replace />,
               },
             ],
           },
@@ -88,7 +88,7 @@ const paths = [
               },
               {
                 path: "*",
-                element: <Error404 />,
+                element: <Navigate to="/404" replace />,
               },
             ],
           },
@@ -116,7 +116,7 @@ const paths = [
       },
       {
         path: "*",
-        element: <Error404 />,
+        element: <Navigate to="/404" replace />,
       },
     ],
   },
