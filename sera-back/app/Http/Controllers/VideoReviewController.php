@@ -79,7 +79,7 @@ class VideoReviewController extends Controller
             $formattedVideo['video']['sources'][0] = [];
             $formattedVideo['video']['sources'][0]['size'] = $video->resolution;
             $formattedVideo['video']['sources'][0]['provider'] = $video->provider;
-            $formattedVideo['video']['sources'][0]['src'] = Storage::disk('s3')->url($video->ressource->url);
+            $formattedVideo['video']['sources'][0]['src'] = $video->ressource->url;
             $formattedVideo['video']['sources'][0]['type'] = $video->type;
             $formattedVideo['comments'] = [];
 
@@ -354,9 +354,15 @@ class VideoReviewController extends Controller
         }
 
         // on get la dernière version de la video review
-        $version = VideoReview::where('project_id', $projectId)->orderBy('version', 'desc')->first()->version;
+        $video = VideoReview::where('project_id', $projectId)->orderBy('version', 'desc')->first();
 
-        if (app()->environment('local')) {
+        if(!$video){
+            $version = 1;
+        }else{
+            $version = $video->version + 1;
+        }
+
+        if (env('IS_LOCAL')) {
             $config = config('filesystems.disks.s3');
             $config['url'] = 'http://localhost:9000';
             $config['endpoint'] = 'http://localhost:9000';

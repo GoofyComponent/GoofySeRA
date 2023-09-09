@@ -4,6 +4,7 @@ const initialState = {
   isPreviouslyLoggedIn: false,
   appError: null,
   lastSeenProjectId: null,
+  lastSeenProjectName: null,
 };
 
 export const AppSlice = createSlice({
@@ -19,13 +20,21 @@ export const AppSlice = createSlice({
     setLastSeenProjectId: (state, action) => {
       state.lastSeenProjectId = action.payload;
     },
+    setLastSeenProjectName: (state, action) => {
+      state.lastSeenProjectName = action.payload;
+    },
     reset: () => {
       return initialState;
     },
   },
 });
 
-export const { registerLogin, setAppError, reset, setLastSeenProjectId } =
-  AppSlice.actions;
+export const {
+  registerLogin,
+  setAppError,
+  reset,
+  setLastSeenProjectId,
+  setLastSeenProjectName,
+} = AppSlice.actions;
 
 export default AppSlice.reducer;

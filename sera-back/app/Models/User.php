@@ -80,7 +80,14 @@ class User extends Authenticatable
         if (!$value) {
             return null;
         }
-
+        // get env IS_LOCAL and if true, return local url
+        $env = env('IS_LOCAL');
+        if (env('IS_LOCAL')) {
+            $config = config('filesystems.disks.s3');
+            $config['url'] = 'http://localhost:9000';
+            $config['endpoint'] = 'http://localhost:9000';
+            config(['filesystems.disks.s3' => $config]);
+        }
 
         $disk = Storage::disk('s3');
         $temporaryUrl = $disk->temporaryUrl(

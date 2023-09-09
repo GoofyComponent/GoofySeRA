@@ -6,7 +6,7 @@ on:
       - develop
 
 jobs:
-  lint:
+  check-build-succeed:
     runs-on: lint
 
     steps:
@@ -26,7 +26,7 @@ jobs:
         working-directory: ./sera-front
         run: npm ci
 
-      - name: Verify & autofix linting errors if needed
+      - name: check if build succeed
         working-directory: ./sera-front
         run: |
           npm run build

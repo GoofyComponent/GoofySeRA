@@ -1,32 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
 import { SharedContainer } from "@/components/app/project/SharedRessources/SharedContainer";
 import { StepsIndicatorContainer } from "@/components/app/project/StepsIndicator/StepsIndicatorContainer";
 import { Separator } from "@/components/ui/separator";
-import { useDispatch } from "react-redux";
-import { setLastSeenProjectId } from "@/helpers/slices/AppSlice";
-import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  setLastSeenProjectId,
+  setLastSeenProjectName,
+} from "@/helpers/slices/AppSlice";
 import { axios } from "@/lib/axios";
 
 import { BigLoader } from "./skeletons/BigLoader";
+import { useParams } from "react-router-dom";
 
 export const Project = () => {
   const { ProjectId: id } = useParams<{ ProjectId: string }>();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setLastSeenProjectId(id));
-  }, [id]);
-
   const {
     data: projectData,
     isLoading,
     error,
-    // isFetching,
+    isSuccess,
   } = useQuery({
     queryKey: ["project", { id }],
     queryFn: async () => {
@@ -35,7 +34,16 @@ export const Project = () => {
     },
   });
 
-  if (error) return <> Erreur </>;
+  useEffect(() => {
+    if (isSuccess && id && !isLoading && projectData) {
+      dispatch(setLastSeenProjectId(id));
+      dispatch(setLastSeenProjectName(projectData.title));
+    }
+  }, [isSuccess, id, projectData]);
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   if (isLoading)
     return (
@@ -49,7 +57,7 @@ export const Project = () => {
       <HeaderTitle
         title={projectData.title && projectData.title}
         projectStatus={projectData.status && projectData.status}
-        previousTitle="Projet"
+        previousTitle="Projects"
       />
       <div className="flex justify-between">
         <Tabs defaultValue="resume" className="ml-6 w-8/12">

@@ -28,7 +28,7 @@ class Ressource extends Model
     public function getUrlAttribute($value)
     {
 
-        if (app()->environment('local')) {
+        if (env('IS_LOCAL')) {
             $config = config('filesystems.disks.s3');
             $config['url'] = 'http://localhost:9000';
             $config['endpoint'] = 'http://localhost:9000';

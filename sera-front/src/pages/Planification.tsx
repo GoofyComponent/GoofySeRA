@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Check, CheckSquare } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
@@ -11,14 +12,20 @@ import { axios } from "@/lib/axios";
 
 export const Planification = () => {
   const { ProjectId } = useParams<{ ProjectId: string }>();
+  const lastSeenProjectName = useSelector(
+    (state: any) => state.app.lastSeenProjectName
+  );
+
   const [teamIsValid, setTeamIsValid] = useState(false);
   const [reservationIsValid, setReservationIsValid] = useState(false);
   const [isPlanificationValid, setIsPlanificationValid] = useState(false);
+  const navigate = useNavigate();
 
   const {
     data: projectStepStatus,
     isLoading,
     isSuccess,
+    refetch: refetchProjectStepStatus,
   } = useQuery({
     queryKey: ["project-step-status", { ProjectId }],
     queryFn: async () => {
@@ -37,6 +44,8 @@ export const Planification = () => {
       return moveStep.data;
     },
     onSuccess: (response: any) => {
+      refetchProjectStepStatus();
+      navigate(`/dashboard/projects/${ProjectId}/captation`);
       console.log("response", response);
     },
     onError: (error: any) => {
@@ -54,7 +63,7 @@ export const Planification = () => {
 
   return (
     <>
-      <HeaderTitle title="Planification" previousTitle="Projet" />
+      <HeaderTitle title="Planification" previousTitle={lastSeenProjectName} />
       <div className="mx-6 flex flex-col justify-end">
         {isLoading && !isSuccess && (
           <p className="text-center italic">Loading...</p>

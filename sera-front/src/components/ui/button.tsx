@@ -20,6 +20,8 @@ const buttonVariants = cva(
         link: "underline-offset-4 hover:underline text-primary",
         title:
           "bg-sera-periwinkle text-sera-jet hover:bg-sera-jet hover:text-sera-periwinkle rounded-full",
+        micro:
+          "bg-sera-jet text-white hover:bg-sera-jet/50 transition-all rounded-xl",
       },
       size: {
         default: "h-10 py-2 px-4",
@@ -27,6 +29,7 @@ const buttonVariants = cva(
         lg: "h-11 px-8 rounded-md",
         icon: "h-10 w-10",
         title: "h-16 w-16 mr-6",
+        micro: "h-8 min-w-[6em]",
       },
     },
     defaultVariants: {
