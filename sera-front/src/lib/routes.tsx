@@ -41,6 +41,10 @@ const paths = [
               {
                 path: "delete",
               },
+              {
+                path: "*",
+                element: <Error404 />,
+              },
             ],
           },
         ],
@@ -57,6 +61,10 @@ const paths = [
               },
               {
                 path: "delete",
+              },
+              {
+                path: "*",
+                element: <Error404 />,
               },
             ],
           },
@@ -77,6 +85,10 @@ const paths = [
               {
                 path: "delete",
                 element: <Users />,
+              },
+              {
+                path: "*",
+                element: <Error404 />,
               },
             ],
           },
@@ -102,6 +114,10 @@ const paths = [
         path: "profile",
         element: <Profile />,
       },
+      {
+        path: "*",
+        element: <Error404 />,
+      },
     ],
   },
   {
@@ -111,6 +127,10 @@ const paths = [
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/404",
+    element: <Error404 />,
   },
   {
     path: "/",
