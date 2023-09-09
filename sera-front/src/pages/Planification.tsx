@@ -25,6 +25,7 @@ export const Planification = () => {
     data: projectStepStatus,
     isLoading,
     isSuccess,
+    refetch: refetchProjectStepStatus,
   } = useQuery({
     queryKey: ["project-step-status", { ProjectId }],
     queryFn: async () => {
@@ -43,6 +44,7 @@ export const Planification = () => {
       return moveStep.data;
     },
     onSuccess: (response: any) => {
+      refetchProjectStepStatus();
       navigate(`/dashboard/projects/${ProjectId}/captation`);
       console.log("response", response);
     },
