@@ -43,7 +43,7 @@ export const Planification = () => {
       return moveStep.data;
     },
     onSuccess: (response: any) => {
-      navigate(`/app/projects/${ProjectId}/captation`);
+      navigate(`/dashboard/projects/${ProjectId}/captation`);
       console.log("response", response);
     },
     onError: (error: any) => {
