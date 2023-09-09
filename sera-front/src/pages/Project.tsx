@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
@@ -16,11 +15,11 @@ import {
 import { axios } from "@/lib/axios";
 
 import { BigLoader } from "./skeletons/BigLoader";
+import { useParams } from "react-router-dom";
 
 export const Project = () => {
   const { ProjectId: id } = useParams<{ ProjectId: string }>();
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(setLastSeenProjectId(id));
   }, [id]);
@@ -38,8 +37,9 @@ export const Project = () => {
       return project.data;
     },
   });
-
-  if (error) return <> Erreur </>;
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
 
   if (isLoading)
     return (

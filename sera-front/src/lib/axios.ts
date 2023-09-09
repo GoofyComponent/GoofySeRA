@@ -86,6 +86,9 @@ axios.interceptors.response.use(
       cookies.remove("laravel_session");
       router.navigate("/login");
     }
+    if (error.response && error.response.status === 500) {
+      router.navigate("/404");
+    }
 
     return Promise.reject(error);
   }
