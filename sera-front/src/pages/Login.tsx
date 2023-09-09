@@ -1,13 +1,15 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import logo from "@/assets/images/sera-logo.svg";
+import { setAppError } from "@/helpers/slices/AppSlice";
 
 import { LoginForm } from "../components/app/login/LoginForm";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isLogged = useSelector(
     (state: { app: { isPreviouslyLoggedIn: boolean } }) =>
       state.app.isPreviouslyLoggedIn
@@ -17,6 +19,8 @@ export const Login = () => {
     if (isLogged) {
       navigate("/dashboard");
     }
+
+    dispatch(setAppError(null));
   }, [isLogged]);
 
   return (
