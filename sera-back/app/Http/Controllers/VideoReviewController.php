@@ -382,4 +382,43 @@ class VideoReviewController extends Controller
             'path' => 'ressources/project_'.$projectId.'/video/version_'.$version.'/'.now()->timestamp.'.mp4',
         ], 200);
     }
+
+    /**
+    * @OA\Get(
+    *     path="/api/projects/{projectId}/videos/validated",
+    *     summary="Get the validated video review of a project",
+    *     tags={"Video Review"},
+    *     @OA\Parameter(
+    *         name="projectId",
+    *         in="path",
+    *         description="Id of the project",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Video review found"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Video review not found"
+    *     ),
+    * )
+    */
+    function getVideoValidated($projectId){
+        $video = VideoReview::where('project_id', $projectId)->where('validated', true)->orderBy('version', 'desc')->first();
+
+        if(!$video){
+            return response()->json([
+                'message' => 'Video not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'video' => $video,
+        ], 200);
+    }
 }
