@@ -1,7 +1,8 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, CheckSquare, PenBox } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { Button } from "@/components/ui/button";
@@ -13,11 +14,19 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { axios } from "@/lib/axios";
+import { convertDateFromDateType } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
 export const Capture = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { ProjectId } = useParams<{ ProjectId: string }>();
+
+  const lastSeenProjectName = useSelector(
+    (state: any) => state.app.lastSeenProjectName
+  );
+
   const [isPlanificationValid, setIsPlanificationValid] = useState(false);
   const [notes, setNotes] = useState<string | null>(null);
   const [notesIsLocked, setNotesIsLocked] = useState(false);
@@ -36,13 +45,24 @@ export const Capture = () => {
         `/api/projects/${ProjectId}/steps?step=Capture`
       );
 
-      if (project.data[0].link === null) {
-        setIsPlanificationValid(false);
-      } else {
+      return project.data[0];
+    },
+  });
+
+  const { data: drivesRushs, isLoading: rushsQueryLoading } = useQuery({
+    queryKey: ["drives-rushs", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(`/api/projects/${ProjectId}/get-rushs`);
+
+      console.log(project.data);
+
+      if (project.data.ressource.url) {
         setIsPlanificationValid(true);
+      } else {
+        setIsPlanificationValid(false);
       }
 
-      return project.data[0];
+      return project.data.ressource;
     },
   });
 
@@ -59,18 +79,38 @@ export const Capture = () => {
     },
     onSuccess: () => {
       refetchProjectStep();
+      queryClient.invalidateQueries(["drives-rushs", { ProjectId }]);
+
+      setIsFileUpdateModalOpen(false);
     },
     onError: (error: any) => {
       console.error(error);
     },
   });
 
-  if (isLoading && !isSuccess)
+  const validateStep = useMutation({
+    mutationFn: async () => {
+      const project = await axios.post(
+        `/api/projects/${ProjectId}/captation-to-postproduction`
+      );
+
+      return project;
+    },
+    onSuccess: () => {
+      refetchProjectStep();
+      navigate(`/dashboard/projects/${ProjectId}/editing`);
+    },
+    onError: (error: any) => {
+      console.error(error);
+    },
+  });
+
+  if (isLoading && !isSuccess && rushsQueryLoading)
     return <BigLoader bgColor="#F3F4F6" textColor="sera-jet" />;
 
   return (
     <>
-      <HeaderTitle title="Capture" previousTitle="Projet" />
+      <HeaderTitle title="Capture" previousTitle={lastSeenProjectName} />
       <div className="mx-6 flex flex-col justify-end">
         {isLoading && !isSuccess && (
           <p className="text-center italic">Loading...</p>
@@ -82,7 +122,7 @@ export const Capture = () => {
               disabled={!isPlanificationValid}
               onClick={() => {
                 if (isPlanificationValid) {
-                  console.log("ValidTheStep");
+                  validateStep.mutate();
                 }
               }}
             >
@@ -125,11 +165,11 @@ export const Capture = () => {
                 }}
               />
             </div>
-            {projectStep.link ? (
+            {drivesRushs && drivesRushs.url ? (
               <FileCell
-                title="Drive Provider Name"
-                link={projectStep.link}
-                lastUpdate={projectStep.updatedAt}
+                title={drivesRushs.name || "Drive link"}
+                link={drivesRushs.url}
+                lastUpdate={drivesRushs.updated_at}
               />
             ) : (
               <NoFileCell />
@@ -197,6 +237,7 @@ const FileUpdateModal = ({
   mutation: any;
 }) => {
   const [link, setLink] = useState("");
+
   return (
     <Dialog
       open={isFileUpdateModalOpen}
@@ -249,7 +290,7 @@ const FileCell = ({
         <p className="my-2 text-xl font-bold ">{title}</p>
         <p className="my-1 truncate text-lg ">{link}</p>
         <p className="my-2 text-right font-extralight italic">
-          Last update : {lastUpdate}
+          Last update : {convertDateFromDateType(new Date(lastUpdate))}
         </p>
       </a>
     </article>

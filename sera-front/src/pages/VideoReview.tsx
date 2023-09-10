@@ -62,6 +62,7 @@ export const VideoReview = () => {
     data: projectStepStatus,
     isLoading: projectStepIsLoading,
     isSuccess: projectStepIsSuccess,
+    refetch: projectStepRefetch,
   } = useQuery({
     queryKey: ["project-step-status", { ProjectId }],
     queryFn: async () => {
@@ -157,6 +158,8 @@ export const VideoReview = () => {
     },
     onSuccess: (response: any) => {
       console.log("response", response);
+      projectStepRefetch();
+      navigate(`/dashboard/projects/${ProjectId}`);
     },
     onError: (error: any) => {
       console.log("error", error);

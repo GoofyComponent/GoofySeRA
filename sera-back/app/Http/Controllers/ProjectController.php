@@ -509,7 +509,7 @@ class ProjectController extends Controller
 
     /**
     * @OA\Post(
-    *     path="/api/projects/{project_id}/add-link",
+    *     path="/api/projects/{project_id}/add-rushs",
     *     summary="Add link to captation",
     *     description="Add link to captation",
     *     operationId="addLinkToCaptation",
@@ -625,7 +625,7 @@ class ProjectController extends Controller
 
     /**
     * @OA\Get(
-    *     path="/api/projects/{id}/get-link",
+    *     path="/api/projects/{id}/get-rushs",
     *     summary="Get link to captation",
     *     description="Get link to captation",
     *     operationId="getLinkToCaptation",

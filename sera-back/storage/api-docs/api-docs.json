@@ -365,8 +365,8 @@
                 "tags": [
                     "Projects"
                 ],
-                "summary": "Add link to video rushs",
-                "description": "Add link to video rushs",
+                "summary": "Add link to captation",
+                "description": "Add link to captation",
                 "operationId": "addLinkToCaptation",
                 "parameters": [
                     {
@@ -445,7 +445,7 @@
                 }
             }
         },
-        "/api/projects/{id}/get-link": {
+        "/api/projects/{id}/get-rushs": {
             "get": {
                 "tags": [
                     "Projects"

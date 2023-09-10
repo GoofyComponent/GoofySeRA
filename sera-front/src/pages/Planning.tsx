@@ -10,7 +10,7 @@ import { ReservationContainer } from "@/components/app/project/Reservation/Reser
 import { Button } from "@/components/ui/button";
 import { axios } from "@/lib/axios";
 
-export const Planification = () => {
+export const Planning = () => {
   const { ProjectId } = useParams<{ ProjectId: string }>();
   const lastSeenProjectName = useSelector(
     (state: any) => state.app.lastSeenProjectName
@@ -45,7 +45,7 @@ export const Planification = () => {
     },
     onSuccess: (response: any) => {
       refetchProjectStepStatus();
-      navigate(`/dashboard/projects/${ProjectId}/captation`);
+      navigate(`/dashboard/projects/${ProjectId}/capture`);
       console.log("response", response);
     },
     onError: (error: any) => {
@@ -63,7 +63,7 @@ export const Planification = () => {
 
   return (
     <>
-      <HeaderTitle title="Planification" previousTitle={lastSeenProjectName} />
+      <HeaderTitle title="Planning" previousTitle={lastSeenProjectName} />
       <div className="mx-6 flex flex-col justify-end">
         {isLoading && !isSuccess && (
           <p className="text-center italic">Loading...</p>
