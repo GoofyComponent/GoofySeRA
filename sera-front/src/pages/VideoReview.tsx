@@ -55,7 +55,6 @@ export const VideoReview = () => {
     data: projectStepStatus,
     isLoading: projectStepIsLoading,
     isSuccess: projectStepIsSuccess,
-    refetch: projectStepRefetch,
   } = useQuery({
     queryKey: ["project-step-status", { ProjectId }],
     queryFn: async () => {
@@ -153,7 +152,6 @@ export const VideoReview = () => {
       return moveStep.data;
     },
     onSuccess: () => {
-      projectStepRefetch();
       navigate(`/dashboard/projects/${ProjectId}`);
     },
   });
@@ -216,10 +214,12 @@ export const VideoReview = () => {
         )}
 
         {editingData[activeVersion] && editingData[activeVersion].video && (
-          <PlyrSection
-            videoData={editingData[activeVersion].video}
-            plyrRef={plyrRef}
-          />
+          <div className="my-6 ml-6 overflow-hidden rounded-lg">
+            <PlyrSection
+              videoData={editingData[activeVersion].video}
+              plyrRef={plyrRef}
+            />
+          </div>
         )}
 
         {!editingData[activeVersion] && (
