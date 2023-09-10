@@ -508,30 +508,26 @@ class StepController extends Controller
             return response()->json(['error' => 'Post-Production is not ongoing.'], 400);
         }
 
-        $review = $project->videoReviews;
+        $review = $project->videoReviews()->get();
 
         if($review === null){
             return response()->json(['error' => 'Project has no video review.'], 400);
         }
 
-        // on cherche la review avec la version
         $review = $review->where('version', $request->version)->first();
 
         if($review === null){
             return response()->json(['error' => 'Project has no video review with this version.'], 400);
         }
 
-        $review->validated = true;
-        $review->save();
-
-        // on mets Post-Production en done
         $steps->{'Post-Production'}->status = 'done';
         $steps->{'Transcription'}->status = 'ongoing';
-        $steps->{'Subtitling'}->status = 'ongoing';
 
         $project->steps = json_encode($steps);
         $project->save();
 
+        $review->validated = true;
+        $review->save();
 
         return response()->json($review, 200);
 

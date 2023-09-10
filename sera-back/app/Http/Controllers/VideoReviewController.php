@@ -409,7 +409,8 @@ class VideoReviewController extends Controller
     * )
     */
     function getVideoValidated($projectId){
-        $video = VideoReview::where('project_id', $projectId)->where('validated', true)->orderBy('version', 'desc')->first();
+        // load with ressource
+        $video = VideoReview::where('project_id', $projectId)->where('validated', true)->orderBy('version', 'desc')->with('ressource')->first();
 
         if(!$video){
             return response()->json([
