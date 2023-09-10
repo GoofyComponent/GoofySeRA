@@ -6,7 +6,7 @@ return [
     "cursus_director" => [
         "projects-requests" => ["show", "index", "store", "update", "destroy"],
         "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password","reservations","reservations"],
-        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
+        "projects" => ["getCaptionUrl","show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
@@ -17,7 +17,7 @@ return [
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
         "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
+        "projects" => ["getCaptionUrl","show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve","unreserve","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
@@ -27,7 +27,7 @@ return [
     ],
     "professor" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index","stepsGet"],
+        "projects" => ["getCaptionUrl","show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","addAComment","getVideoValidated"],
@@ -36,7 +36,7 @@ return [
     ],
     "video_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index","stepsGet","addLink"],
+        "projects" => ["getCaptionUrl","show", "index","stepsGet","addLink"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","addAComment","getTemporaryUploadUrl","getVideoValidated"],
@@ -45,7 +45,7 @@ return [
     ],
     "video_editor" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index"],
+        "projects" => ["getCaptionUrl","show", "index"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
@@ -54,7 +54,7 @@ return [
     ],
     "transcription_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index","stepsGet"],
+        "projects" => ["getCaptionUrl","show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["addAComment","getVideoValidated"],
@@ -64,7 +64,7 @@ return [
     ],
     "traduction_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index","stepsGet"],
+        "projects" => ["getCaptionUrl","show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["addAComment","getVideoValidated"],
@@ -73,7 +73,7 @@ return [
     ],
     "editorial_team" => [
         "users" => ["show", "index", "roles", "image", "password","reservations"],
-        "projects" => ["show", "index","stepsGet"],
+        "projects" => ["getCaptionUrl","show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["addAComment","getVideoValidated"],
