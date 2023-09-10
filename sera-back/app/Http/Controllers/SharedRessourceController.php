@@ -48,8 +48,12 @@ class SharedRessourceController extends Controller
     *     ),
     * )
     */
-    public function index($projectId)
+    public function index(Request $request, $projectId)
     {
+        $validated = $request->validate([
+            'filter' => 'string',
+        ]);
+
         $project = Project::find($projectId);
 
         if (!$project) {
@@ -57,9 +61,22 @@ class SharedRessourceController extends Controller
                 'message' => 'La ressource n\'existe pas'
             ], 400);
         }
+        
+        $filter = $request->filter;
 
-        $ressources = $project->ressources()->get();
-        return response()->json($ressources);
+        if ($filter === 'video'){
+            return response()->json([
+                'message' => 'Vous n\'etes pas autorisés à accéder aux vidéos'
+            ], 400);
+        }
+
+        if ($filter) {
+            $ressources = Ressource::where('project_id', $projectId)->where('type', $filter)->get();
+        } else {
+            $ressources = Ressource::where('project_id', $projectId)->where('type', '!=', 'video')->get();
+        }
+
+        return response()->json($ressources, 201);
     }
 
         /**
