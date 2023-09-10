@@ -623,4 +623,88 @@ class ProjectController extends Controller
         return response()->json($ressource, 201);
     }
 
+    /**
+    * @OA\Get(
+    *     path="/api/projects/{id}/get-link",
+    *     summary="Get link to captation",
+    *     description="Get link to captation",
+    *     operationId="getLinkToCaptation",
+    *     tags={"Projects"},
+    *     @OA\Parameter(
+    *         description="ID of project to update",
+    *         in="path",
+    *         name="id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *         @OA\JsonContent(
+    *             @OA\Property(
+    *                 property="id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="project_request_id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="title",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="description",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="colors",
+    *                 type="string"
+    *             ),
+    *            @OA\Property(
+    *                property="created_at",
+    *               type="string"
+    *           ),
+    *           @OA\Property(
+    *             property="updated_at",
+    *            type="string"
+    *           ),
+    *        ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Bad request"
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthenticated"
+    *     ),
+    *     @OA\Response(
+    *         response=403,
+    *         description="Forbidden"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Not found"
+    *     )
+    * )
+    */
+    function getCaptionUrl($idProject){
+
+        $project = Project::find($idProject);
+
+        if ($project === null) {
+            return response()->json(['message' => 'Project not found.'], 404);
+        }
+
+        $ressource = Ressource::where('project_id', $idProject)->where('type', 'Captation url')->first();
+
+        return response()->json([
+            'ressource' => $ressource
+        ], 200);
+
+    }
+
 }
