@@ -148,7 +148,7 @@ export const EditorialForm = () => {
         />
         <Button
           type="submit"
-          className="ml-auto flex border-2 bg-sera-jet text-base text-sera-periwinkle hover:border-sera-jet hover:bg-sera-periwinkle hover:text-sera-jet md:w-1/12"
+          className="mt-0 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
           disabled={updateUserData.isLoading || !form.formState.isValid}
         >
           {updateUserData.isLoading ? (
