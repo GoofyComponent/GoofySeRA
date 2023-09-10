@@ -1,11 +1,20 @@
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { PasswordForm } from "@/components/app/profile/PasswordForm";
 import { UserForm } from "@/components/app/profile/UserForm";
+import { ImageForm } from "@/components/app/profile/ImageForm";
 
 export default function Profile() {
   return (
     <>
       <HeaderTitle title="Profile" />
+      <hr className="mx-6 my-4 h-0.5 border-0 bg-gray-200 dark:bg-gray-900"></hr>
+      <div className="mx-6 flex flex-col md:flex-row md:justify-between">
+        <div className="px-4 md:w-2/6">
+          <h3 className="text-2xl font-semibold">Image Update</h3>
+          <p className="font-light">Update your account&apos;s image.</p>
+        </div>
+        <ImageForm />
+      </div>
       <hr className="mx-6 my-4 h-0.5 border-0 bg-gray-200 dark:bg-gray-900"></hr>
       <div className="mx-6 flex flex-col md:flex-row md:justify-between">
         <div className="px-4 md:w-2/6">
