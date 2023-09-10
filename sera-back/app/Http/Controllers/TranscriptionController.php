@@ -331,18 +331,17 @@ class TranscriptionController extends Controller
             $vtt = $srt->content('vtt');
 
             $transcriptionName = 'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.vtt';
-            $path = Storage::disk('s3')->put('ressources/' . $projectId . '/transcriptions/' . $transcriptionName, $vtt);
+            $isUpload = Storage::disk('s3')->put('ressources/' . $projectId . '/transcriptions/' . $transcriptionName, $vtt);
 
-            if (!$path) {
+            if (!$isUpload) {
                 return response()->json([
                     'message' => 'Error while storing the file'
                 ], 500);
             }
-
             $newRessource = new Ressource();
             $newRessource->name = $transcriptionName;
             $newRessource->type = 'transcription';
-            $newRessource->url = $path;
+            $newRessource->url ='ressources/' . $projectId . '/transcriptions/' . $transcriptionName;
             $newRessource->project_id = $projectId;
             $newRessource->save();
 
@@ -359,9 +358,9 @@ class TranscriptionController extends Controller
             $srt = $vtt->content('srt');
 
             $transcriptionName = 'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.srt';
-            $path = Storage::disk('s3')->put('ressources/' . $projectId . '/transcriptions/' . $transcriptionName, $srt);
+            $isUpload = Storage::disk('s3')->put('ressources/' . $projectId . '/transcriptions/' . $transcriptionName, $srt);
 
-            if (!$path) {
+            if (!$isUpload) {
                 return response()->json([
                     'message' => 'Error while storing the file'
                 ], 500);
@@ -370,7 +369,7 @@ class TranscriptionController extends Controller
             $newRessource = new Ressource();
             $newRessource->name = $transcriptionName;
             $newRessource->type = 'transcription';
-            $newRessource->url = $path;
+            $newRessource->url = 'ressources/' . $projectId . '/transcriptions/' . $transcriptionName;
             $newRessource->project_id = $projectId;
             $newRessource->save();
 
