@@ -410,7 +410,21 @@ class VideoReviewController extends Controller
     */
     function getVideoValidated($projectId){
         // load with ressource
-        $video = VideoReview::where('project_id', $projectId)->where('validated', true)->orderBy('version', 'desc')->with('ressource')->first();
+        $video = VideoReview::where('project_id', $projectId)->where('validated', true)->orderBy('version', 'desc')->first();
+        $ressource = Ressource::find($video->ressource_id);
+        $formattedVideo = [];
+        $formattedVideo['version'] = $video->version;
+        $formattedVideo['video'] = [];
+        $formattedVideo['video']['type'] = $ressource->type;
+        $formattedVideo['video']['title'] = $ressource->name;
+        $formattedVideo['video']['sources'] = [];
+        $formattedVideo['video']['sources'][0] = [];
+        $formattedVideo['video']['sources'][0]['size'] = $video->resolution;
+        $formattedVideo['video']['sources'][0]['provider'] = $video->provider;
+        $formattedVideo['video']['sources'][0]['src'] = $ressource->url;
+        $formattedVideo['video']['sources'][0]['type'] = $video->type;
+
+        $video->json= $formattedVideo['video'];
 
         if(!$video){
             return response()->json([
