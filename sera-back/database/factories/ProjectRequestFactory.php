@@ -28,9 +28,9 @@ class ProjectRequestFactory extends Factory
         return [
             'user_id' => $cursus_director->id,
             'priority' => $this->faker->randomElement($priorityArray),
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(3),
-            'needs' => $this->faker->paragraph(3),
+            'title' => $this->faker->realText(20),
+            'description' => $this->faker->realText(100),
+            'needs' => $this->faker->realText(100),
             'status' => $this->faker->randomElement($statusArray),
         ];
     }
