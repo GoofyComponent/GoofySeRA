@@ -93,6 +93,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         Route::post('projects/{projectId}/ressources', 'App\Http\Controllers\SharedRessourceController@store')->name('ressources.store');
         Route::post('ressources/{ressourceId}/update', 'App\Http\Controllers\SharedRessourceController@update')->name('ressources.update');
         Route::delete('ressources/{ressourceId}', 'App\Http\Controllers\SharedRessourceController@destroy')->name('ressources.destroy');
+        Route::get('ressources/{projectId}/types', 'App\Http\Controllers\SharedRessourceController@getRessourcesTypes')->name('ressources.getTypes');
 
         /************************/
 

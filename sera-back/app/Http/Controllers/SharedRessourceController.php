@@ -414,4 +414,26 @@ class SharedRessourceController extends Controller
             'message' => 'La ressource a bien été supprimée'
         ], 200);
     }
+
+    public function getRessourcesTypes(Request $request, $projectId)
+    {
+        $project = Project::find($projectId);
+
+        if (!$project) {
+            return response()->json([
+                'message' => 'Le projet n\'existe pas'
+            ], 400);
+        }
+
+        $ressources = $project->ressources()->get();
+
+        $ressourcesTypes = $ressources->pluck('type')->unique();
+        $ressourcesTypes = $ressourcesTypes->filter(function ($value, $key) {
+            return $value != 'video' && $value != 'transcription' && $value != 'subtitle';
+        });
+
+        return response()->json([
+            $ressourcesTypes
+        ], 200);
+    }
 }

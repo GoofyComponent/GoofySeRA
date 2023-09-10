@@ -10,7 +10,7 @@ return [
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
-        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
@@ -21,7 +21,7 @@ return [
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve","unreserve","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
-        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
@@ -31,7 +31,7 @@ return [
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","addAComment","getVideoValidated"],
-        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "video_team" => [
@@ -40,7 +40,7 @@ return [
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","addAComment","getTemporaryUploadUrl","getVideoValidated"],
-        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "video_editor" => [
@@ -49,7 +49,7 @@ return [
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
-        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "transcription_team" => [
@@ -58,7 +58,7 @@ return [
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["addAComment","getVideoValidated"],
-        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
@@ -68,7 +68,7 @@ return [
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["addAComment","getVideoValidated"],
-        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "editorial_team" => [
@@ -77,7 +77,7 @@ return [
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
         "video-reviews" => ["addAComment","getVideoValidated"],
-        "ressources" => ["show", "index", "store", "update", "destroy"],
+        "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
 ];
