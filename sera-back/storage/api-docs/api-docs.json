@@ -360,7 +360,7 @@
                 }
             }
         },
-        "/api/projects/{project_id}/add-link": {
+        "/api/projects/{project_id}/add-rushs": {
             "post": {
                 "tags": [
                     "Projects"
@@ -445,7 +445,7 @@
                 }
             }
         },
-        "/api/projects/{id}/get-link": {
+        "/api/projects/{id}/get-rushs": {
             "get": {
                 "tags": [
                     "Projects"

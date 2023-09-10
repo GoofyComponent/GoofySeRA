@@ -156,10 +156,10 @@ export const teamChecker = (team: Member[]) => {
 export const stepLinkExtractor = (step: number) => {
   switch (step) {
     case 1:
-      return "planification";
+      return "prepare";
       break;
     case 2:
-      return "captation";
+      return "capture";
       break;
     case 3:
       return "editing";
@@ -174,7 +174,7 @@ export const stepLinkExtractor = (step: number) => {
       return "edito";
       break;
     default:
-      return "";
+      return "prepare";
       break;
   }
 };
