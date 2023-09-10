@@ -14,7 +14,7 @@ class TeamSeeder extends Seeder
     public function run(): void
     {
         // on récupère tous les projets
-        $projectsId = [2, 3, 4, 5, 6, 7];
+        $projectsId = [1, 2, 3, 4, 5, 6, 7];
         $projects = \App\Models\Project::whereIn('id', $projectsId)->get();
 
 
