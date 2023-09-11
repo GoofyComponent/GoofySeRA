@@ -4,8 +4,6 @@ import { Loader2 } from "lucide-react";
 import Plyr, { APITypes, PlyrProps, usePlyr } from "plyr-react";
 import React from "react";
 import { useSelector } from "react-redux";
-
-import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
 /* const defaultOptions = {
