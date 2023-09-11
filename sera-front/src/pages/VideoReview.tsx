@@ -147,12 +147,11 @@ export const VideoReview = () => {
       );
       return moveStep.data;
     },
-    onSuccess: (response: any) => {
-      console.log("response", response);
+    onSuccess: () => {
       projectStepRefetch();
       navigate(`/dashboard/projects/${ProjectId}`);
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.log("error", error);
     },
   });
@@ -168,7 +167,6 @@ export const VideoReview = () => {
   }, [activeVersion]);
 
   useEffect(() => {
-    console.log("editingData", editingData);
     if (!editingData) return;
     if (editingData.length === 0) return;
     setIsEditingValid(true);

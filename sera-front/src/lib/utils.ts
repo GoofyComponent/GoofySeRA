@@ -15,6 +15,9 @@ interface Member {
   laravel_through_key: number;
 }
 
+export const SERA_JET_HEXA = "#413B41";
+export const SERA_PERIWINKLE_HEXA = "#E5D1FF";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -166,10 +169,10 @@ export const stepLinkExtractor = (step: number) => {
       return "editing";
       break;
     case 4:
-      return "transcription";
+      return "transcript";
       break;
     case 5:
-      return "traduction";
+      return "subs";
       break;
     case 6:
       return "edito";

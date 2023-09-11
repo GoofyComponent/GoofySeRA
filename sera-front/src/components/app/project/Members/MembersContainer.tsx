@@ -268,9 +268,7 @@ const UserCard = ({
 
       queryClient.invalidateQueries(["projectMembers", { id: ProjectId }]);
     },
-    onError: (error: any) => {
-      console.log("error", error);
-
+    onError: () => {
       toast({
         title: "Were unable to add the user to the project at the moment",
         description: `Please try again later.`,
@@ -297,9 +295,7 @@ const UserCard = ({
 
       queryClient.invalidateQueries(["projectMembers", { id: ProjectId }]);
     },
-    onError: (error: any) => {
-      console.log("error", error);
-
+    onError: () => {
       toast({
         title: "Were unable to remove the user from the project at the moment",
         description: `Please try again later.`,

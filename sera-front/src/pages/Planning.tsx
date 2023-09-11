@@ -42,13 +42,9 @@ export const Planning = () => {
       );
       return moveStep.data;
     },
-    onSuccess: (response: any) => {
+    onSuccess: () => {
       refetchProjectStepStatus();
       navigate(`/dashboard/projects/${ProjectId}/capture`);
-      console.log("response", response);
-    },
-    onError: (error: any) => {
-      console.log("error", error);
     },
   });
 

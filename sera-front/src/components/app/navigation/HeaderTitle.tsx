@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
@@ -18,10 +19,17 @@ export const HeaderTitle = ({
   linkPath = -1,
   previousTitle,
 }: HeaderTitleProps) => {
-  if (title === "" || title === undefined || title === null) {
-    title = document.title || "Sera";
-  }
-  previousTitle = previousTitle || "Projet";
+  useEffect(() => {
+    if (title === "" || title === undefined || title === null) {
+      title = `Sera - ${document.title}` || "Sera";
+    } else {
+      document.title = `Sera - ${title}` || "Sera";
+    }
+
+    return () => {
+      document.title = "Sera Dashboard";
+    };
+  }, []);
 
   return (
     <div className="m-6 flex items-center text-sera-jet">

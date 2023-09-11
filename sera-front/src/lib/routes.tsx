@@ -13,6 +13,7 @@ import { Projects } from "@/pages/Projects";
 import { Rooms } from "@/pages/Rooms";
 import { Test } from "@/pages/Test";
 import { Tickets } from "@/pages/Tickets";
+import { Transcription } from "@/pages/Transcription";
 import { Users } from "@/pages/Users";
 import { VideoReview } from "@/pages/VideoReview";
 
@@ -109,6 +110,10 @@ const paths = [
       {
         path: "projects/:ProjectId/capture",
         element: <Capture />,
+      },
+      {
+        path: "projects/:ProjectId/transcript",
+        element: <Transcription />,
       },
       {
         path: "projects/:ProjectId/editing",
