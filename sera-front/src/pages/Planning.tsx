@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Check, CheckSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
 import { ReservationContainer } from "@/components/app/project/Reservation/ReservationContainer";
-import { Button } from "@/components/ui/button";
+import { StepValidator } from "@/components/ui/stepValidator";
 import { axios } from "@/lib/axios";
 
 export const Planning = () => {
@@ -64,44 +63,19 @@ export const Planning = () => {
   return (
     <>
       <HeaderTitle title="Planning" previousTitle={lastSeenProjectName} />
-      <div className="mx-6 flex flex-col justify-end">
-        {isLoading && !isSuccess && (
-          <p className="text-center italic">Loading...</p>
-        )}
-        {projectStepStatus != "done" && isSuccess && (
-          <>
-            <Button
-              className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-              disabled={!isPlanificationValid}
-              onClick={() => {
-                if (isPlanificationValid) {
-                  passToCaptation.mutate();
-                }
-              }}
-            >
-              <Check />
-              <p className="ml-2">Validate this step</p>
-            </Button>
-            {!isPlanificationValid && (
-              <p className="my-auto text-gray-600">
-                You can&apos;t validate this step until your team is complete
-                and you have at least one reservation.
-              </p>
-            )}
-          </>
-        )}
-        {projectStepStatus === "done" && isSuccess && (
-          <div className="my-auto flex justify-center rounded-lg border-2 border-sera-jet text-center text-sera-jet">
-            <CheckSquare size={32} className="my-auto mr-4" />
-            <div className="flex flex-col justify-center text-center">
-              <p className="font-bold">This step has been validated.</p>
-              <p className="font-extralight italic">
-                You can still update the information
-              </p>
-            </div>
-          </div>
-        )}
+
+      <div className="mx-auto w-11/12">
+        <StepValidator
+          projectStepStatus={projectStepStatus}
+          isprojectStatusLoading={isLoading}
+          isprojectStatusSuccess={isSuccess}
+          isCurrentStepValid={isPlanificationValid}
+          mutationMethod={passToCaptation}
+          cannotValidateMessage="You can't validate this step until your team is complete and you have at least one reservation."
+          buttonMessage="Validate this step"
+        />
       </div>
+
       <div id="planification" className="mx-6 flex flex-col justify-start">
         <section id="planification-team" className="">
           <MembersContainer

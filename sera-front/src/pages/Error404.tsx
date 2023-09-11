@@ -1,12 +1,15 @@
+import "../assets/styles/chokbar.css";
+
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Toaster } from "@/components/ui/toaster";
+import { setAppError } from "@/helpers/slices/AppSlice";
+
 import chokbarimg from "../assets/images/chokbar-404.png";
 import Sera from "../assets/images/sera-logo.svg";
-import "../assets/styles/chokbar.css";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useDispatch } from "react-redux";
-import { setAppError } from "@/helpers/slices/AppSlice";
-import { Toaster } from "@/components/ui/toaster";
 
 export const Error404 = () => {
   const [chokbar, setchokbar] = useState("");

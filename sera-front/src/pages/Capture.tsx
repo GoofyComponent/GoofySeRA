@@ -1,20 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, CheckSquare, PenBox } from "lucide-react";
+import { PenBox } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { FileCell, NoFileCell } from "@/components/app/capture/CaptureCells";
+import { FileUpdateModal } from "@/components/app/capture/CaptureModals";
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { StepValidator } from "@/components/ui/stepValidator";
 import { Textarea } from "@/components/ui/textarea";
 import { axios } from "@/lib/axios";
-import { convertDateFromDateType } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -111,44 +107,19 @@ export const Capture = () => {
   return (
     <>
       <HeaderTitle title="Capture" previousTitle={lastSeenProjectName} />
-      <div className="mx-6 flex flex-col justify-end">
-        {isLoading && !isSuccess && (
-          <p className="text-center italic">Loading...</p>
-        )}
-        {projectStep.status != "done" && isSuccess && (
-          <>
-            <Button
-              className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-              disabled={!isPlanificationValid}
-              onClick={() => {
-                if (isPlanificationValid) {
-                  validateStep.mutate();
-                }
-              }}
-            >
-              <Check />
-              <p className="ml-2">Validate this step</p>
-            </Button>
-            {!isPlanificationValid && (
-              <p className="my-auto text-gray-600">
-                You can&apos;t validate this step until you set one video rushs
-                drive
-              </p>
-            )}
-          </>
-        )}
-        {projectStep.status === "done" && isSuccess && (
-          <div className="my-auto flex justify-center rounded-lg border-2 border-sera-jet text-center text-sera-jet">
-            <CheckSquare size={32} className="my-auto mr-4" />
-            <div className="flex flex-col justify-center text-center">
-              <p className="font-bold">This step has been validated.</p>
-              <p className="font-extralight italic">
-                You can still update the information
-              </p>
-            </div>
-          </div>
-        )}
+
+      <div className="mx-6">
+        <StepValidator
+          projectStepStatus={projectStep.status}
+          isprojectStatusLoading={isLoading}
+          isprojectStatusSuccess={isSuccess}
+          isCurrentStepValid={isPlanificationValid}
+          mutationMethod={validateStep}
+          cannotValidateMessage="You can't validate this step until you set one video rushs drive"
+          buttonMessage="Validate this step"
+        />
       </div>
+
       <div id="capture" className="mx-6">
         <div className="flex justify-between">
           <section id="planification-team" className="mx-2 w-5/12">
@@ -214,6 +185,7 @@ export const Capture = () => {
             Lock the notes
           </Button>
         </section>
+
         <FileUpdateModal
           isFileUpdateModalOpen={isFileUpdateModalOpen}
           setIsFileUpdateModalOpen={setIsFileUpdateModalOpen}
@@ -222,88 +194,5 @@ export const Capture = () => {
         />
       </div>
     </>
-  );
-};
-
-const FileUpdateModal = ({
-  isFileUpdateModalOpen,
-  setIsFileUpdateModalOpen,
-  type,
-  mutation,
-}: {
-  isFileUpdateModalOpen: boolean;
-  setIsFileUpdateModalOpen: (open: boolean) => void;
-  type: string;
-  mutation: any;
-}) => {
-  const [link, setLink] = useState("");
-
-  return (
-    <Dialog
-      open={isFileUpdateModalOpen}
-      onOpenChange={(open) => setIsFileUpdateModalOpen(open)}
-    >
-      <DialogContent className="p-4">
-        <DialogHeader>
-          <DialogTitle>Add a {type} link file</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col justify-center text-sera-jet">
-          <label className="my-2 text-xl font-bold" htmlFor="link">
-            Link
-          </label>
-          <input
-            className="my-2 rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all hover:cursor-pointer hover:border-sera-jet/50 hover:text-sera-jet/50"
-            type="text"
-            name="link"
-            id="link"
-            placeholder={`Type the ${type} link here...`}
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-          />
-          <Button
-            className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-            onClick={() => {
-              if (link === "") return;
-              mutation.mutate({ link, type });
-            }}
-          >
-            Add the {type} link
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const FileCell = ({
-  title,
-  link,
-  lastUpdate,
-}: {
-  title: string;
-  link: string;
-  lastUpdate: string;
-}) => {
-  return (
-    <article className="mb-0 mt-auto min-w-full rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all hover:cursor-pointer hover:border-sera-jet/50 hover:text-sera-jet/50">
-      <a href={link} target="_blank" rel="noreferrer">
-        <p className="my-2 text-xl font-bold ">{title}</p>
-        <p className="my-1 truncate text-lg ">{link}</p>
-        <p className="my-2 text-right font-extralight italic">
-          Last update : {convertDateFromDateType(new Date(lastUpdate))}
-        </p>
-      </a>
-    </article>
-  );
-};
-
-const NoFileCell = () => {
-  return (
-    <article className="mb-0 mt-auto min-w-full rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all">
-      <p className="my-2 text-xl font-bold ">No file added</p>
-      <p className="my-1 truncate text-lg ">
-        You can add a file by clicking on the update button
-      </p>
-    </article>
   );
 };
