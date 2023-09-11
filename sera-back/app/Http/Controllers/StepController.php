@@ -534,7 +534,53 @@ class StepController extends Controller
     }
 
 
-
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{project_id}/validate/transcription",
+    *     tags={"Step"},
+    *     summary="Validate transcription",
+    *     description="Validate transcription",
+    *     operationId="ValidateTranscription",
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         required=true,
+    *         description="Validate transcription",
+    *         @OA\JsonContent(
+    *             required={"version"},
+    *             @OA\Property(property="version", type="integer", example="1"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Transcription",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="version", type="integer", example="1"),
+    *             @OA\Property(property="link", type="string", example="https://www.youtube.com/watch?v=1"),
+    *             @OA\Property(property="is_valid", type="boolean", example="false"),
+    *             @OA\Property(property="project_id", type="integer", example="1"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Bad request",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="Transcription is not ongoing."),
+    *         ),
+    *     ),
+    * )
+    */
     public function validateTranscription(Request $request, $project_id){
 
         $request->validate([
