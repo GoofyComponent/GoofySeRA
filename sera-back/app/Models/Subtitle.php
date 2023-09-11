@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Subtitle extends Model
 {
     use HasFactory;
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function ressource()
+    {
+        return $this->belongsTo(Ressource::class);
+    }
 }
