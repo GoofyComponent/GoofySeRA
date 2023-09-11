@@ -49,4 +49,9 @@ class Project extends Model
     {
         return $this->hasMany(Transcription::class);
     }
+
+    public function subtitles()
+    {
+        return $this->hasMany(Subtitle::class);
+    }
 }
