@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { axios } from "@/lib/axios";
-import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+import { formatDate, SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -42,6 +42,7 @@ export const Transcription = () => {
     useState<File | null>(null);
   const [selectedVersion, setSelectedVersion] = useState<any>(null);
   const [srtArray, setSrtArray] = useState<any>([]);
+  const [plyrSourceObject, setPlyrSourceObject] = useState<any>(null);
 
   const {
     data: transcriptData,
@@ -68,6 +69,31 @@ export const Transcription = () => {
       setSelectedVersion(formatedData[formatedData.length - 1]);
 
       return formatedData;
+    },
+  });
+
+  const { data: validatedVideoData, isLoading: validatedVideoIsLoading } =
+    useQuery({
+      queryKey: ["project-video", { ProjectId }],
+      queryFn: async () => {
+        const project = await axios.get(
+          `/api/projects/${ProjectId}/videos/validated`
+        );
+        return project.data;
+      },
+    });
+
+  const {
+    data: projectStepStatus,
+    isLoading: isStepStatusLoading,
+    isSuccess: isStepStatusSuccess,
+  } = useQuery({
+    queryKey: ["project-step-status", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(
+        `/api/projects/${ProjectId}/steps?step=Planning`
+      );
+      return project.data[0].status;
     },
   });
 
@@ -113,10 +139,31 @@ export const Transcription = () => {
       setSubtiltleFileSubmitted(null);
       setAddFileModal(false);
     },
-    onError: (error) => {
-      console.log("error", error);
-    },
   });
+
+  useEffect(() => {
+    if (
+      !validatedVideoData ||
+      !validatedVideoData.video ||
+      !validatedVideoData.video.json
+    )
+      return;
+    if (!selectedVersion || !selectedVersion.vtt.ressource.url) return;
+
+    getFile.refetch();
+
+    const plyrSourceObject = validatedVideoData.video.json;
+    plyrSourceObject.tracks = [
+      {
+        kind: "captions",
+        label: "VO",
+        srclang: "vo",
+        src: selectedVersion.vtt.ressource.url,
+      },
+    ];
+
+    setPlyrSourceObject(plyrSourceObject);
+  }, [selectedVersion, validatedVideoData]);
 
   useEffect(() => {
     if (!getFile.data) return;
@@ -124,14 +171,8 @@ export const Transcription = () => {
   }, [getFile.data]);
 
   useEffect(() => {
-    //Fetch subtitle file content
-    if (!selectedVersion) return;
-    getFile.refetch();
-  }, [selectedVersion]);
-
-  useEffect(() => {
     setIsTranscriptValid(false);
-    if (plyrRef.current?.plyr.source === null) return;
+    if (plyrRef.current?.plyr.source === null || srtArray === null) return;
     const mySubtitles = srtArray;
 
     const setCurrentLine = () => {
@@ -159,23 +200,9 @@ export const Transcription = () => {
     if (plyrRef?.current?.plyr?.source) {
       return offFuncs;
     }
-  }, [plyrRef, plyrRef.current, srtArray]);
+  }, [plyrRef && plyrRef.current, srtArray]);
 
-  const {
-    data: projectStepStatus,
-    isLoading: isStepStatusLoading,
-    isSuccess: isStepStatusSuccess,
-  } = useQuery({
-    queryKey: ["project-step-status", { ProjectId }],
-    queryFn: async () => {
-      const project = await axios.get(
-        `/api/projects/${ProjectId}/steps?step=Planning`
-      );
-      return project.data[0].status;
-    },
-  });
-
-  if (isTranscriptLoading && isStepStatusLoading)
+  if (isTranscriptLoading && isStepStatusLoading && validatedVideoIsLoading)
     return <BigLoader bgColor="transparent" textColor="sera-jet" />;
 
   return (
@@ -236,21 +263,26 @@ export const Transcription = () => {
           )}
         </section>
         <section className="my-auto w-1/2 px-2">
-          <div
-            className="mx-auto aspect-video w-9/12 overflow-hidden rounded-lg"
-            style={{
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              //@ts-ignore
-              "--plyr-color-main": SERA_JET_HEXA,
-              "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
-            }}
-          >
-            <RaptorPlyr
-              ref={plyrRef}
-              source={videoData}
-              className="aspect-video"
-            />
-          </div>
+          <p className="text-center text-sm font-extralight italic">
+            The subtitle displayed on the player is the latest uploaded version.
+          </p>
+          {plyrSourceObject && (
+            <div
+              className="mx-auto aspect-video w-11/12 overflow-hidden rounded-lg"
+              style={{
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                //@ts-ignore
+                "--plyr-color-main": SERA_JET_HEXA,
+                "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
+              }}
+            >
+              <RaptorPlyr
+                ref={plyrRef}
+                source={plyrSourceObject || validatedVideoData.video.json}
+                className="aspect-video"
+              />
+            </div>
+          )}
         </section>
       </div>
       <Separator className="mx-auto my-4 h-0.5 w-11/12 bg-sera-jet/75" />
@@ -356,9 +388,11 @@ const TranscriptFileCell = ({
         </SelectContent>
       </Select>
       <div>
-        <p>You are seeing transcript file version 3</p>
-        <p className="font-extralight italic">
-          Uploaded on 2021-05-03 at 15:30 by John Doe
+        <p>
+          You are seeing transcript file version {selectedVersion.srt.version}
+        </p>
+        <p className="text-right font-extralight italic">
+          Uploaded on {formatDate(selectedVersion.srt.created_at)}
         </p>
       </div>
     </article>
@@ -387,17 +421,4 @@ const NoTranscriptFileCell = ({
       </p>
     </article>
   );
-};
-
-const videoData = {
-  type: "video",
-  title: "bunny",
-  sources: [
-    {
-      size: 1080,
-      provider: "html5",
-      src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-      type: "video/mp4",
-    },
-  ],
 };

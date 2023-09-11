@@ -50,8 +50,6 @@ export const Capture = () => {
     queryFn: async () => {
       const project = await axios.get(`/api/projects/${ProjectId}/get-rushs`);
 
-      console.log(project.data);
-
       if (project.data.ressource.url) {
         setIsPlanificationValid(true);
       } else {
@@ -70,7 +68,6 @@ export const Capture = () => {
           link,
         });
 
-      console.log(link, type);
       return call;
     },
     onSuccess: () => {

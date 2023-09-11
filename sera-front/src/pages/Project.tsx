@@ -24,7 +24,6 @@ export const Project = () => {
   const {
     data: projectData,
     isLoading,
-    error,
     isSuccess,
   } = useQuery({
     queryKey: ["project", { id }],
@@ -40,10 +39,6 @@ export const Project = () => {
       dispatch(setLastSeenProjectName(projectData.title));
     }
   }, [isSuccess, id, projectData]);
-
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
 
   if (isLoading)
     return (

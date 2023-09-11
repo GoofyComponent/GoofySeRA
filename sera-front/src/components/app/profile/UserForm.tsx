@@ -92,9 +92,7 @@ export const UserForm = () => {
 
       return;
     },
-    onError: (error: any) => {
-      console.log("error", error);
-
+    onError: () => {
       toast({
         title: "Were unable to update your infos at the moment",
         description: `Please try again later.`,

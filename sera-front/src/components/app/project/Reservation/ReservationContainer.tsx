@@ -321,7 +321,6 @@ const SearchRoomDialog = ({
       setRoomSearchModal(false);
     },
     onError: (error: any) => {
-      console.log(error);
       if (error.response.data.error) {
         setErrorMessage(error.response.data.error);
       } else {

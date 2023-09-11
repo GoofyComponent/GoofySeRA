@@ -73,8 +73,8 @@ networks:
     driver: bridge
   hosted:
     external: true
-volumes:
-  sail-mariadb:
-    driver: local
-  sail-minio:
-    driver: local
+#volumes:
+#sail-mariadb:
+#driver: local
+#sail-minio:
+#driver: local

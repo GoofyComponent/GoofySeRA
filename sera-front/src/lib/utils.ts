@@ -169,10 +169,10 @@ export const stepLinkExtractor = (step: number) => {
       return "editing";
       break;
     case 4:
-      return "transcription";
+      return "transcript";
       break;
     case 5:
-      return "traduction";
+      return "subs";
       break;
     case 6:
       return "edito";
