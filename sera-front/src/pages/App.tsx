@@ -23,6 +23,13 @@ import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { UserInfosSummarySkeletons } from "./skeletons/ProfilePopover";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
 function App() {
   const errorState = useSelector((state: any) => state.app.appError);
   const userData = useSelector((state: any) => state.user.infos);
@@ -61,6 +68,18 @@ function App() {
     },
   });
 
+  const { data: userNotifications } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      const userNotifications = await axios.get("/api/notifications");
+      return userNotifications.data;
+    },
+  });
+
+  useEffect(() => {
+    userNotifications && console.log("notif", userNotifications);
+  }, [userNotifications]);
+
   return (
     <>
       <header className="my-auto flex h-[100px] justify-between p-6">
@@ -74,19 +93,38 @@ function App() {
         </div>
         <div className="my-auto flex justify-end">
           <div className="relative my-auto mr-2 flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-sera-periwinkle">
-          <Popover>
-            <PopoverTrigger className="m-auto">
-            <Bell className="m-auto text-[#916AF6]" />
-            </PopoverTrigger>
-            <PopoverContent className="flex flex-col text-lg font-medium text-sera-jet divide-y mt-4">
-              <div>
-                <div className="flex justify-start text-base">
-                  <p>Notification</p>
+            <Popover>
+              <PopoverTrigger className="m-auto">
+                <Bell className="m-auto text-[#916AF6]" />
+              </PopoverTrigger>
+              <PopoverContent className="mt-4 flex flex-col divide-y text-lg font-medium text-sera-jet">
+                <div>
+                  <div className="flex justify-start text-base">
+                    <p>Notification</p>
+                  </div>
+                  <Separator />
+                  <Accordion type="single" collapsible className="w-full">
+                    {userNotifications &&
+                      userNotifications.length > 0 &&
+                      userNotifications.map((notification: any, i: number) => {
+                        return (
+                          <>
+                            <AccordionItem value={`item-${i}`}>
+                              <AccordionTrigger className="flex justify-start bg-transparent text-left ">
+                                <p>{notification.title}</p>
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <p>{notification.description}</p>
+                              </AccordionContent>
+                            </AccordionItem>
+                            <Separator />
+                          </>
+                        );
+                      })}
+                  </Accordion>
                 </div>
-                <Separator className="my-2" />
-              </div>
-            </PopoverContent>
-          </Popover>
+              </PopoverContent>
+            </Popover>
           </div>
           <Popover>
             <PopoverTrigger>
