@@ -97,7 +97,8 @@ class TranscriptionController extends Controller
     {
         $request->validate([
             'version' => 'integer',
-            'file_type' => 'string|in:srt,vtt'
+            'file_type' => 'string|in:srt,vtt',
+            'final' => 'boolean'
         ]);
 
         $project = Project::find($projectId);
@@ -109,6 +110,14 @@ class TranscriptionController extends Controller
         }
 
         $transcriptions = $project->transcriptions();
+
+        if ($request->has('final') && $request->final == true) {
+            $transcriptions = $transcriptions->where('is_valid', true);
+
+            return response()->json([
+                'data' => $transcriptions->get()
+            ], 200);
+        }
 
         if ($request->has('version')) {
             $transcriptions = $transcriptions->where('version', $request->version);

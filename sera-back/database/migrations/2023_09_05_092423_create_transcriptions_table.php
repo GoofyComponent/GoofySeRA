@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('version')->nullable(false);
             $table->string('file_type')->nullable(false);
+            $table->boolean('is_valid')->nullable(false)->default(false);
             $table->timestamps();
         });
     }

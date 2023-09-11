@@ -532,4 +532,76 @@ class StepController extends Controller
         return response()->json($review, 200);
 
     }
+
+
+
+    public function validateTranscription(Request $request, $project_id){
+
+        $request->validate([
+            'version' => 'required|integer',
+        ]);
+
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        if(!isset($steps->{'Transcription'}) || $steps->{'Transcription'}->status !== 'ongoing'){
+            return response()->json(['error' => 'Transcription is not ongoing.'], 400);
+        }
+
+        // on doit vérifier qu'on a la version de la transcription
+        $transcriptions = $project->transcriptions()->get();
+
+        if($transcriptions === null){
+            return response()->json(['error' => 'Project has no transcription.'], 400);
+        }
+
+        // si il a déjà une transcription validée on return 400
+        $isAlreadyValid = $transcriptions->where('is_valid', true)->first();
+
+        if($isAlreadyValid !== null){
+            return response()->json(['error' => 'Project has already a transcription validated.'], 400);
+        }
+
+        $transcription = $transcriptions->where('version', $request->version)->first();
+
+        if($transcription === null){
+            return response()->json(['error' => 'Project has no transcription with this version.'], 400);
+        }
+
+
+        // si dans steps -> Transcription -> status not ongoing return 400
+
+        if(!isset($steps->{'Transcription'}) || $steps->{'Transcription'}->status !== 'ongoing'){
+            return response()->json(['error' => 'Transcription is not ongoing.'], 400);
+        }
+
+        $steps->{'Transcription'}->status = 'done';
+
+        $steps->{'Subtitling'}->status = 'ongoing';
+
+        // $transcription->is_valid = true;
+
+        $transcriptions = $transcriptions->where('version', $request->version)->all();
+
+        foreach ($transcriptions as $transcription) {
+            $transcription->is_valid = true;
+            $transcription->save();
+        }
+
+
+
+        $transcription->save();
+
+        $project->steps = json_encode($steps);
+
+        $project->save();
+
+
+        return response()->json($transcriptions, 200);
+    }
 }

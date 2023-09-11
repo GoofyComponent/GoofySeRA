@@ -27,7 +27,7 @@ class ProjectFactory extends Factory
             'project_request_id' => $projectRequest->id,
             'title' => $this->faker->realText(20),
             'description' => $this->faker->realText(100),
-            'status' => $this->faker->randomElement($statusArray),
+            'status' => "ongoing",
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
             'end_date' => Carbon::now()->addDays(2)->format('Y-m-d'),
             'colors' => json_encode(ColorHelper::prettyHexadecimal(150)),
