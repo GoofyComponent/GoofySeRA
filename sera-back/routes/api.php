@@ -41,6 +41,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::resource('users', 'App\Http\Controllers\UserController')->except(['store']);
     Route::post('users', 'App\Http\Controllers\Auth\RegisteredUserController@store')->name('users.store');
     Route::get('roles', 'App\Http\Controllers\UserController@getRoles')->name('users.roles');
+    Route::get('iso', 'App\Http\Controllers\UserController@getIsoList')->name('users.iso');
 
     /*****************************/
 
@@ -109,8 +110,6 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         Route::post('projects/{projectId}/transcriptions', 'App\Http\Controllers\TranscriptionController@store')->name('transcriptions.store');
         Route::delete('projects/{projectId}/transcriptions', 'App\Http\Controllers\TranscriptionController@destroy')->name('transcriptions.destroy');
         /************************/
-
-    Route::resource('rooms', 'App\Http\Controllers\RoomController');
 
     /*********************************/
 

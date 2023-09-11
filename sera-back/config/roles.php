@@ -5,7 +5,7 @@
 return [
     "cursus_director" => [
         "projects-requests" => ["show", "index", "store", "update", "destroy"],
-        "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password","reservations","reservations"],
+        "users" => ["iso","show", "index", "store", "update", "destroy", "roles", "image", "password","reservations","reservations"],
         "projects" => ["validateTranscription","getCaptionUrl","show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available","showByProject"],
@@ -16,7 +16,7 @@ return [
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
-        "users" => ["show", "index", "store", "update", "destroy", "roles", "image", "password","reservations"],
+        "users" => ["iso","show", "index", "store", "update", "destroy", "roles", "image", "password","reservations"],
         "projects" => ["validateTranscription","getCaptionUrl","show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve","unreserve","available","showByProject"],
@@ -26,7 +26,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "professor" => [
-        "users" => ["show", "index", "roles", "image", "password","reservations"],
+        "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
         "projects" => ["getCaptionUrl","show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
@@ -35,7 +35,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "video_team" => [
-        "users" => ["show", "index", "roles", "image", "password","reservations"],
+        "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
         "projects" => ["getCaptionUrl","show", "index","stepsGet","addLink"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
@@ -44,7 +44,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "video_editor" => [
-        "users" => ["show", "index", "roles", "image", "password","reservations"],
+        "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
         "projects" => ["getCaptionUrl","show", "index"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
@@ -53,7 +53,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "transcription_team" => [
-        "users" => ["show", "index", "roles", "image", "password","reservations"],
+        "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
         "projects" => ["getCaptionUrl","show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
@@ -63,7 +63,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "traduction_team" => [
-        "users" => ["show", "index", "roles", "image", "password","reservations"],
+        "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
         "projects" => ["getCaptionUrl","show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],
@@ -72,7 +72,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"]
     ],
     "editorial_team" => [
-        "users" => ["show", "index", "roles", "image", "password","reservations"],
+        "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
         "projects" => ["getCaptionUrl","show", "index","stepsGet"],
         "teams" => ["show"],
         "rooms" => ["show", "index","available","showByProject"],

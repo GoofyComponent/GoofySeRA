@@ -6,10 +6,10 @@ use App\Models\Ressource;
 use Carbon\Carbon;
 use App\Models\Team;
 use App\Models\Project;
-use Illuminate\Support\Js;
 use App\Helpers\ColorHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+
 
 class ProjectController extends Controller
 {
@@ -706,5 +706,4 @@ class ProjectController extends Controller
         ], 200);
 
     }
-
 }
