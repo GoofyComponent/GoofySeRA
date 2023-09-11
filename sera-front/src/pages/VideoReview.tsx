@@ -5,18 +5,10 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
+import { AddVideoDialog } from "@/components/app/videoReview/AddDialog";
 import { ChatContainer } from "@/components/app/videoReview/ChatContainer";
 import { ReviewActions } from "@/components/app/videoReview/ReviewActions";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { PlyrSection } from "@/components/ui/plyrSection";
 import { axios } from "@/lib/axios";
 
@@ -280,80 +272,19 @@ export const VideoReview = () => {
         />
       </section>
 
-      <Dialog
-        open={openAddVideo}
-        onOpenChange={(isOpen) => {
-          if (isOpen) return;
-          setOpenAddVideo(false);
-        }}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add a video to review ?</DialogTitle>
-            <DialogDescription>
-              Add your edited video and the additonnal information to review it
-            </DialogDescription>
-          </DialogHeader>
-          <div>
-            <Label htmlFor="video-name">Video name</Label>
-            <Input
-              type="text"
-              placeholder="Video name"
-              onChange={(e) => setAddedVideoName(e.target.value)}
-              name="video-name"
-            />
-            <Label htmlFor="video-description">Video description</Label>
-            <Input
-              type="text"
-              placeholder="Video description"
-              onChange={(e) => setAddedVideoDescription(e.target.value)}
-              name="video-description"
-            />
-            <Label htmlFor="video-resolution">Video resolution</Label>
-            <Input
-              type="text"
-              placeholder="1080"
-              onChange={(e) => setAddedVideoResolution(e.target.value)}
-              name="video-resolution"
-            />
-            <Label htmlFor="video-file">Video file</Label>
-            <Input
-              type="file"
-              placeholder="Video file"
-              onChange={(e) => {
-                if (e.target.files) {
-                  setAddVideoFile(e.target.files[0]);
-                }
-              }}
-              name="video-file"
-              className="hover:cursor-pointer"
-            />
-            <Button
-              onClick={() => {
-                addVideoMutation.mutate();
-              }}
-              className="my-2 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-              disabled={
-                !addedVideoName ||
-                !addedVideoDescription ||
-                !addedVideoResolution ||
-                !addVideoFile ||
-                addVideoMutation.isLoading
-              }
-            >
-              {!addVideoMutation.isLoading && <p>Add video</p>}
-              {addVideoMutation.isLoading && (
-                <div className="flex justify-center">
-                  <BigLoader
-                    bgColor="transparent"
-                    textColor="sera-periwinkle"
-                  />
-                </div>
-              )}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <AddVideoDialog
+        openAddVideo={openAddVideo}
+        addedVideoName={addedVideoName}
+        addedVideoDescription={addedVideoDescription}
+        addedVideoResolution={addedVideoResolution}
+        addVideoFile={addVideoFile}
+        setOpenAddVideo={setOpenAddVideo}
+        setAddedVideoName={setAddedVideoName}
+        setAddedVideoDescription={setAddedVideoDescription}
+        setAddedVideoResolution={setAddedVideoResolution}
+        setAddVideoFile={setAddVideoFile}
+        addVideoMutation={addVideoMutation}
+      />
     </div>
   );
 };
