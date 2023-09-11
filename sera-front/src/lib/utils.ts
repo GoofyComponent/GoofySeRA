@@ -1,4 +1,5 @@
 import { ClassValue, clsx } from "clsx";
+import { matchPath } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface Member {
@@ -203,4 +204,36 @@ export const videoTimeDeserializer = (time: string) => {
   const seconds = parseInt(timeArray[2]);
 
   return hours * 3600 + minutes * 60 + seconds;
+};
+
+export const checkLastSeenProject = (
+  pathName: string,
+  lastSeenProjectId: string
+) => {
+  let isLastSeen = false;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}`))
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/prepare`))
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/capture`))
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/editing`))
+    isLastSeen = true;
+
+  if (
+    matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/transcript`)
+  )
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/subs`))
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/edito`))
+    isLastSeen = true;
+
+  return isLastSeen;
 };
