@@ -1,4 +1,3 @@
-import { Separator } from "@/components/ui/separator";
 import clsx from "clsx";
 import {
   BookOpen,
@@ -10,6 +9,9 @@ import {
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
+
+import { Separator } from "@/components/ui/separator";
+import { checkLastSeenProject } from "@/lib/utils";
 
 export const Nav = () => {
   const pathname = useLocation();
@@ -28,10 +30,8 @@ export const Nav = () => {
               className={clsx(
                 "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
                 "flex text-sera-jet",
-                matchPath(
-                  pathname.pathname,
-                  `/dashboard/projects/${lastSeenProject}`
-                ) && "bg-sera-jet text-sera-periwinkle ",
+                checkLastSeenProject(pathname.pathname, lastSeenProject) &&
+                  "bg-sera-jet text-sera-periwinkle ",
                 "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
               )}
             >
