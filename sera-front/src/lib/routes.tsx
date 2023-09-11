@@ -102,6 +102,31 @@ const paths = [
         ],
       },
       {
+        path: "knowledge",
+        element: <Knowledge />,
+        children: [
+          {
+            path: ":dataId",
+            element: <Knowledge />,
+            /* children: [
+              {
+                path: "infos",
+              },
+              {
+                path: "edit",
+              },
+              {
+                path: "delete",
+              },
+              {
+                path: "*",
+                element: <Navigate to="/404" replace />,
+              },
+            ], */
+          },
+        ],
+      },
+      {
         path: "projects",
         element: <Projects />,
       },
@@ -109,10 +134,7 @@ const paths = [
         path: "projects/:ProjectId",
         element: <Project />,
       },
-      {
-        path: "edito/knowledge-base",
-        element: <Knowledge />,
-      },
+
       {
         path: "projects/:ProjectId/prepare",
         element: <Planning />,

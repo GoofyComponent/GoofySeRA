@@ -6,6 +6,7 @@ import {
   Home,
   Ticket,
   User,
+  WalletCards,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
@@ -71,6 +72,21 @@ export const Nav = () => {
           <User size={32} className="my-auto mr-2" />
           <p className="my-auto hidden text-2xl font-semibold lg:block">
             Users
+          </p>
+        </Link>
+        <Link
+          to="/dashboard/knowledge"
+          className={clsx(
+            "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
+            "flex text-sera-jet",
+            matchPath(pathname.pathname, "/dashboard/knowledge") &&
+              "bg-sera-jet text-sera-periwinkle",
+            "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
+          )}
+        >
+          <WalletCards size={32} className="my-auto mr-2" />
+          <p className="my-auto hidden text-2xl font-semibold lg:block">
+            Dataspace
           </p>
         </Link>
         <Link
