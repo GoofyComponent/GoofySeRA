@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
+use Monarobase\CountryList\CountryListFacade as Countries;
+
 class UserController extends Controller
 {
     /**
@@ -811,6 +813,35 @@ class UserController extends Controller
         });
 
         return response()->json($reservations);
+    }
+
+    /**
+    *  @OA\Get(
+    *       path="/api/iso",
+    *       summary="Get the iso list",
+    *       tags={"Users"},
+    *       @OA\Response(
+    *           response=200,
+    *           description="The iso list",
+    *           @OA\JsonContent(
+    *               type="array",
+    *               @OA\Items(
+    *                   type="object",
+    *                   @OA\Property(
+    *                       property="code",
+    *                       type="string",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="name",
+    *                       type="string",
+    *                   ),
+    *               ),
+    *           ),
+    *       ),
+    *   )
+    */
+    function getIsoList(){
+        return response()->json(Countries::getList('en', 'php'));
     }
 
 }
