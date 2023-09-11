@@ -93,9 +93,6 @@ export const Capture = () => {
       refetchProjectStep();
       navigate(`/dashboard/projects/${ProjectId}/editing`);
     },
-    onError: (error: any) => {
-      console.error(error);
-    },
   });
 
   if (isLoading && !isSuccess && rushsQueryLoading)

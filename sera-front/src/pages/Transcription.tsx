@@ -1,10 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Check, CheckSquare } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import srtParser2 from "srt-parser-2";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
+import {
+  NoTranscriptFileCell,
+  TranscriptFileCell,
+} from "@/components/app/transcription/TranscriptCell";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,24 +20,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RaptorPlyr } from "@/components/ui/plyrSection";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { StepValidator } from "@/components/ui/stepValidator";
 import { axios } from "@/lib/axios";
-import { formatDate, SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
 export const Transcription = () => {
   const parser = new srtParser2();
+  const navigate = useNavigate();
 
   const { ProjectId } = useParams<{ ProjectId: string }>();
   const plyrRef = useRef<any>(null);
+
+  const lastSeenProjectName = useSelector(
+    (state: any) => state.app.lastSeenProjectName
+  );
 
   const [isTranscriptValid, setIsTranscriptValid] = useState(false);
   const [displayedLine, setDisplayedLine] = useState("");
@@ -91,7 +94,7 @@ export const Transcription = () => {
     queryKey: ["project-step-status", { ProjectId }],
     queryFn: async () => {
       const project = await axios.get(
-        `/api/projects/${ProjectId}/steps?step=Planning`
+        `/api/projects/${ProjectId}/steps?step=Transcription`
       );
       return project.data[0].status;
     },
@@ -141,6 +144,23 @@ export const Transcription = () => {
     },
   });
 
+  const validateStep = useMutation({
+    mutationFn: async () => {
+      const project = await axios.post(
+        `/api/projects/${ProjectId}/validate/transcription`,
+        {
+          version: selectedVersion.srt.version,
+        }
+      );
+
+      return project;
+    },
+    onSuccess: () => {
+      refetchTranscript();
+      navigate(`/dashboard/projects/${ProjectId}`);
+    },
+  });
+
   useEffect(() => {
     if (
       !validatedVideoData ||
@@ -171,7 +191,15 @@ export const Transcription = () => {
   }, [getFile.data]);
 
   useEffect(() => {
-    setIsTranscriptValid(false);
+    console.log(selectedVersion);
+    if (!selectedVersion) return;
+
+    if (selectedVersion.srt && selectedVersion.srt.ressource) {
+      setIsTranscriptValid(true);
+    }
+  }, [selectedVersion]);
+
+  useEffect(() => {
     if (plyrRef.current?.plyr.source === null || srtArray === null) return;
     const mySubtitles = srtArray;
 
@@ -207,51 +235,27 @@ export const Transcription = () => {
 
   return (
     <>
-      <HeaderTitle title="Transcription" previousTitle="Projet" />
+      <HeaderTitle title="Transcription" previousTitle={lastSeenProjectName} />
       <div className="mx-6 flex justify-between">
         <section className="flex w-1/2 flex-col justify-evenly">
-          <div className="flex flex-col justify-end">
-            {isStepStatusLoading && !isStepStatusSuccess && (
-              <p className="text-center italic">Loading...</p>
-            )}
-            {projectStepStatus != "done" && isStepStatusSuccess && (
-              <>
-                <Button
-                  className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                  disabled={!isTranscriptValid}
-                  onClick={() => {
-                    if (isTranscriptValid) {
-                      console.log("isTranscriptValid");
-                    }
-                  }}
-                >
-                  <Check />
-                  <p className="ml-2">Validate this step</p>
-                </Button>
-                {!isTranscriptValid && (
-                  <p className="my-auto text-gray-600">
-                    You can&apos;t validate this step until your team is
-                    complete and you have at least one reservation.
-                  </p>
-                )}
-              </>
-            )}
-            {projectStepStatus === "done" && isStepStatusSuccess && (
-              <div className="my-auto flex justify-center rounded-lg border-2 border-sera-jet text-center text-sera-jet">
-                <CheckSquare size={32} className="my-auto mr-4" />
-                <div className="flex flex-col justify-center text-center">
-                  <p className="font-bold">This step has been validated.</p>
-                  <p className="font-extralight italic">
-                    You can still update the information
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
+          <StepValidator
+            projectStepStatus={projectStepStatus}
+            isprojectStatusLoading={isStepStatusLoading}
+            isprojectStatusSuccess={isStepStatusSuccess}
+            isCurrentStepValid={isTranscriptValid}
+            mutationMethod={validateStep}
+            buttonMessage="Validate this step"
+            cannotValidateMessage="You can't validate this step until you have at least one transcription file."
+            validateAvertissement="You are about to validate the file currently selected. You won't be able to modify it after validation."
+          />
+
           <h3 className="mb-2 mt-0 text-4xl font-medium text-sera-jet">
             Transcript file :
           </h3>
-          {transcriptData && transcriptData.length > 0 ? (
+          {selectedVersion &&
+          selectedVersion.srt &&
+          transcriptData &&
+          transcriptData.length > 0 ? (
             <TranscriptFileCell
               selectedVersion={selectedVersion}
               transcriptData={transcriptData}
@@ -331,94 +335,19 @@ export const Transcription = () => {
                 addSubtitleFile.mutate();
               }}
             >
-              Submit
+              {!addSubtitleFile.isLoading && <p>Submit</p>}
+              {addSubtitleFile.isLoading && (
+                <div className="flex justify-center">
+                  <BigLoader
+                    bgColor="transparent"
+                    textColor="sera-periwinkle"
+                  />
+                </div>
+              )}
             </Button>
           </div>
         </DialogContent>
       </Dialog>
     </>
-  );
-};
-
-const TranscriptFileCell = ({
-  selectedVersion,
-  transcriptData,
-  setAddFileModal,
-  setSelectedVersion,
-}: {
-  selectedVersion: any;
-  transcriptData: any;
-  setAddFileModal: (value: boolean) => void;
-  setSelectedVersion: (value: any) => void;
-}) => {
-  return (
-    <article className="my-auto min-w-full rounded-lg border-2 border-sera-jet p-1 text-sera-jet">
-      <div className="flex justify-between pb-2">
-        <p className="my-2 text-xl font-bold ">Select a version</p>
-        <button
-          className="rounded-lg bg-sera-jet px-2 text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          onClick={() => setAddFileModal(true)}
-        >
-          Upload a new SRT file
-        </button>
-      </div>
-
-      <Select
-        defaultValue={transcriptData[transcriptData.length - 1].srt.version}
-        name="Transcript File Version"
-        value={selectedVersion.srt.version}
-        onValueChange={(value) => {
-          const version = transcriptData.find(
-            (version: any) => version.srt.version === value
-          );
-          if (version) {
-            setSelectedVersion(version);
-          }
-        }}
-      >
-        <SelectTrigger className="mb-1">
-          <SelectValue placeholder="Select a file" />
-        </SelectTrigger>
-        <SelectContent>
-          {transcriptData.map((version: any) => (
-            <SelectItem key={version.srt.version} value={version.srt.version}>
-              Version {version.srt.version}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <div>
-        <p>
-          You are seeing transcript file version {selectedVersion.srt.version}
-        </p>
-        <p className="text-right font-extralight italic">
-          Uploaded on {formatDate(selectedVersion.srt.created_at)}
-        </p>
-      </div>
-    </article>
-  );
-};
-
-const NoTranscriptFileCell = ({
-  setAddFileModal,
-}: {
-  setAddFileModal: (value: boolean) => void;
-}) => {
-  return (
-    <article className="my-auto min-w-full rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all">
-      <div className="flex justify-between pb-2">
-        <p className="my-2 text-xl font-bold ">No file added</p>
-        <button
-          className="rounded-lg bg-sera-jet px-2 text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          onClick={() => setAddFileModal(true)}
-        >
-          Upload a new SRT file
-        </button>
-      </div>
-
-      <p className="my-1 truncate text-lg ">
-        You can add a file by clicking on the upload button
-      </p>
-    </article>
   );
 };
