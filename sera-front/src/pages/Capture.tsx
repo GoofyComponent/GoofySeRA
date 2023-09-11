@@ -4,18 +4,13 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
+import { FileCell, NoFileCell } from "@/components/app/capture/CaptureCells";
+import { FileUpdateModal } from "@/components/app/capture/CaptureModals";
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { StepValidator } from "@/components/ui/stepValidator";
 import { Textarea } from "@/components/ui/textarea";
 import { axios } from "@/lib/axios";
-import { convertDateFromDateType } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -190,6 +185,7 @@ export const Capture = () => {
             Lock the notes
           </Button>
         </section>
+
         <FileUpdateModal
           isFileUpdateModalOpen={isFileUpdateModalOpen}
           setIsFileUpdateModalOpen={setIsFileUpdateModalOpen}
@@ -198,88 +194,5 @@ export const Capture = () => {
         />
       </div>
     </>
-  );
-};
-
-const FileUpdateModal = ({
-  isFileUpdateModalOpen,
-  setIsFileUpdateModalOpen,
-  type,
-  mutation,
-}: {
-  isFileUpdateModalOpen: boolean;
-  setIsFileUpdateModalOpen: (open: boolean) => void;
-  type: string;
-  mutation: any;
-}) => {
-  const [link, setLink] = useState("");
-
-  return (
-    <Dialog
-      open={isFileUpdateModalOpen}
-      onOpenChange={(open) => setIsFileUpdateModalOpen(open)}
-    >
-      <DialogContent className="p-4">
-        <DialogHeader>
-          <DialogTitle>Add a {type} link file</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col justify-center text-sera-jet">
-          <label className="my-2 text-xl font-bold" htmlFor="link">
-            Link
-          </label>
-          <input
-            className="my-2 rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all hover:cursor-pointer hover:border-sera-jet/50 hover:text-sera-jet/50"
-            type="text"
-            name="link"
-            id="link"
-            placeholder={`Type the ${type} link here...`}
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-          />
-          <Button
-            className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-            onClick={() => {
-              if (link === "") return;
-              mutation.mutate({ link, type });
-            }}
-          >
-            Add the {type} link
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const FileCell = ({
-  title,
-  link,
-  lastUpdate,
-}: {
-  title: string;
-  link: string;
-  lastUpdate: string;
-}) => {
-  return (
-    <article className="mb-0 mt-auto min-w-full rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all hover:cursor-pointer hover:border-sera-jet/50 hover:text-sera-jet/50">
-      <a href={link} target="_blank" rel="noreferrer">
-        <p className="my-2 text-xl font-bold ">{title}</p>
-        <p className="my-1 truncate text-lg ">{link}</p>
-        <p className="my-2 text-right font-extralight italic">
-          Last update : {convertDateFromDateType(new Date(lastUpdate))}
-        </p>
-      </a>
-    </article>
-  );
-};
-
-const NoFileCell = () => {
-  return (
-    <article className="mb-0 mt-auto min-w-full rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all">
-      <p className="my-2 text-xl font-bold ">No file added</p>
-      <p className="my-1 truncate text-lg ">
-        You can add a file by clicking on the update button
-      </p>
-    </article>
   );
 };

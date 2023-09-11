@@ -11,7 +11,7 @@ import {
   DeleteModal,
   EditModal,
   InfosModal,
-} from "@/components/app/rooms/Modals";
+} from "@/components/app/rooms/RoomsModals";
 import { RoomsTable } from "@/components/app/rooms/RoomsTable";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
