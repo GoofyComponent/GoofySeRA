@@ -14,16 +14,14 @@ class TeamSeeder extends Seeder
     public function run(): void
     {
         // on récupère tous les projets
-        $projectsId = [1, 2, 3, 4, 5, 6, 7];
-        $projects = \App\Models\Project::whereIn('id', $projectsId)->get();
-
+        $projects = \App\Models\Project::all();
 
         foreach ($projects as $project) {
             $teams[] = \App\Models\Team::factory()->create([
                 'project_id' => $project->id,
             ]);
         }
-        // // On va créer pour chacune des équipes créées un membre de chaque type
+        //  On va créer pour chacune des équipes créées un membre de chaque type
         $roles = array_keys(config('roles'));
 
         foreach ($teams as $team) {
