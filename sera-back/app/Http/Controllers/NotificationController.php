@@ -22,14 +22,21 @@ class NotificationController extends Controller
             'title' => 'required|string',
             'description' => 'required|string',
             'is_urgent' => 'required|boolean',
+            'user_id' => 'required|integer'
         ]);
+
+        $user = \App\Models\User::find($validated['user_id']);
+
+        if ($user == null) {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
 
         $notification = new Notification();
         $notification->title = $$validated['title'];
         $notification->description = $validated['description'];
         $notification->is_read = false;
         $notification->is_deleted = false;
-        $notification->user_id = Auth::user()->id;
+        $notification->user_id = $validated['user_id'];
         $notification->is_urgent = $validated['is_urgent'];
         $notification->save();
 
