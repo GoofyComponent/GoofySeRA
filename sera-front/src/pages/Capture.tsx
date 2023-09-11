@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, CheckSquare, PenBox } from "lucide-react";
+import { PenBox } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { StepValidator } from "@/components/ui/stepValidator";
 import { Textarea } from "@/components/ui/textarea";
 import { axios } from "@/lib/axios";
 import { convertDateFromDateType } from "@/lib/utils";
@@ -111,44 +112,19 @@ export const Capture = () => {
   return (
     <>
       <HeaderTitle title="Capture" previousTitle={lastSeenProjectName} />
-      <div className="mx-6 flex flex-col justify-end">
-        {isLoading && !isSuccess && (
-          <p className="text-center italic">Loading...</p>
-        )}
-        {projectStep.status != "done" && isSuccess && (
-          <>
-            <Button
-              className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-              disabled={!isPlanificationValid}
-              onClick={() => {
-                if (isPlanificationValid) {
-                  validateStep.mutate();
-                }
-              }}
-            >
-              <Check />
-              <p className="ml-2">Validate this step</p>
-            </Button>
-            {!isPlanificationValid && (
-              <p className="my-auto text-gray-600">
-                You can&apos;t validate this step until you set one video rushs
-                drive
-              </p>
-            )}
-          </>
-        )}
-        {projectStep.status === "done" && isSuccess && (
-          <div className="my-auto flex justify-center rounded-lg border-2 border-sera-jet text-center text-sera-jet">
-            <CheckSquare size={32} className="my-auto mr-4" />
-            <div className="flex flex-col justify-center text-center">
-              <p className="font-bold">This step has been validated.</p>
-              <p className="font-extralight italic">
-                You can still update the information
-              </p>
-            </div>
-          </div>
-        )}
+
+      <div className="mx-6">
+        <StepValidator
+          projectStepStatus={projectStep.status}
+          isprojectStatusLoading={isLoading}
+          isprojectStatusSuccess={isSuccess}
+          isCurrentStepValid={isPlanificationValid}
+          mutationMethod={validateStep}
+          cannotValidateMessage="You can't validate this step until you set one video rushs drive"
+          buttonMessage="Validate this step"
+        />
       </div>
+
       <div id="capture" className="mx-6">
         <div className="flex justify-between">
           <section id="planification-team" className="mx-2 w-5/12">
