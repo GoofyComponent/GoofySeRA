@@ -1,9 +1,11 @@
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
-import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const ImageForm = () => {
   const oldUserData = useSelector((state: any) => state.user.infos);
@@ -58,11 +60,14 @@ export const ImageForm = () => {
   return (
     <div className="flex flex-col justify-start space-y-6 rounded-lg bg-sera-periwinkle/20 p-4 drop-shadow-2xl md:w-4/6">
       <form className="flex flex-col space-y-4">
-        <label className="text-lg">Image</label>
+        <Label htmlFor="imageInput" className="text-lg">
+          Image
+        </Label>
         <Input
           type="file"
           accept="image/*"
           id="imageInput"
+          name="imageInput"
           className="border-sera-jet text-sera-jet"
         />
         <Button
