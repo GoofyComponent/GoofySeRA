@@ -24,6 +24,7 @@ import { BigLoader } from "./skeletons/BigLoader";
 import { Textarea } from "@/components/ui/textarea";
 import { StepValidator } from "@/components/ui/stepValidator";
 import clsx from "clsx";
+import { SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 
 export const Editorial = () => {
   const navigate = useNavigate();
@@ -328,7 +329,15 @@ export const Editorial = () => {
             <div className=" flex w-[45%] flex-col ">
               {!editorialsIsLoading && (
                 <>
-                  <div className="mb-2 overflow-hidden rounded-lg">
+                  <div
+                    className="mb-2 overflow-hidden rounded-lg"
+                    style={{
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      //@ts-ignore
+                      "--plyr-color-main": SERA_JET_HEXA,
+                      "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
+                    }}
+                  >
                     <PlyrSection
                       videoData={editorialsVideos}
                       plyrRef={plyrRef}

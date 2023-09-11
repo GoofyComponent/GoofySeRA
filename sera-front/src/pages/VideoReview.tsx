@@ -14,6 +14,7 @@ import { axios } from "@/lib/axios";
 import { accessManager } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
+import { SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 
 export const VideoReview = () => {
   const navigate = useNavigate();
@@ -214,7 +215,15 @@ export const VideoReview = () => {
         )}
 
         {editingData[activeVersion] && editingData[activeVersion].video && (
-          <div className="my-6 ml-6 overflow-hidden rounded-lg">
+          <div
+            className="my-6 ml-6 overflow-hidden rounded-lg"
+            style={{
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              //@ts-ignore
+              "--plyr-color-main": SERA_JET_HEXA,
+              "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
+            }}
+          >
             <PlyrSection
               videoData={editingData[activeVersion].video}
               plyrRef={plyrRef}
