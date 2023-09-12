@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Subtitle;
 use App\Models\Ressource;
 use App\Models\VideoReview;
 use Illuminate\Http\Request;
@@ -409,8 +410,14 @@ class VideoReviewController extends Controller
     * )
     */
     function getVideoValidated($projectId){
-        // load with ressource
         $video = VideoReview::where('project_id', $projectId)->where('validated', true)->orderBy('version', 'desc')->first();
+
+        if(!$video){
+            return response()->json([
+                'message' => 'Video not found',
+            ], 404);
+        }
+
         $ressource = Ressource::find($video->ressource_id);
         $formattedVideo = [];
         $formattedVideo['version'] = $video->version;
@@ -424,13 +431,21 @@ class VideoReviewController extends Controller
         $formattedVideo['video']['sources'][0]['src'] = $ressource->url;
         $formattedVideo['video']['sources'][0]['type'] = $video->type;
 
-        $video->json= $formattedVideo['video'];
+        $subtitles = Subtitle::where('project_id', $projectId)->where('file_type', 'vtt')->get();
+        if($subtitles){
+            $formattedVideo['video']['tracks'] = [];
+            foreach($subtitles as $subtitle){
+                $formattedSubtitle = [];
+                $formattedSubtitle['kind'] = 'captions';
+                $formattedSubtitle['label'] = $subtitle->lang == 'vo' ? 'VO' : ucfirst($subtitle->lang);
+                $formattedSubtitle['src'] = $subtitle->ressource->url;
+                $formattedSubtitle['srclang'] = $subtitle->lang;
+                $formattedVideo['video']['tracks'][] = $formattedSubtitle;
+            }
 
-        if(!$video){
-            return response()->json([
-                'message' => 'Video not found',
-            ], 404);
         }
+
+        $video->json= $formattedVideo['video'];
 
         return response()->json([
             'video' => $video,

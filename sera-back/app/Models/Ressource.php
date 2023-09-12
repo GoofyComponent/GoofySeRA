@@ -48,4 +48,9 @@ class Ressource extends Model
 
         return $temporaryUrl;
     }
+
+    public function subtitles()
+    {
+        return $this->hasMany(Subtitle::class);
+    }
 }

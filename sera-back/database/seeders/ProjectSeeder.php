@@ -298,5 +298,20 @@ class ProjectSeeder extends Seeder
         $transcription2->is_valid = 1;
         $transcription2->save();
 
+        $voSubtitle = new \App\Models\Subtitle();
+        $voSubtitle ->project_id = $project->id;
+        $voSubtitle ->ressource_id = $transcriptionRessource->id;
+        $voSubtitle ->file_type = 'vtt';
+        $voSubtitle ->lang = 'vo';
+        $voSubtitle->save();
+
+        $voSubtitle2 = new \App\Models\Subtitle();
+        $voSubtitle2 ->project_id = $project->id;
+        $voSubtitle2 ->ressource_id = $transcriptionRessource2->id;
+        $voSubtitle2 ->file_type = 'srt';
+        $voSubtitle2 ->lang = 'vo';
+        $voSubtitle2->save();
+
+
     }
 }
