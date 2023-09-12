@@ -10,7 +10,7 @@ class Knowledge extends Model
 {
     use HasFactory;
 
-    public function getImageUrlAttribute($value)
+    public function getImageURLAttribute($value)
     {
 
         if (env('IS_LOCAL')) {
