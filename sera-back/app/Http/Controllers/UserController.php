@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
-use Monarobase\CountryList\CountryListFacade as Countries;
-
 class UserController extends Controller
 {
     /**
@@ -841,7 +839,8 @@ class UserController extends Controller
     *   )
     */
     function getIsoList(){
-        return response()->json(Countries::getList('en', 'php'));
+        $languages = \ResourceBundle::getLocales('');
+        return response()->json($languages);
     }
 
 }

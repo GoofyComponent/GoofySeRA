@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Subtitle;
 use App\Models\Ressource;
 use Illuminate\Http\Request;
-use App\Models\Subtitle;
-use Illuminate\Support\Facades\Storage;
 use \Done\Subtitles\Subtitles;
-use Monarobase\CountryList\CountryListFacade as Countries;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -107,17 +107,18 @@ class SubtitleController extends Controller
     */
     public function store(Request $request, $projectId){
 
-        $countriesKeys = Countries::getList('en', 'php');
-        $countriesKeys = array_keys($countriesKeys);
+        // on appelle getIsoList du usercontroller
+        $countries = new UserController();
+        $countries = $countries->getIsoList()->getOriginalContent();
 
         $validator = Validator::make($request->all(), [
             'srt' => 'file',
             'vtt' => 'file',
-            'lang' => 'required|string|in:'.implode(',', $countriesKeys),
+            'lang' => 'required|string|in:' . implode(',', $countries),
         ]);
 
         $validator->setCustomMessages([
-            'lang.in' => 'Le tableau complet des langues est : '.implode(', ', $countriesKeys),
+            'lang.in' => 'Le tableau complet des langues est : '.implode(', ', $countries),
         ]);
 
         if ($validator->fails()) {
@@ -401,15 +402,14 @@ class SubtitleController extends Controller
     * )
     */
     public function index(Request $request, $projectId){
-        $countriesKeys = Countries::getList('en', 'php');
-        $countriesKeys = array_keys($countriesKeys);
-
+        $countries = new UserController();
+        $countries = $countries->getIsoList()->getOriginalContent();
         $validator = Validator::make($request->all(), [
-            'lang' => 'string|in:'.implode(',', $countriesKeys),
+            'lang' => 'string|in:'.implode(',', $countries),
         ]);
 
         $validator->setCustomMessages([
-            'lang.in' => 'Le tableau complet des langues est : '.implode(', ', $countriesKeys),
+            'lang.in' => 'Le tableau complet des langues est : '.implode(', ', $countries),
         ]);
 
         if ($validator->fails()) {
@@ -519,15 +519,15 @@ class SubtitleController extends Controller
     * )
     */
     public function destroy(Request $request, $projectId){
-        $countriesKeys = Countries::getList('en', 'php');
-        $countriesKeys = array_keys($countriesKeys);
+        $countries = new UserController();
+        $countries = $countries->getIsoList()->getOriginalContent();
 
         $validator = Validator::make($request->all(), [
-            'lang' => 'required|string|in:'.implode(',', $countriesKeys),
+            'lang' => 'required|string|in:'.implode(',', $countries),
         ]);
 
         $validator->setCustomMessages([
-            'lang.in' => 'Le tableau complet des langues est : '.implode(', ', $countriesKeys),
+            'lang.in' => 'Le tableau complet des langues est : '.implode(', ', $countries),
         ]);
 
         if ($validator->fails()) {
