@@ -46,6 +46,8 @@ export const ImageForm = () => {
           title: "Success!",
           description: `Your image has been updated successfully.`,
         });
+        const imageUpdated = new Event("imageUpdated");
+        document.dispatchEvent(imageUpdated);
       }
     } catch (error) {
       console.error("Error uploading image:", error);
