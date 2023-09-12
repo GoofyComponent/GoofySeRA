@@ -122,14 +122,13 @@ class KnowledgeController extends Controller
             return response()->json(['error' => 'Knowledge not found.'], 404);
         }
 
-        $previousPath = $knowledge->getImageRealPath();
-        dd($previousPath);
-        if ($previousPath != null){
-            Storage::disk('s3')->delete($previousPath);
+
+        if ($knowledge->imageURL != null){
+            Storage::disk('s3')->delete($knowledge->imageURL);
         }
 
         $knowledge->delete();
 
-        return response()->json($knowledge, 201);
+        return response()->json(['message' => 'Knowledge deleted.'], 201);
     }
 }

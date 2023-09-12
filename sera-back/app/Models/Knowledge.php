@@ -10,15 +10,12 @@ class Knowledge extends Model
 {
     use HasFactory;
 
-    public function getImageRealPath(){
-        if ($this->imageURL == null) {
-            return null;
-        }
-        return $this->imageURL;
-    }
-
     public function getImageURLAttribute($value)
     {
+        // si value null, return null
+        if (!$value) {
+            return null;
+        }
 
         if (env('IS_LOCAL')) {
             $config = config('filesystems.disks.s3');
