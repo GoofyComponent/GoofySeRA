@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,7 @@ function App() {
   const userData = useSelector((state: any) => state.user.infos);
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!errorState) return;
@@ -39,6 +40,17 @@ function App() {
 
     dispatch(setAppError(null));
   }, [errorState]);
+
+  useEffect(() => {
+    const imageUpdated = () => {
+      queryClient.invalidateQueries(["user"]);
+    };
+
+    document.addEventListener("imageUpdated", imageUpdated);
+    return () => {
+      document.removeEventListener("imageUpdated", imageUpdated);
+    };
+  }, [queryClient]);
 
   useQuery({
     queryKey: ["user"],
