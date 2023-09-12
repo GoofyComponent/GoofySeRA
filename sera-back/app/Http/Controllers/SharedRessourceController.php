@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Ressource;
 use App\Models\Project;
+use App\Models\Ressource;
+use App\Models\VideoReview;
+use Illuminate\Http\Request;
+use App\Models\Transcription;
 use Illuminate\Support\Facades\Storage;
 
 class SharedRessourceController extends Controller
@@ -61,7 +63,7 @@ class SharedRessourceController extends Controller
                 'message' => 'La ressource n\'existe pas'
             ], 400);
         }
-        
+
         $filter = $request->filter;
 
         if ($filter === 'video'){
@@ -73,7 +75,21 @@ class SharedRessourceController extends Controller
         if ($filter) {
             $ressources = Ressource::where('project_id', $projectId)->where('type', $filter)->get();
         } else {
-            $ressources = Ressource::where('project_id', $projectId)->where('type', '!=', 'video')->get();
+
+            $ressources = Ressource::where('project_id', $projectId)->where('type', '!=', 'video')->where('type', '!=', 'transcription')->get();
+
+            $videoReview = VideoReview::where('project_id', $projectId)->where('validated', 1)->first();
+            if ($videoReview) {
+                $ressource = Ressource::find($videoReview->ressource_id);
+                $ressources->prepend($ressource);
+            }
+
+            $transcriptions = Transcription::where('project_id', $projectId)->where('is_valid', 1)->get();
+            foreach ($transcriptions as $transcription) {
+                $ressource = Ressource::find($transcription->ressource_id);
+                $ressources->prepend($ressource);
+            }
+
         }
 
         return response()->json($ressources, 201);

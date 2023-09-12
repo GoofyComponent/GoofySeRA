@@ -182,7 +182,7 @@ class ProjectSeeder extends Seeder
         $videowReview->type = 'video/mp4';
         $videowReview->resolution = '720';
         $videowReview->provider = 'html5';
-        $videowReview->validated = false;
+        $videowReview->validated = true;
         $videowReview->save();
 
         $videowComment = new \App\Models\CommentReview();
@@ -257,7 +257,7 @@ class ProjectSeeder extends Seeder
         $videowReview->type = 'video/mp4';
         $videowReview->resolution = '720';
         $videowReview->provider = 'html5';
-        $videowReview->validated = false;
+        $videowReview->validated = true;
         $videowReview->save();
 
         $videowComment = new \App\Models\CommentReview();
