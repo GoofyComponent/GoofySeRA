@@ -122,10 +122,16 @@ class TranscriptionController extends Controller
 
         if ($request->has('final') && $request->final == true) {
             $transcriptions = $transcriptions->where('is_valid', true);
+            $transcriptions = $transcriptions->with('ressource')->get();
 
+            $tranformTranscriptions = [];
+            foreach ($transcriptions as $transcription) {
+                $tranformTranscriptions[$transcription->version][$transcription->file_type] = $transcription;
+            }
             return response()->json([
-                'data' => $transcriptions->get()
+                'data' => $tranformTranscriptions
             ], 200);
+
         }
 
         if ($request->has('version')) {
