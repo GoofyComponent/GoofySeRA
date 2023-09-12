@@ -630,6 +630,8 @@ class StepController extends Controller
 
         $steps->{'Subtitling'}->status = 'ongoing';
 
+        $steps->{'Editorial'}->status = 'ongoing';
+
         $transcriptions = $transcriptions->where('version', $request->version)->all();
 
         foreach ($transcriptions as $transcription) {
