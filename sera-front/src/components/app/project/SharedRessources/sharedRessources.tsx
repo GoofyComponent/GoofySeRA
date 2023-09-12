@@ -1,6 +1,6 @@
-import { ExternalLink, Image } from "lucide-react";
+import { ExternalLink, File, Image } from "lucide-react";
+import { useState } from "react";
 
-import { formatDate } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -8,13 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+/* import { RaptorPlyr } from "@/components/ui/plyrSection"; */
+import { formatDate } from "@/lib/utils";
 
 export const SharedRessources = ({ ressourceData }: { ressourceData: any }) => {
   const { type, updated_at, created_at } = ressourceData;
   const dateToDisplay = formatDate(updated_at || created_at);
-
-  console.log(type);
 
   if (type === "Captation url")
     return (
@@ -26,7 +25,15 @@ export const SharedRessources = ({ ressourceData }: { ressourceData: any }) => {
       />
     );
 
-  if (type === "document") return <DocumentResource />;
+  if (type === "document")
+    return (
+      <DocumentResource
+        name={ressourceData.name}
+        description={ressourceData.description}
+        url={ressourceData.url}
+        date={dateToDisplay}
+      />
+    );
 
   if (type === "image")
     return (
@@ -38,9 +45,17 @@ export const SharedRessources = ({ ressourceData }: { ressourceData: any }) => {
       />
     );
 
-  if (type === "video") return <VideoResource />;
-
-  if (type === "transcription") return <TextResource />;
+  /*   if (type === "video") return <VideoResource />;
+   */
+  if (type === "transcription")
+    return (
+      <DocumentResource
+        name={ressourceData.name}
+        description={ressourceData.description}
+        url={ressourceData.url}
+        date={dateToDisplay}
+      />
+    );
 };
 
 const LinkResource = ({
@@ -54,7 +69,6 @@ const LinkResource = ({
   url: string;
   date: string;
 }) => {
-  console.log(url);
   return (
     <a
       className="m-2 flex w-full rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all hover:cursor-pointer hover:opacity-50"
@@ -73,8 +87,50 @@ const LinkResource = ({
   );
 };
 
-const DocumentResource = () => {
-  return <div></div>;
+const DocumentResource = ({
+  name,
+  description,
+  url,
+  date,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  date: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <button
+        className="m-2 flex w-full rounded-lg border-2 border-sera-jet p-2 text-left text-sera-jet transition-all hover:cursor-pointer hover:opacity-50"
+        onClick={() => setIsOpen(true)}
+      >
+        <File size={48} className="m-auto" />
+        <div>
+          <p className="font-bold">{name}</p>
+          <p>{description}</p>
+          <p className="mt-4 italic">Open the document</p>
+          <p className="font-extralight">{date}</p>
+        </div>
+      </button>
+      <Dialog
+        onOpenChange={(isOpen) => {
+          if (isOpen) return;
+          setIsOpen(false);
+        }}
+        open={isOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{name}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+          <iframe src={url} title={name} className="h-full w-full"></iframe>
+          <p>If the document dosent show up, check your downloads</p>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };
 
 const ImageResource = ({
@@ -123,10 +179,48 @@ const ImageResource = ({
   );
 };
 
-const VideoResource = () => {
-  return <div></div>;
-};
+/* const VideoResource = ({
+  name,
+  description,
+  url,
+  date,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  date: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-const TextResource = () => {
-  return <div></div>;
-};
+  return (
+    <>
+      <button
+        className="m-2 flex w-full rounded-lg border-2 border-sera-jet p-2 text-left text-sera-jet transition-all hover:cursor-pointer hover:opacity-50"
+        onClick={() => setIsOpen(true)}
+      >
+        <Image size={48} className="m-auto" />
+        <div>
+          <p className="font-bold">{name}</p>
+          <p>{description}</p>
+          <p className="mt-4 italic">Open the image</p>
+          <p className="font-extralight">{date}</p>
+        </div>
+      </button>
+      <Dialog
+        onOpenChange={(isOpen) => {
+          if (isOpen) return;
+          setIsOpen(false);
+        }}
+        open={isOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{name}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+           <RaptorPlyr /> 
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}; */
