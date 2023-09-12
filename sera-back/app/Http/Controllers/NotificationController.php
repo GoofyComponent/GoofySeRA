@@ -160,7 +160,7 @@ class NotificationController extends Controller
     *    )
     * )
     */
-    public function update(Request $request)
+    public function update(Request $request,$id)
     {
         $validated = $request->validate([
             'title' => 'string',
@@ -169,7 +169,7 @@ class NotificationController extends Controller
             'is_read' => 'boolean'
         ]);
 
-        $notification = Notification::find($request->id);
+        $notification = Notification::find($id);
 
         if ($notification == null) {
             return response()->json(['error' => 'Notification not found.'], 404);
