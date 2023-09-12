@@ -13,7 +13,7 @@ return [
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["store"],
+        "subtitles" => ["store","destroy","index"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
@@ -25,7 +25,7 @@ return [
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["store"],
+        "subtitles" => ["store","destroy","index"],
     ],
     "professor" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -35,7 +35,7 @@ return [
         "video-reviews" => ["getReviewsByProjectId","addAComment","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["store"],
+        "subtitles" => ["index"],
     ],
     "video_team" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -45,7 +45,7 @@ return [
         "video-reviews" => ["getReviewsByProjectId","addAComment","getTemporaryUploadUrl","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["store"],
+        "subtitles" => ["index"],
     ],
     "video_editor" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -55,7 +55,7 @@ return [
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["store"],
+        "subtitles" => ["index"],
     ],
     "transcription_team" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -66,7 +66,7 @@ return [
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["store"],
+        "subtitles" => ["store","destroy","index"],
     ],
     "traduction_team" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -76,7 +76,7 @@ return [
         "video-reviews" => ["addAComment","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["store"],
+        "subtitles" => ["store","destroy","index"],
     ],
     "editorial_team" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -86,6 +86,6 @@ return [
         "video-reviews" => ["addAComment","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["store"],
+        "subtitles" => ["index"],
     ],
 ];

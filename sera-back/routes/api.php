@@ -112,9 +112,9 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         /************************/
 
         /***** Transcription *****/
-        // Route::get('projects/{projectId}/subtitle', 'App\Http\Controllers\TranscriptionController@index')->name('subtitles.index');
+        Route::get('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@index')->name('subtitles.index');
         Route::post('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@store')->name('subtitles.store');
-        // Route::delete('projects/{projectId}/subtitle', 'App\Http\Controllers\TranscriptionController@destroy')->name('subtitles.destroy');
+        Route::delete('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@destroy')->name('subtitles.destroy');
         /************************/
 
     /*********************************/
