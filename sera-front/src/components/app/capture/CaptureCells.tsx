@@ -1,6 +1,6 @@
 import { convertDateFromDateType } from "@/lib/utils";
 
-export const FileCell = ({
+export const UrlCell = ({
   title,
   link,
   lastUpdate,
@@ -22,7 +22,7 @@ export const FileCell = ({
   );
 };
 
-export const NoFileCell = () => {
+export const NoUrlCell = () => {
   return (
     <article className="mb-0 mt-auto min-w-full rounded-lg border-2 border-sera-jet p-2 text-sera-jet transition-all">
       <p className="my-2 text-xl font-bold ">No file added</p>

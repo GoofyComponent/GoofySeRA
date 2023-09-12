@@ -1,4 +1,4 @@
-import { Check, CheckSquare } from "lucide-react";
+import { Check, CheckSquare, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
@@ -25,7 +25,10 @@ export const StepValidator = ({
   return (
     <div className="flex w-full flex-col">
       {isprojectStatusLoading && !isprojectStatusSuccess && (
-        <BigLoader bgColor="transparent" textColor="sera-jet" />
+        <Loader2
+          size={34}
+          className="mx-auto animate-spin bg-transparent text-sera-jet"
+        />
       )}
       {projectStepStatus != "done" && isprojectStatusSuccess && (
         <>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { FileCell, NoFileCell } from "@/components/app/capture/CaptureCells";
+import { NoUrlCell, UrlCell } from "@/components/app/capture/CaptureCells";
 import { FileUpdateModal } from "@/components/app/capture/CaptureModals";
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { Button } from "@/components/ui/button";
@@ -131,13 +131,13 @@ export const Capture = () => {
               />
             </div>
             {drivesRushs && drivesRushs.url ? (
-              <FileCell
+              <UrlCell
                 title={drivesRushs.name || "Drive link"}
                 link={drivesRushs.url}
                 lastUpdate={drivesRushs.updated_at}
               />
             ) : (
-              <NoFileCell />
+              <NoUrlCell />
             )}
           </section>
           <section id="rooms-container" className="mx-2 w-5/12">
@@ -155,7 +155,7 @@ export const Capture = () => {
               />
             </div>
             {/* SAMPLE DATA */}
-            <NoFileCell />
+            <NoUrlCell />
           </section>
         </div>
         <section className="w-full">
