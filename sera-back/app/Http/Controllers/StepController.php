@@ -630,18 +630,20 @@ class StepController extends Controller
 
         $steps->{'Subtitling'}->status = 'ongoing';
 
-        // $transcription->is_valid = true;
-
         $transcriptions = $transcriptions->where('version', $request->version)->all();
 
         foreach ($transcriptions as $transcription) {
             $transcription->is_valid = true;
             $transcription->save();
+
+            $subtitles = new \App\Models\Subtitle();
+            $subtitles->ressource_id = $transcription->ressource_id;
+            $subtitles->project_id = $transcription->project_id;
+            $subtitles->file_type =  $transcription->file_type;
+            $subtitles->lang = "vo";
+            $subtitles->save();
         }
 
-
-
-        $transcription->save();
 
         $project->steps = json_encode($steps);
 
