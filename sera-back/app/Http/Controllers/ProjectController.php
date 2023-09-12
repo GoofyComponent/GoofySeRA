@@ -79,10 +79,16 @@ class ProjectController extends Controller
             throw new \Exception('Invalid sort parameter. Only "asc" or "desc" allowed.');
         }
 
-
+        $user = $request->user();
         $query = Project::with('Team.users');
 
+        $query->whereHas('Team.users', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
+        });
+
         $query->orderBy('updated_at', $sort);
+
+
 
         // Filter by status
         if ($request->has('status')) {
@@ -119,6 +125,7 @@ class ProjectController extends Controller
             }
 
         }
+
 
         return $projects;
     }
