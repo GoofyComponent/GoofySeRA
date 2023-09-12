@@ -10,6 +10,13 @@ class Knowledge extends Model
 {
     use HasFactory;
 
+    public function getImageRealPath(){
+        if ($this->imageURL == null) {
+            return null;
+        }
+        return $this->imageURL;
+    }
+
     public function getImageURLAttribute($value)
     {
 
