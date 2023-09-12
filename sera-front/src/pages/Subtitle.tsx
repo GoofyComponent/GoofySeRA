@@ -187,7 +187,8 @@ export const Subtitle = () => {
       <section id="srt-checker" className="mx-6">
         <div className="flex justify-between">
           <h3 className="my-2 text-4xl font-medium text-sera-jet">
-            SRT Viewer :
+            Currently viewing &quot;{selectedLanguage?.toUpperCase()}&quot;
+            subtitle
           </h3>
           <Button
             className="my-auto bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
