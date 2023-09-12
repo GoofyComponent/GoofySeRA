@@ -41,7 +41,6 @@ export const SharedContainer = () => {
       const ressources = await axios.get(
         `/api/projects/${ProjectId}/ressources`
       );
-      console.log(ressources.data);
       return ressources.data;
     },
   });

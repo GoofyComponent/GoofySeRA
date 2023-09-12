@@ -87,9 +87,6 @@ export const Rooms = () => {
 
       setTicketDialogOpen(false);
     },
-    onError: () => {
-      return console.log("error");
-    },
   });
 
   const onSubmitAddRoomForm = async (data: {

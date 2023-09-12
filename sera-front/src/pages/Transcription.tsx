@@ -191,7 +191,6 @@ export const Transcription = () => {
   }, [getFile.data]);
 
   useEffect(() => {
-    console.log(selectedVersion);
     if (!selectedVersion) return;
 
     if (selectedVersion.srt && selectedVersion.srt.ressource) {

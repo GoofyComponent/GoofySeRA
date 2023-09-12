@@ -70,8 +70,6 @@ export const RaptorPlyr = React.forwardRef<APITypes, PlyrProps>(
   (props, ref) => {
     const { source, options = null } = props;
 
-    console.log("source", source);
-
     if (!source)
       return <BigLoader bgColor="transparent" textColor="sera-jet" />;
 

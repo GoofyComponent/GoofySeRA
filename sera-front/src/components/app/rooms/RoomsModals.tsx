@@ -36,9 +36,6 @@ export const DeleteModal = ({
       roomsRefetch();
       navigate(`/dashboard/rooms`);
     },
-    onError: () => {
-      console.log("error");
-    },
   });
 
   return (

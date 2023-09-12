@@ -1,4 +1,4 @@
-import { ExternalLink, File, Image } from "lucide-react";
+import { ExternalLink, File, Image, Video } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-/* import { RaptorPlyr } from "@/components/ui/plyrSection"; */
+import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { formatDate } from "@/lib/utils";
 
 export const SharedRessources = ({ ressourceData }: { ressourceData: any }) => {
@@ -45,8 +45,16 @@ export const SharedRessources = ({ ressourceData }: { ressourceData: any }) => {
       />
     );
 
-  /*   if (type === "video") return <VideoResource />;
-   */
+  if (type === "video")
+    return (
+      <VideoResource
+        name={ressourceData.name}
+        description={ressourceData.description}
+        url={ressourceData.url}
+        date={dateToDisplay}
+      />
+    );
+
   if (type === "transcription")
     return (
       <DocumentResource
@@ -77,11 +85,11 @@ const LinkResource = ({
       rel="noreferrer"
     >
       <ExternalLink size={48} className="m-auto" />
-      <div>
-        <p className="font-bold">{name}</p>
-        <p>{description}</p>
-        <p className="mt-4 italic">{url}</p>
-        <p className="font-extralight">{date}</p>
+      <div className="w-7/12">
+        <p className="truncate font-bold">{name}</p>
+        <p className=" line-clamp-3">{description}</p>
+        <p className="mt-4 truncate italic">{url}</p>
+        <p className="line-clamp-3 font-extralight">{date}</p>
       </div>
     </a>
   );
@@ -106,11 +114,11 @@ const DocumentResource = ({
         onClick={() => setIsOpen(true)}
       >
         <File size={48} className="m-auto" />
-        <div>
-          <p className="font-bold">{name}</p>
-          <p>{description}</p>
-          <p className="mt-4 italic">Open the document</p>
-          <p className="font-extralight">{date}</p>
+        <div className="w-7/12">
+          <p className="truncate font-bold">{name}</p>
+          <p className="line-clamp-3">{description}</p>
+          <p className="mt-4 truncate italic">Open the document</p>
+          <p className="line-clamp-3 font-extralight">{date}</p>
         </div>
       </button>
       <Dialog
@@ -125,7 +133,9 @@ const DocumentResource = ({
             <DialogTitle>{name}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <iframe src={url} title={name} className="h-full w-full"></iframe>
+          <div className="overflow-hidden rounded-lg">
+            <iframe src={url} title={name} className="h-full w-full"></iframe>
+          </div>
           <p>If the document dosent show up, check your downloads</p>
         </DialogContent>
       </Dialog>
@@ -153,11 +163,11 @@ const ImageResource = ({
         onClick={() => setIsOpen(true)}
       >
         <Image size={48} className="m-auto" />
-        <div>
-          <p className="font-bold">{name}</p>
-          <p>{description}</p>
-          <p className="mt-4 italic">Open the image</p>
-          <p className="font-extralight">{date}</p>
+        <div className="w-7/12">
+          <p className="truncate font-bold">{name}</p>
+          <p className="line-clamp-3">{description}</p>
+          <p className="mt-4 truncate italic">Open the image</p>
+          <p className="line-clamp-3 font-extralight">{date}</p>
         </div>
       </button>
       <Dialog
@@ -172,14 +182,16 @@ const ImageResource = ({
             <DialogTitle>{name}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <img src={url} alt={name} />
+          <div className="overflow-hidden rounded-lg">
+            <img src={url} alt={name} />
+          </div>
         </DialogContent>
       </Dialog>
     </>
   );
 };
 
-/* const VideoResource = ({
+const VideoResource = ({
   name,
   description,
   url,
@@ -198,12 +210,12 @@ const ImageResource = ({
         className="m-2 flex w-full rounded-lg border-2 border-sera-jet p-2 text-left text-sera-jet transition-all hover:cursor-pointer hover:opacity-50"
         onClick={() => setIsOpen(true)}
       >
-        <Image size={48} className="m-auto" />
-        <div>
-          <p className="font-bold">{name}</p>
-          <p>{description}</p>
-          <p className="mt-4 italic">Open the image</p>
-          <p className="font-extralight">{date}</p>
+        <Video size={48} className="m-auto" />
+        <div className="w-7/12">
+          <p className="truncate font-bold">{name}</p>
+          <p className="line-clamp-3">{description}</p>
+          <p className="mt-4 truncate italic">Open the video</p>
+          <p className="line-clamp-3 font-extralight">{date}</p>
         </div>
       </button>
       <Dialog
@@ -218,9 +230,20 @@ const ImageResource = ({
             <DialogTitle>{name}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-           <RaptorPlyr /> 
+          <div className="overflow-hidden rounded-lg">
+            <RaptorPlyr
+              source={{
+                type: "video",
+                sources: [
+                  {
+                    src: url,
+                  },
+                ],
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </>
   );
-}; */
+};
