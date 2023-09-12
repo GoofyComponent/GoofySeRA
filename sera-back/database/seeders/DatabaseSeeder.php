@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             // // RessourceSeeder::class,
             // VideoReviewSeeder::class,
             NotificationSeeder::class,
+            KnowledgeSeeder::class,
         ]);
     }
 }
