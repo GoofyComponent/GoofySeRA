@@ -185,6 +185,10 @@ class NotificationController extends Controller
             $notification->is_urgent = $validated['is_urgent'];
         }
 
+        if ($request->filled('is_read')) {
+            $notification->is_read = $validated['is_read'];
+        }
+
         $notification->save();
         return response()->json($notification, 201);
     }
