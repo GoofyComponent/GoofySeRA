@@ -5,6 +5,396 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/knowledges": {
+            "get": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Get list of knowledges",
+                "description": "Returns list of knowledges",
+                "operationId": "getKnowledgesList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Knowledge 1"
+                                            },
+                                            "infos": {
+                                                "type": "string",
+                                                "example": "Infos about knowledge 1"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "video"
+                                            },
+                                            "imageURL": {
+                                                "type": "string",
+                                                "example": "https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2021-05-20 08:55:00"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2021-05-20 08:55:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Store new knowledge",
+                "description": "Returns knowledge data",
+                "operationId": "storeKnowledge",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "infos",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Knowledge 1"
+                                    },
+                                    "infos": {
+                                        "type": "string",
+                                        "example": "Infos about knowledge 1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "video"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Knowledge 1"
+                                        },
+                                        "infos": {
+                                            "type": "string",
+                                            "example": "Infos about knowledge 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "imageURL": {
+                                            "type": "string",
+                                            "example": "https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/knowledges/{id}": {
+            "get": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Get knowledge information",
+                "description": "Returns knowledge data",
+                "operationId": "getKnowledgeById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Knowledge id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Knowledge 1"
+                                        },
+                                        "infos": {
+                                            "type": "string",
+                                            "example": "Infos about knowledge 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "imageURL": {
+                                            "type": "string",
+                                            "example": "https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Knowledge not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Update existing knowledge",
+                "description": "Returns updated knowledge data",
+                "operationId": "updateKnowledge",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Knowledge id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "infos",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Knowledge 1"
+                                    },
+                                    "infos": {
+                                        "type": "string",
+                                        "example": "Infos about knowledge 1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "video"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Knowledge 1"
+                                        },
+                                        "infos": {
+                                            "type": "string",
+                                            "example": "Infos about knowledge 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "imageURL": {
+                                            "type": "string",
+                                            "example": "https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Knowledge not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Delete existing knowledge",
+                "description": "Deletes a record and returns no content",
+                "operationId": "deleteKnowledge",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Knowledge id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Knowledge deleted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Knowledge not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
         "/api/projects": {
             "get": {
                 "tags": [
