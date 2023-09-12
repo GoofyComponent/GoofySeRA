@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { RaptorPlyr } from "@/components/ui/plyrSection";
-import { formatDate } from "@/lib/utils";
+import { formatDate, SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 
 export const SharedRessources = ({ ressourceData }: { ressourceData: any }) => {
   const { type, updated_at, created_at } = ressourceData;
@@ -230,7 +230,15 @@ const VideoResource = ({
             <DialogTitle>{name}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <div className="overflow-hidden rounded-lg">
+          <div
+            className="overflow-hidden rounded-lg"
+            style={{
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              //@ts-ignore
+              "--plyr-color-main": SERA_JET_HEXA,
+              "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
+            }}
+          >
             <RaptorPlyr
               source={{
                 type: "video",
