@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
@@ -18,8 +18,10 @@ import { axios } from "@/lib/axios";
 import { BigLoader } from "./skeletons/BigLoader";
 
 export const Project = () => {
-  const { ProjectId: id } = useParams<{ ProjectId: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { ProjectId: id } = useParams<{ ProjectId: string }>();
 
   const {
     data: projectData,
@@ -32,6 +34,12 @@ export const Project = () => {
       return project.data;
     },
   });
+
+  useEffect(() => {
+    if (!searchParams.get("section")) {
+      navigate(`/dashboard/projects/${id}?section=resume`);
+    }
+  }, []);
 
   useEffect(() => {
     if (isSuccess && id && !isLoading && projectData) {
@@ -55,17 +63,26 @@ export const Project = () => {
         previousTitle="Projects"
       />
       <div className="flex justify-between">
-        <Tabs defaultValue="resume" className="ml-6 w-8/12">
+        <Tabs
+          className="ml-6 w-8/12"
+          value={searchParams.get("section") || "resume"}
+        >
           <TabsList className="bg-transparent p-0">
             <TabsTrigger
               value="resume"
               className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+              onClick={() =>
+                navigate(`/dashboard/projects/${id}?section=resume`)
+              }
             >
               Résumé
             </TabsTrigger>
             <TabsTrigger
               value="ressources"
               className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+              onClick={() =>
+                navigate(`/dashboard/projects/${id}?section=ressources`)
+              }
             >
               Ressources partagées
             </TabsTrigger>
@@ -73,6 +90,9 @@ export const Project = () => {
               <TabsTrigger
                 value="members"
                 className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+                onClick={() =>
+                  navigate(`/dashboard/projects/${id}?section=members`)
+                }
               >
                 Membres
               </TabsTrigger>
