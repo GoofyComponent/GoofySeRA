@@ -75,7 +75,7 @@ export const Project = () => {
                 navigate(`/dashboard/projects/${id}?section=resume`)
               }
             >
-              Résumé
+              Resume
             </TabsTrigger>
             <TabsTrigger
               value="ressources"
@@ -84,7 +84,7 @@ export const Project = () => {
                 navigate(`/dashboard/projects/${id}?section=ressources`)
               }
             >
-              Ressources partagées
+              Shared ressources
             </TabsTrigger>
             {projectData.team && (
               <TabsTrigger
@@ -94,14 +94,17 @@ export const Project = () => {
                   navigate(`/dashboard/projects/${id}?section=members`)
                 }
               >
-                Membres
+                Members
               </TabsTrigger>
             )}
           </TabsList>
 
           <Separator className="mb-2 h-0.5 w-full bg-sera-jet"></Separator>
 
-          <TabsContent value="resume">
+          <TabsContent value="resume" className="text-sera-jet">
+            <h3 className="mb-4 text-4xl font-medium text-sera-jet">
+              Resume :
+            </h3>
             <div className="flex justify-start">
               <h3 className="text-xl font-semibold">Project name :</h3>
               <p className="mt-auto">{projectData.title}</p>
@@ -110,9 +113,7 @@ export const Project = () => {
             <p className="text-normal mt-2">{projectData.description}</p>
             <div>
               <h3 className="text-xl font-semibold">What&apos;s next ?</h3>
-              <p className="text-normal mt-2">
-                BLABLABLA VOUS DEVEZ ENCORE FAIRE CA POUR VALIDERR LETAPE
-              </p>
+              <p className="text-normal mt-2">---------------------</p>
             </div>
           </TabsContent>
           <TabsContent value="ressources">
