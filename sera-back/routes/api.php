@@ -111,10 +111,17 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         Route::delete('projects/{projectId}/transcriptions', 'App\Http\Controllers\TranscriptionController@destroy')->name('transcriptions.destroy');
         /************************/
 
-        /***** Subtitle *****/
+        /***** Subtitles *****/
         Route::get('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@index')->name('subtitles.index');
         Route::post('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@store')->name('subtitles.store');
         Route::delete('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@destroy')->name('subtitles.destroy');
+        /************************/
+
+        /***** Knowledge *****/
+
+        Route::resource('knowledges', 'App\Http\Controllers\KnowledgeController')->except(['update']);
+        Route::post('knowledges/{id}', 'App\Http\Controllers\KnowledgeController@update')->name('knowledges.update');
+
         /************************/
 
     /*********************************/
