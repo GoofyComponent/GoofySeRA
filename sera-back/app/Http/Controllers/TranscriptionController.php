@@ -47,6 +47,15 @@ class TranscriptionController extends Controller
     *              enum={"srt", "vtt"}
     *          )
     *      ),
+    *      @OA\Parameter(
+    *          name="final",
+    *          description="Get only final transcriptions",
+    *          required=false,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="boolean"
+    *          )
+    *      ),
     *      @OA\Response(
     *          response=200,
     *          description="successful operation",
