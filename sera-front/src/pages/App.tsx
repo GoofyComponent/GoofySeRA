@@ -156,7 +156,7 @@ function App() {
                         userNotifications.map(
                           (notification: any, i: number) => {
                             return (
-                              <>
+                              <div key={i}>
                                 <AccordionItem value={`item-${i}`}>
                                   <AccordionTrigger
                                     className={clsx(
@@ -180,7 +180,7 @@ function App() {
                                 {notification.is_read === 0 && (
                                   <Separator className="" />
                                 )}
-                              </>
+                              </div>
                             );
                           }
                         )}
