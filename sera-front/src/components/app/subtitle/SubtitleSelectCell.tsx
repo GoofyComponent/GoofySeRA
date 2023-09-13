@@ -17,6 +17,7 @@ export const SubtitleSelectCell = ({ subtitleData }: { subtitleData: any }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [addFileModal, setAddFileModal] = useState(false);
+  const { ProjectId } = useParams<{ ProjectId: string }>();
   const langKey = ["en", "fr", "es", "de", "it", "pt", "zh", "ja"];
 
   return (
