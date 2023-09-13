@@ -24,7 +24,11 @@ import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { Separator } from "@/components/ui/separator";
 import { StepValidator } from "@/components/ui/stepValidator";
 import { axios } from "@/lib/axios";
-import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+import {
+  accessManager,
+  SERA_JET_HEXA,
+  SERA_PERIWINKLE_HEXA,
+} from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -269,16 +273,18 @@ export const Transcription = () => {
       />
       <div className="mx-6 flex justify-between">
         <section className="flex w-1/2 flex-col justify-evenly">
-          <StepValidator
-            projectStepStatus={projectStepStatus}
-            isprojectStatusLoading={isStepStatusLoading}
-            isprojectStatusSuccess={isStepStatusSuccess}
-            isCurrentStepValid={isTranscriptValid}
-            mutationMethod={validateStep}
-            buttonMessage="Validate this step"
-            cannotValidateMessage="You can't validate this step until you have at least one transcription file."
-            validateAvertissement="You are about to validate the file currently selected. You won't be able to modify it after validation."
-          />
+          {accessManager(undefined, "validate_project_step") && (
+            <StepValidator
+              projectStepStatus={projectStepStatus}
+              isprojectStatusLoading={isStepStatusLoading}
+              isprojectStatusSuccess={isStepStatusSuccess}
+              isCurrentStepValid={isTranscriptValid}
+              mutationMethod={validateStep}
+              buttonMessage="Validate this step"
+              cannotValidateMessage="You can't validate this step until you have at least one transcription file."
+              validateAvertissement="You are about to validate the file currently selected. You won't be able to modify it after validation."
+            />
+          )}
 
           <h3 className="mb-2 mt-0 text-4xl font-medium text-sera-jet">
             Transcript file :

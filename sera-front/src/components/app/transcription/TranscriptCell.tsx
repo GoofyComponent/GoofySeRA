@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatDate } from "@/lib/utils";
+import { accessManager, formatDate } from "@/lib/utils";
 
 export const TranscriptFileCell = ({
   selectedVersion,
@@ -23,12 +23,14 @@ export const TranscriptFileCell = ({
     <article className="my-auto min-w-full rounded-lg border-2 border-sera-jet p-1 text-sera-jet">
       <div className="flex justify-between pb-2">
         <p className="my-2 text-xl font-bold ">Select a version</p>
-        <button
-          className="rounded-lg bg-sera-jet px-2 text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          onClick={() => setAddFileModal(true)}
-        >
-          Upload a new SRT file
-        </button>
+        {accessManager(undefined, "add_transcript_file") && (
+          <button
+            className="rounded-lg bg-sera-jet px-2 text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            onClick={() => setAddFileModal(true)}
+          >
+            Upload a new SRT file
+          </button>
+        )}
       </div>
 
       <Select

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { StepValidator } from "@/components/ui/stepValidator";
 import { Textarea } from "@/components/ui/textarea";
 import { axios } from "@/lib/axios";
+import { accessManager } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -106,17 +107,19 @@ export const Capture = () => {
         linkPath={`/dashboard/projects/${ProjectId}`}
       />
 
-      <div className="mx-6">
-        <StepValidator
-          projectStepStatus={projectStep.status}
-          isprojectStatusLoading={isLoading}
-          isprojectStatusSuccess={isSuccess}
-          isCurrentStepValid={isPlanificationValid}
-          mutationMethod={validateStep}
-          cannotValidateMessage="You can't validate this step until you set one video rushs drive"
-          buttonMessage="Validate this step"
-        />
-      </div>
+      {accessManager(undefined, "validate_project_step") && (
+        <div className="mx-6">
+          <StepValidator
+            projectStepStatus={projectStep.status}
+            isprojectStatusLoading={isLoading}
+            isprojectStatusSuccess={isSuccess}
+            isCurrentStepValid={isPlanificationValid}
+            mutationMethod={validateStep}
+            cannotValidateMessage="You can't validate this step until you set one video rushs drive"
+            buttonMessage="Validate this step"
+          />{" "}
+        </div>
+      )}
 
       <div id="capture" className="mx-6">
         <div className="flex justify-between">
@@ -125,14 +128,16 @@ export const Capture = () => {
               <h3 className="my-4 text-4xl font-medium text-sera-jet">
                 Video rush drive
               </h3>
-              <PenBox
-                size={32}
-                className="my-auto text-sera-jet transition-all hover:cursor-pointer hover:text-sera-jet/50"
-                onClick={() => {
-                  setFileUpdateModalType("videos rushs");
-                  setIsFileUpdateModalOpen(true);
-                }}
-              />
+              {accessManager(undefined, "add_rush_link") && (
+                <PenBox
+                  size={32}
+                  className="my-auto text-sera-jet transition-all hover:cursor-pointer hover:text-sera-jet/50"
+                  onClick={() => {
+                    setFileUpdateModalType("videos rushs");
+                    setIsFileUpdateModalOpen(true);
+                  }}
+                />
+              )}
             </div>
             {drivesRushs && drivesRushs.url ? (
               <UrlCell

@@ -249,12 +249,15 @@ export const Tickets = () => {
               }}
               open={ticketDialogOpen}
             >
-              <Button
-                onClick={() => setTicketDialogOpen(true)}
-                className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-              >
-                Add a ticket
-              </Button>
+              {accessManager(undefined, "add_project_request") && (
+                <Button
+                  onClick={() => setTicketDialogOpen(true)}
+                  className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                >
+                  Add a ticket
+                </Button>
+              )}
+
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Create a new ticket ?</DialogTitle>

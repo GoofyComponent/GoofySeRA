@@ -8,6 +8,7 @@ import { MembersContainer } from "@/components/app/project/Members/MembersContai
 import { ReservationContainer } from "@/components/app/project/Reservation/ReservationContainer";
 import { StepValidator } from "@/components/ui/stepValidator";
 import { axios } from "@/lib/axios";
+import { accessManager } from "@/lib/utils";
 
 export const Planning = () => {
   const { ProjectId } = useParams<{ ProjectId: string }>();
@@ -64,17 +65,19 @@ export const Planning = () => {
         linkPath={`/dashboard/projects/${ProjectId}`}
       />
 
-      <div className="mx-auto w-11/12">
-        <StepValidator
-          projectStepStatus={projectStepStatus}
-          isprojectStatusLoading={isLoading}
-          isprojectStatusSuccess={isSuccess}
-          isCurrentStepValid={isPlanificationValid}
-          mutationMethod={passToCaptation}
-          cannotValidateMessage="You can't validate this step until your team is complete and you have at least one reservation."
-          buttonMessage="Validate this step"
-        />
-      </div>
+      {accessManager(undefined, "validate_project_step") && (
+        <div className="mx-auto w-11/12">
+          <StepValidator
+            projectStepStatus={projectStepStatus}
+            isprojectStatusLoading={isLoading}
+            isprojectStatusSuccess={isSuccess}
+            isCurrentStepValid={isPlanificationValid}
+            mutationMethod={passToCaptation}
+            cannotValidateMessage="You can't validate this step until your team is complete and you have at least one reservation."
+            buttonMessage="Validate this step"
+          />
+        </div>
+      )}
 
       <div id="planification" className="mx-6 flex flex-col justify-start">
         <section id="planification-team" className="">

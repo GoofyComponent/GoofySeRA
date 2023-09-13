@@ -280,7 +280,7 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_reservations") return false;
     if (action === "add_rush_link") return false;
     if (action === "add_video_version") return false;
-    if (action === "add_transcript") return false;
+    if (action === "add_transcript_file") return false;
     if (action === "add_subs") return false;
 
     //Ajouter pr l'edito et les subs

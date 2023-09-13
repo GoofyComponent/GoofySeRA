@@ -10,6 +10,7 @@ import { ReviewActions } from "@/components/app/videoReview/ReviewActions";
 import { PlyrSection } from "@/components/ui/plyrSection";
 import { StepValidator } from "@/components/ui/stepValidator";
 import { axios } from "@/lib/axios";
+import { accessManager } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -178,18 +179,20 @@ export const VideoReview = () => {
           linkPath={`/dashboard/projects/${ProjectId}`}
         />
 
-        <div className="mx-auto w-11/12">
-          <StepValidator
-            projectStepStatus={projectStepStatus}
-            isprojectStatusLoading={projectStepIsLoading}
-            isprojectStatusSuccess={projectStepIsSuccess}
-            isCurrentStepValid={isEditingValid}
-            mutationMethod={passToTranscription}
-            cannotValidateMessage="You can't validate this step until your validate one version of the video"
-            validateAvertissement="You gonna validate the current edit your display on the player."
-            buttonMessage="Validate this version"
-          />
-        </div>
+        {accessManager(undefined, "validate_project_step") && (
+          <div className="mx-auto w-11/12">
+            <StepValidator
+              projectStepStatus={projectStepStatus}
+              isprojectStatusLoading={projectStepIsLoading}
+              isprojectStatusSuccess={projectStepIsSuccess}
+              isCurrentStepValid={isEditingValid}
+              mutationMethod={passToTranscription}
+              cannotValidateMessage="You can't validate this step until your validate one version of the video"
+              validateAvertissement="You gonna validate the current edit your display on the player."
+              buttonMessage="Validate this version"
+            />
+          </div>
+        )}
 
         {!editingIsLoading && editingIsSuccess && (
           <ReviewActions

@@ -150,12 +150,15 @@ export const Rooms = () => {
             }}
             open={roomDialogOpen}
           >
-            <Button
-              onClick={() => setTicketDialogOpen(true)}
-              className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-            >
-              Add a room
-            </Button>
+            {accessManager(undefined, "add_room") && (
+              <Button
+                onClick={() => setTicketDialogOpen(true)}
+                className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+              >
+                Add a room
+              </Button>
+            )}
+
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Create a new room ?</DialogTitle>
