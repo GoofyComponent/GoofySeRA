@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name')->nullable(false);
             $table->enum('type', $types)->nullable(false);
             $table->text('infos')->nullable(false);
-            $table->string('imageURL')->nullable(true);
+            $table->string('image')->nullable(true);
             $table->timestamps();
         });
     }

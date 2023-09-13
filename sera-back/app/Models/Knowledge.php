@@ -10,7 +10,7 @@ class Knowledge extends Model
 {
     use HasFactory;
 
-    public function getImageURLAttribute($value)
+    public function getimageAttribute($value)
     {
         // si value null, return null
         if (!$value) {
