@@ -40,8 +40,10 @@ return [
         "video-reviews" => ["getReviewsByProjectId","addAComment","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["index"],
+        "subtitles" => ["index","show"],
         "edito" => ["show", "index"],
+        "transcriptions" => ["index","show"],
+
 
     ],
     "video_team" => [
@@ -52,8 +54,10 @@ return [
         "video-reviews" => ["getReviewsByProjectId","addAComment","getTemporaryUploadUrl","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["index"],
+        "subtitles" => ["index","show"],
         "edito" => ["show", "index"],
+        "transcriptions" => ["index","show"],
+
 
     ],
     "video_editor" => [
@@ -64,8 +68,10 @@ return [
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["index"],
+        "subtitles" => ["index","show"],
         "edito" => ["show", "index"],
+        "transcriptions" => ["index","show"],
+
 
     ],
     "transcription_team" => [
@@ -91,6 +97,8 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["store","destroy","index"],
         "edito" => ["show", "index"],
+        "transcriptions" => ["index","show"],
+
 
     ],
     "editorial_team" => [
@@ -101,9 +109,9 @@ return [
         "video-reviews" => ["addAComment","getVideoValidated"],
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
-        "subtitles" => ["index"],
+        "subtitles" => ["index","show"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "edito" => ["show", "index", "store", "update", "destroy","removeImage"],
-
+        "transcriptions" => ["index","show"],
     ],
 ];
