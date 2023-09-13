@@ -210,91 +210,87 @@ class EditoController extends Controller
     }
 
     /**
-    * @OA\Post(
-    *      path="/api/projects/{project_id}/edito",
-    *      operationId="updateEdito",
-    *      tags={"Edito"},
-    *      summary="Update Edito",
-    *      description="Update Edito",
-    *      @OA\Parameter(
-    *          name="project_id",
-    *          description="Project id",
-    *          required=true,
-    *          in="path",
-    *          @OA\Schema(
-    *              type="integer"
-    *          )
-    *      ),
-    *      @OA\RequestBody(
-    *          required=true,
-    *          @OA\JsonContent(
-    *              required={"title", "description"},
-    *              @OA\Property(
-    *                  property="title",
-    *                  type="string"
-    *              ),
-    *              @OA\Property(
-    *                  property="description",
-    *                  type="string"
-    *              ),
-    *              @OA\Property(
-    *                  property="images",
-    *                  type="array",
-    *                  @OA\Items(
-    *                      type="string",
-    *                      format="binary"
-    *                  )
-    *              ),
-    *          ),
-    *      ),
-    *      @OA\Response(
-    *          response=200,
-    *          description="successful operation",
-    *          @OA\JsonContent(
-    *              type="object",
-    *              @OA\Property(
-    *                  property="id",
-    *                  type="integer"
-    *              ),
-    *              @OA\Property(
-    *                  property="title",
-    *                  type="string"
-    *              ),
-    *              @OA\Property(
-    *                  property="description",
-    *                  type="string"
-    *              ),
-    *              @OA\Property(
-    *                  property="images",
-    *                  type="array",
-    *                  @OA\Items(
-    *                      type="string"
-    *                  )
-    *              ),
-    *              @OA\Property(
-    *                  property="project_id",
-    *                  type="integer"
-    *              ),
-    *              @OA\Property(
-    *                  property="created_at",
-    *                  type="string"
-    *              ),
-    *              @OA\Property(
-    *                  property="updated_at",
-    *                  type="string"
-    *              ),
-    *          )
-    *      ),
-    *      @OA\Response(
-    *          response=404,
-    *          description="Project not found"
-    *      ),
-    *      @OA\Response(
-    *          response=404,
-    *          description="Edito not found"
-    *      ),
-    * )
-    */
+     * @OA\Post(
+     *      path="/api/projects/{project_id}/edito/update",
+     *      operationId="updateEdito",
+     *      tags={"Edito"},
+     *      summary="Update Edito",
+     *      description="Update Edito",
+     *      @OA\Parameter(
+     *          name="project_id",
+     *          description="Project id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="title",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="description",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="images",
+     *                  type="array",
+     *                  @OA\Items(
+     *                      type="string",
+     *                      format="binary"
+     *                  )
+     *              ),
+     *          ),
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="id",
+     *                  type="integer"
+     *              ),
+     *              @OA\Property(
+     *                  property="title",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="description",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="images",
+     *                  type="array",
+     *                  @OA\Items(
+     *                      type="string"
+     *                  )
+     *              ),
+     *              @OA\Property(
+     *                  property="project_id",
+     *                  type="integer"
+     *              ),
+     *              @OA\Property(
+     *                  property="created_at",
+     *                  type="string"
+     *              ),
+     *              @OA\Property(
+     *                  property="updated_at",
+     *                  type="string"
+     *              ),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Project not found"
+     *      ),
+     * )
+     */
+
     public function update(Request $request, $project_id)
     {
         $validatedData = $request->validate([
@@ -375,10 +371,6 @@ class EditoController extends Controller
     *      @OA\Response(
     *          response=404,
     *          description="Project not found"
-    *      ),
-    *      @OA\Response(
-    *          response=404,
-    *          description="Edito not found"
     *      ),
     * )
     */
@@ -466,10 +458,6 @@ class EditoController extends Controller
     *     @OA\Response(
     *         response=404,
     *         description="Project not found"
-    *     ),
-    *     @OA\Response(
-    *         response=404,
-    *         description="Edito not found"
     *     ),
     * )
     */
