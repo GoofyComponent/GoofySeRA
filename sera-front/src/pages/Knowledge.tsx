@@ -20,16 +20,21 @@ export const Knowledge = () => {
   const { dataId } = useParams<{ dataId: string }>();
 
   const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
 
-  const { data: knowledgeData } = useQuery({
+  const { data: knowledgeData, refetch: refetchKnowledge } = useQuery({
     queryKey: ["knowledge"],
     queryFn: async () => {
-      const knowledge = await axios.get(`/api/knowledges`);
-      console.log(knowledge.data);
+      let call = "/api/knowledges";
+      if (searchInput.trim() !== "") {
+        call = `/api/knowledges?search=${searchInput}`;
+      }
+      const knowledge = await axios.get(call);
       return knowledge.data;
     },
   });
 
+  //A del
   console.log(knowledgeData);
 
   useEffect(() => {
@@ -73,18 +78,17 @@ export const Knowledge = () => {
             className="mr-2 w-[360px]"
             type="text"
             placeholder="Search in the database"
-            value={"searchInput"}
+            value={searchInput}
             onChange={(e) => {
-              console.log(e.target.value);
-              /* const inputValue = e.target.value;
+              const inputValue = e.target.value;
               setSearchInput(inputValue);
               if (inputValue.trim() === "") {
-                refetchUsers(users);
-              } */
+                refetchKnowledge();
+              }
             }}
           />
           <Button
-            onClick={() => console.log("") /* refetchUsers(users) */}
+            onClick={() => refetchKnowledge()}
             className="bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
           >
             Search
