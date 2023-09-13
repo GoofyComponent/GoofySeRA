@@ -46,7 +46,6 @@ export const AddKnowledgeModal = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("knowledge created", knowledge.data);
       return knowledge.data;
     },
     onSuccess: () => {
@@ -157,7 +156,6 @@ export const ViewKnowledgeModal = () => {
       const knowledge = await axios.get(
         `/api/knowledges/${searchParams.get("knowledgeID")}`
       );
-      console.log(knowledge.data);
       return knowledge.data;
     },
   });
