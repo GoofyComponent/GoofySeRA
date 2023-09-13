@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Pagination } from "@/components/ui/pagination";
 import { axios } from "@/lib/axios";
+import { accessManager } from "@/lib/utils";
 
 export const Rooms = () => {
   const navigate = useNavigate();
@@ -45,6 +46,12 @@ export const Rooms = () => {
     name: "",
     description: "",
   });
+
+  useEffect(() => {
+    if (!accessManager("rooms", undefined)) {
+      return navigate("/dashboard");
+    }
+  }, []);
 
   const {
     data: roomsData,

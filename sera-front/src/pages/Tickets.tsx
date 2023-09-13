@@ -48,7 +48,7 @@ import {
 } from "@/components/ui/tooltip";
 import { axios } from "@/lib/axios";
 import { TicketsEntity } from "@/lib/types/types";
-import { formatDate } from "@/lib/utils";
+import { accessManager, formatDate } from "@/lib/utils";
 
 export const Tickets = () => {
   const ticketStatus = "pending";
@@ -74,6 +74,13 @@ export const Tickets = () => {
     priority: "",
     status: "pending",
   });
+
+  useEffect(() => {
+    if (!accessManager("project_requests", undefined)) {
+      console.log("access denied");
+      return navigate("/dashboard");
+    }
+  }, []);
 
   const {
     data: ticketsData,
