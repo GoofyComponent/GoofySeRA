@@ -149,7 +149,7 @@ function App() {
                     <Accordion
                       type="single"
                       collapsible
-                      className=" h-[331px] w-full overflow-y-scroll"
+                      className=" h-[331px] w-full overflow-y-scroll scrollbar scrollbar-track-transparent scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3"
                     >
                       {userNotifications &&
                         userNotifications.length > 0 &&
