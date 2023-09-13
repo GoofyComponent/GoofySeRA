@@ -17,6 +17,15 @@ class KnowledgeController extends Controller
     *      tags={"Knowledges"},
     *      summary="Get list of knowledges",
     *      description="Returns list of knowledges",
+    *      @OA\Parameter(
+    *          name="search",
+    *          description="Search string",
+    *          required=false,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="string",
+    *          )
+    *      ),
     *      @OA\Response(
     *          response=200,
     *          description="Successful operation",
@@ -44,9 +53,19 @@ class KnowledgeController extends Controller
     *       )
     *     )
     */
-    public function index()
+    public function index(Request $request)
     {
+        $validated = $request->validate([
+            'search' => 'string',
+        ]);
+
         $knowledges = Knowledge::all();
+
+        if ($request->filled('search')){
+            $knowledges = Knowledge::where('name', 'like', '%'.$validated['search'].'%')
+            ->orWhere('infos', 'like', '%'.$validated['search'].'%')
+            ->get();
+        }
 
         return response()->json($knowledges, 201);
     }
