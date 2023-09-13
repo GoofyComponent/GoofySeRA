@@ -103,8 +103,7 @@ export const Capture = () => {
       <HeaderTitle
         title="Capture"
         previousTitle={lastSeenProjectName}
-        /*         linkPath={`/dashboard/projects/${ProjectId}`}
-         */
+        linkPath={`/dashboard/projects/${ProjectId}`}
       />
 
       <div className="mx-6">
