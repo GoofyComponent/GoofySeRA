@@ -11,8 +11,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { BigLoader } from "@/pages/skeletons/BigLoader";
 
 export const KnowledgeTable = ({ datas }: { datas: any }) => {
+  if (!datas) return <BigLoader bgColor="transparent" textColor="ser-jet" />;
+
   return (
     <Table>
       <TableHeader>
@@ -37,8 +40,8 @@ export const KnowledgeTable = ({ datas }: { datas: any }) => {
           <Row
             key={index}
             name={data.name}
-            infos={data.biography}
-            imageUrl={data.image}
+            infos={data.infos}
+            imageUrl={data.imageURL}
             type={data.type}
           />
         ))}
