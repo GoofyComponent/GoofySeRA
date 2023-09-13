@@ -32,7 +32,7 @@ export const Subtitle = () => {
   const { data: subtitleData, isSuccess: isSubtitleSuccess } = useQuery({
     queryKey: ["subtitle", { ProjectId, selectedLanguage }],
     queryFn: async () => {
-      const response = await axios.get(`/api/projects/1/subtitles`);
+      const response = await axios.get(`/api/projects/${ProjectId}/subtitles`);
       return response.data.subtitles;
     },
   });
@@ -149,19 +149,21 @@ export const Subtitle = () => {
 
   return (
     <>
-      <HeaderTitle title="Subtitle" previousTitle={lastSeenProjectName} />
+      <HeaderTitle
+        title="Subtitle"
+        previousTitle={lastSeenProjectName}
+        linkPath={`/dashboard/projects/${ProjectId}`}
+      />
       <div className="mx-6 flex justify-between">
         <section className="flex w-1/2 flex-col justify-evenly">
           <h3 className="mb-2 mt-0 text-4xl font-medium text-sera-jet">
             Subtitle language :
           </h3>
-
           {subtitleData && isSubtitleSuccess && (
             <SubtitleSelectCell subtitleData={subtitleData} />
           )}
-
-          {(!subtitleData || subtitleData.length === 0) &&
-            isSubtitleSuccess && <NoSubtitleCell />}
+          {!subtitleData && isSubtitleSuccess && <NoSubtitleCell />}
+          {console.log(subtitleData)}
         </section>
         <section className="my-auto w-1/2 px-2">
           {srtArray && validatedVideoData && (
