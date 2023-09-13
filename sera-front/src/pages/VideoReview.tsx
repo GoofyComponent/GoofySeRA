@@ -115,9 +115,6 @@ export const VideoReview = () => {
       editingRefetch();
       setOpenAddVideo(false);
     },
-    onError: (error) => {
-      console.log(error);
-    },
   });
 
   const addComments = useMutation({
@@ -131,9 +128,6 @@ export const VideoReview = () => {
     },
     onSuccess: () => {
       editingRefetch();
-    },
-    onError: (error) => {
-      console.log(error);
     },
   });
 
@@ -150,9 +144,6 @@ export const VideoReview = () => {
     onSuccess: () => {
       projectStepRefetch();
       navigate(`/dashboard/projects/${ProjectId}`);
-    },
-    onError: (error) => {
-      console.log("error", error);
     },
   });
 

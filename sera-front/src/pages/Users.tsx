@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { axios } from "@/lib/axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import React from "react";
 import {
   Link,
   useMatch,
@@ -8,26 +8,8 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+
 import UsersTable from "@/components/app/users/UsersTable";
-import { Pagination } from "@/components/ui/pagination";
-import { UsersEntity } from "@/lib/types/types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,8 +20,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Pagination } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { axios } from "@/lib/axios";
+import { UsersEntity } from "@/lib/types/types";
 import { getInitials, selectRoleDisplay } from "@/lib/utils";
 
 export const Users = () => {

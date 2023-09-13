@@ -67,14 +67,10 @@ export const Subtitle = () => {
         (item: any) => item.file_type === "srt"
       );
 
-      console.log("srtObject", srtObject);
       if (!srtObject) throw new Error("No transcription file");
-
-      console.log(srtObject);
 
       const file = await axios.get(srtObject.ressource.url);
 
-      console.log(file.data);
       //Download the file
       const blob = new Blob([file.data], { type: "text/srt" });
       const link = document.createElement("a");
@@ -190,7 +186,6 @@ export const Subtitle = () => {
             <SubtitleSelectCell subtitleData={subtitleData} />
           )}
           {!subtitleData && isSubtitleSuccess && <NoSubtitleCell />}
-          {console.log(subtitleData)}
         </section>
         <section className="my-auto w-1/2 px-2">
           {srtArray && validatedVideoData && (

@@ -13,6 +13,17 @@
                 "summary": "Get list of knowledges",
                 "description": "Returns list of knowledges",
                 "operationId": "getKnowledgesList",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
