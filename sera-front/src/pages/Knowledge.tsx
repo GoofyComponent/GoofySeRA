@@ -1,5 +1,5 @@
 import { Label } from "@radix-ui/react-label";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -13,6 +13,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { axios } from "@/lib/axios";
 
@@ -104,16 +111,49 @@ export const Knowledge = () => {
         }}
         open={ticketDialogOpen}
       >
-        {searchParams.get("action") === "add" && AddKnowledgeModal()}
-        {searchParams.get("action") === "infos" && ViewKnowledgeModal()}
-        {searchParams.get("action") === "edit" && EditKnowledgeModal()}
-        {searchParams.get("action") === "delete" && DeleteKnowledgeModal()}
+        {searchParams.get("action") === "add" && <AddKnowledgeModal />}
+        {searchParams.get("action") === "infos" && <ViewKnowledgeModal />}
+        {searchParams.get("action") === "edit" && <EditKnowledgeModal />}
+        {searchParams.get("action") === "delete" && <DeleteKnowledgeModal />}
       </Dialog>
     </>
   );
 };
 
 const AddKnowledgeModal = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [name, setName] = useState("");
+  const [infos, setInfos] = useState("");
+  const [type, setType] = useState("");
+  const [image, setImage] = useState("");
+
+  const createKnowledge = useMutation({
+    mutationFn: async () => {
+      const formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("infos", infos);
+      formData.append("type", type);
+
+      if (image) {
+        formData.append("image", image);
+      }
+
+      const knowledge = await axios.post(`/api/knowledges`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("knowledge created", knowledge.data);
+      return knowledge.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["knowledge"]);
+      navigate("/dashboard/knowledge");
+    },
+  });
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -134,10 +174,10 @@ const AddKnowledgeModal = () => {
             type="text"
             id="name"
             name="name"
-            value={""}
+            value={name}
             placeholder={"Name"}
             className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="mb-4 flex flex-col">
@@ -146,17 +186,29 @@ const AddKnowledgeModal = () => {
           </Label>
           <Textarea
             id="infos"
-            value={""}
+            value={infos}
             placeholder={"Infos"}
             className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => setInfos(e.target.value)}
           />
         </div>
         <div className="mb-4 flex flex-col">
           <Label className="mb-2" htmlFor="type">
             Type
           </Label>
-          <p>Select</p>
+          <Select onValueChange={(value) => setType(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Choose a type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Location">Location</SelectItem>
+              <SelectItem value="Personality">Personality</SelectItem>
+              <SelectItem value="Instrument">Instrument</SelectItem>
+              <SelectItem value="Event">Event</SelectItem>
+              <SelectItem value="Music">Music</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="mb-4 flex flex-col">
           <Label className="mb-2" htmlFor="image">
@@ -166,14 +218,23 @@ const AddKnowledgeModal = () => {
             type="file"
             id="image"
             className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => setImage(e.target.value)}
           />
         </div>
         <Button
           className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          onClick={() => console.log("")}
+          onClick={() => {
+            createKnowledge.mutate();
+          }}
+          disabled={createKnowledge.isLoading}
         >
-          Create
+          {createKnowledge.isLoading ? "Creating..." : "Create"}
+        </Button>
+        <Button
+          className="my-2 w-full border-2 border-black bg-white text-black transition-all hover:bg-white hover:text-black hover:opacity-25"
+          onClick={() => navigate("/dashboard/knowledge")}
+        >
+          Close
         </Button>
       </div>
     </DialogContent>
@@ -181,48 +242,47 @@ const AddKnowledgeModal = () => {
 };
 
 const ViewKnowledgeModal = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const { data: knowledgeData } = useQuery({
+    queryKey: ["knowledge-infos", { id: searchParams.get("knowledgeID") }],
+    queryFn: async () => {
+      const knowledge = await axios.get(
+        `/api/knowledges/${searchParams.get("knowledgeID")}`
+      );
+      console.log(knowledge.data);
+      return knowledge.data;
+    },
+  });
+
+  if (!knowledgeData) return null;
+
   return (
-    <DialogContent className="w-1/2">
+    <DialogContent className="w-8/12">
       <DialogHeader>
-        <DialogTitle>Data Name</DialogTitle>
+        <DialogTitle>{knowledgeData.name}</DialogTitle>
         <DialogDescription>
-          <p>Type</p>
+          <p>{knowledgeData.type}</p>
         </DialogDescription>
       </DialogHeader>
       <div className="flex">
-        <img
-          className="mr-2 w-1/2 rounded-lg"
-          src="https://source.unsplash.com/random"
-          alt=""
-        />
+        {knowledgeData.image && (
+          <img
+            className="mr-2 w-1/2 rounded-lg"
+            src={knowledgeData.image}
+            alt={knowledgeData.name}
+          />
+        )}
+
         <div className="ml-2 max-h-[40em] w-1/2 overflow-auto">
           <p className="text-xl font-semibold text-sera-jet">Infos</p>
-          <p className="text-base text-sera-jet">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-            maximus, mauris ut aliquam ultrices, rLorem ipsum dolor sit amet,
-            consectetur adipiscing elit. Donec maximus, mauris ut aliquam
-            ultrices, rLorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec maximus, mauris ut aliquam ultrices, rLorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Donec maximus, mauris ut aliquam
-            {/*  ultrices, rLorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec maximus, mauris ut aliquam ultrices, rLorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Donec maximus, mauris ut aliquam
-            ultrices, rLorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec maximus, mauris ut aliquam ultrices, ronec maximus, mauris ut
-            aliquam ultrices, rLorem ipsum dolor sit amet, consectetur
-            adipiscing elit. Donec maximus, mauris ut aliquam ultrices, rLorem
-            ipsum dolor sit amet, consectetur adipiscing elit. Donec maximus,
-            mauris ut aliquam ultrices, ronec maximus, mauris ut aliquam
-            ultrices, rLorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Donec maximus, mauris ut aliquam ultrices, rLorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Donec maximus, mauris ut aliquam
-            ultrices, r */}
-          </p>
+          <p className="text-base text-sera-jet">{knowledgeData.infos}</p>
         </div>
       </div>
       <Button
         className="mx-2 border-2 border-black bg-white text-black transition-all hover:bg-white hover:text-black hover:opacity-25"
-        onClick={() => console.log("")}
+        onClick={() => navigate("/dashboard/knowledge")}
       >
         Close
       </Button>
@@ -231,10 +291,66 @@ const ViewKnowledgeModal = () => {
 };
 
 const EditKnowledgeModal = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+
+  const [name, setName] = useState("");
+  const [infos, setInfos] = useState("");
+  const [type, setType] = useState("");
+  const [image, setImage] = useState("");
+
+  const { data: knowledgeData } = useQuery({
+    queryKey: ["knowledge-infos", { id: searchParams.get("knowledgeID") }],
+    queryFn: async () => {
+      const knowledge = await axios.get(
+        `/api/knowledges/${searchParams.get("knowledgeID")}`
+      );
+      console.log(knowledge.data);
+      return knowledge.data;
+    },
+  });
+
+  const updateKnowledge = useMutation({
+    mutationFn: async () => {
+      const formData = new FormData();
+
+      if (name) formData.append("name", name);
+      if (infos) formData.append("infos", infos);
+      if (type) formData.append("type", type);
+
+      if (image) {
+        formData.append("image", image);
+      }
+
+      const knowledge = await axios.post(
+        `/api/knowledges/${searchParams.get("knowledgeID")}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("knowledge updated", knowledge.data);
+      return knowledge.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["knowledge-infos"]);
+      queryClient.invalidateQueries(["knowledge"]);
+      navigate("/dashboard/knowledge");
+    },
+  });
+
+  if (!knowledgeData) return null;
+
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Update - [infosname] ?</DialogTitle>
+        <DialogTitle>Update - {knowledgeData.name} ?</DialogTitle>
+        <DialogDescription>
+          All fields are optional, leave fields blank to make no changes.
+        </DialogDescription>
       </DialogHeader>
       <div>
         <div className="mb-4 flex flex-col">
@@ -245,10 +361,10 @@ const EditKnowledgeModal = () => {
             type="text"
             id="name"
             name="name"
-            value={""}
-            placeholder={"Name"}
+            value={name}
+            placeholder={knowledgeData.name}
             className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="mb-4 flex flex-col">
@@ -257,17 +373,32 @@ const EditKnowledgeModal = () => {
           </Label>
           <Textarea
             id="infos"
-            value={""}
-            placeholder={"Infos"}
+            value={infos}
+            placeholder={knowledgeData.infos}
             className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => setInfos(e.target.value)}
           />
         </div>
         <div className="mb-4 flex flex-col">
           <Label className="mb-2" htmlFor="type">
             Type
           </Label>
-          <p>Select</p>
+          <Select
+            onValueChange={(value) => setType(value)}
+            defaultValue={knowledgeData.type}
+          >
+            <SelectTrigger className="">
+              <SelectValue placeholder={knowledgeData.type} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Location">Location</SelectItem>
+              <SelectItem value="Personality">Personality</SelectItem>
+              <SelectItem value="Instrument">Instrument</SelectItem>
+              <SelectItem value="Event">Event</SelectItem>
+              <SelectItem value="Music">Music</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="mb-4 flex flex-col">
           <Label className="mb-2" htmlFor="image">
@@ -276,17 +407,25 @@ const EditKnowledgeModal = () => {
           <Input
             type="file"
             id="image"
+            accept="image/*"
             className="col-span-3"
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => setImage(e.target.value)}
           />
         </div>
         <Button
           className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
           onClick={() => {
-            console.log("");
+            updateKnowledge.mutate();
           }}
+          disabled={updateKnowledge.isLoading}
         >
-          Create
+          {updateKnowledge.isLoading ? "Updating..." : "Update"}
+        </Button>
+        <Button
+          className="my-2 w-full border-2 border-black bg-white text-black transition-all hover:bg-white hover:text-black hover:opacity-25"
+          onClick={() => navigate("/dashboard/knowledge")}
+        >
+          Close
         </Button>
       </div>
     </DialogContent>
@@ -294,29 +433,64 @@ const EditKnowledgeModal = () => {
 };
 
 const DeleteKnowledgeModal = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+
+  const { data: knowledgeData } = useQuery({
+    queryKey: ["knowledge-infos", { id: searchParams.get("knowledgeID") }],
+    queryFn: async () => {
+      const knowledge = await axios.get(
+        `/api/knowledges/${searchParams.get("knowledgeID")}`
+      );
+      console.log(knowledge.data);
+      return knowledge.data;
+    },
+  });
+
+  const deleteKnowledge = useMutation({
+    mutationFn: async () => {
+      const knowledge = await axios.delete(
+        `/api/knowledges/${searchParams.get("knowledgeID")}`
+      );
+      console.log("knowledge deleted", knowledge.data);
+      return knowledge.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["knowledge"]);
+      navigate("/dashboard/knowledge");
+    },
+  });
+
+  if (!knowledgeData) return null;
+
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Delete - [Dataname] ?</DialogTitle>
+        <DialogTitle>Delete - {knowledgeData.name} ?</DialogTitle>
         <DialogDescription>
-          <p>You are about to delete the data [Dataname].</p>
-          <p>This action is irreversible.</p>
+          You are about to delete the data{" "}
+          <span className="italic">{knowledgeData.name}</span>.{"\n"}This action
+          is irreversible.
         </DialogDescription>
       </DialogHeader>
       <div className="flex justify-end">
         <Button
           className="mx-2 border-2 border-black bg-white text-black transition-all hover:bg-white hover:text-black hover:opacity-25"
-          onClick={() => {}}
+          onClick={() => {
+            navigate("/dashboard/knowledge");
+          }}
         >
           Cancel
         </Button>
         <Button
           className="mx-2 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
           onClick={() => {
-            console.log("");
+            deleteKnowledge.mutate();
           }}
+          disabled={deleteKnowledge.isLoading}
         >
-          Delete
+          {deleteKnowledge.isLoading ? "Deleting..." : "Delete"}
         </Button>
       </div>
     </DialogContent>

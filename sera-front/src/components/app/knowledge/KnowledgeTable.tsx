@@ -39,9 +39,10 @@ export const KnowledgeTable = ({ datas }: { datas: any }) => {
         {datas.map((data: any, index: number) => (
           <Row
             key={index}
+            id={data.id}
             name={data.name}
             infos={data.infos}
-            imageUrl={data.imageURL}
+            imageUrl={data.image}
             type={data.type}
           />
         ))}
@@ -51,11 +52,13 @@ export const KnowledgeTable = ({ datas }: { datas: any }) => {
 };
 
 const Row = ({
+  id,
   name,
   infos,
   imageUrl,
   type,
 }: {
+  id: string;
   name: string;
   infos: string;
   imageUrl: string;
@@ -84,13 +87,19 @@ const Row = ({
       </TableCell>
       <TableCell>
         <div className="my-auto flex">
-          <Link to={`/dashboard/knowledge/${"room"}?action=infos`}>
+          <Link
+            to={`/dashboard/knowledge/${"room"}?action=infos&knowledgeID=${id}`}
+          >
             <Info className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
           </Link>
-          <Link to={`/dashboard/knowledge/${"room"}?action=edit`}>
+          <Link
+            to={`/dashboard/knowledge/${"room"}?action=edit&knowledgeID=${id}`}
+          >
             <PenBox className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
           </Link>
-          <Link to={`/dashboard/knowledge/${"room"}?action=delete`}>
+          <Link
+            to={`/dashboard/knowledge/${"room"}?action=delete&knowledgeID=${id}`}
+          >
             <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
           </Link>
         </div>
