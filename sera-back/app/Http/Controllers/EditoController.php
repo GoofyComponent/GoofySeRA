@@ -76,7 +76,7 @@ class EditoController extends Controller
     */
     public function index($project_id)
     {
-        $edito = Edito::where('project_id', $project_id)->first();
+        $edito = Edito::where('project_id', $project_id)->with('knowledges')->first();
         return response()->json($edito);
     }
 
@@ -491,6 +491,287 @@ class EditoController extends Controller
         $edito->images = json_encode($imageArray);
 
         $edito->save();
+
+        return response()->json($edito, 200);
+    }
+
+
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{project_id}/edito/add-knowledge",
+    *     operationId="addKnowledge",
+    *     tags={"Edito"},
+    *     summary="Add knowledge to Edito",
+    *     description="Add knowledge to Edito",
+    *     @OA\Parameter(
+    *         name="project_id",
+    *         description="Project id",
+    *         required=true,
+    *         in="path",
+    *         @OA\Schema(
+    *             type="integer"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         required=true,
+    *         @OA\JsonContent(
+    *             required={"knowledge_id"},
+    *             @OA\Property(
+    *                 property="knowledge_id",
+    *                 type="integer"
+    *             ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="successful operation",
+    *         @OA\JsonContent(
+    *             type="object",
+    *             @OA\Property(
+    *                 property="id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="title",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="description",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="images",
+    *                 type="array",
+    *                 @OA\Items(
+    *                     type="string"
+    *                 )
+    *             ),
+    *             @OA\Property(
+    *                 property="knowledges",
+    *                 type="array",
+    *                 @OA\Items(
+    *                     type="object",
+    *                     @OA\Property(
+    *                         property="id",
+    *                         type="integer"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="name",
+    *                         type="string"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="image",
+    *                         type="string"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="type",
+    *                         type="string"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="created_at",
+    *                         type="string"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="updated_at",
+    *                         type="string"
+    *                     ),
+    *                 )
+    *             ),
+    *             @OA\Property(
+    *                 property="project_id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="created_at",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="updated_at",
+    *                 type="string"
+    *             ),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Project not found"
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Knowledge already added"
+    *     ),
+    * )
+    */
+    public function addKnowledge(Request $request, $project_id){
+        $validatedData = $request->validate([
+            'knowledge_id' => ['required', 'integer'],
+        ]);
+
+        $project = Project::find($project_id);
+
+        if (!$project) {
+            return response()->json([
+                'message' => 'Project not found'
+            ], 404);
+        }
+
+        $edito = Edito::where('project_id', $project_id)->first();
+
+        if (!$edito) {
+            return response()->json([
+                'message' => 'Edito not found'
+            ], 404);
+        }
+
+        if($edito->knowledges()->where('knowledge_id',$validatedData['knowledge_id'])->first()){
+            return response()->json([
+                'message' => 'Knowledge already added'
+            ], 400);
+        }
+
+        $edito->knowledges()->attach($validatedData['knowledge_id']);
+
+        // on charge les knowledges
+        $edito->load('knowledges');
+
+        return response()->json($edito, 200);
+    }
+
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{project_id}/edito/remove-knowledge",
+    *     operationId="unlinkKnowledge",
+    *     tags={"Edito"},
+    *     summary="Unlink knowledge from Edito",
+    *     description="Unlink knowledge from Edito",
+    *     @OA\Parameter(
+    *         name="project_id",
+    *         description="Project id",
+    *         required=true,
+    *         in="path",
+    *         @OA\Schema(
+    *             type="integer"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         required=true,
+    *         @OA\JsonContent(
+    *             required={"knowledge_id"},
+    *             @OA\Property(
+    *                 property="knowledge_id",
+    *                 type="integer"
+    *             ),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="successful operation",
+    *         @OA\JsonContent(
+    *             type="object",
+    *             @OA\Property(
+    *                 property="id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="title",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="description",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="images",
+    *                 type="array",
+    *                 @OA\Items(
+    *                     type="string"
+    *                 )
+    *             ),
+    *             @OA\Property(
+    *                 property="knowledges",
+    *                 type="array",
+    *                 @OA\Items(
+    *                     type="object",
+    *                     @OA\Property(
+    *                         property="id",
+    *                         type="integer"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="name",
+    *                         type="string"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="image",
+    *                         type="string"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="type",
+    *                         type="string"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="created_at",
+    *                         type="string"
+    *                     ),
+    *                     @OA\Property(
+    *                         property="updated_at",
+    *                         type="string"
+    *                     ),
+    *                 )
+    *             ),
+    *             @OA\Property(
+    *                 property="project_id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="created_at",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="updated_at",
+    *                 type="string"
+    *             ),
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Project not found"
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Knowledge not found"
+    *     ),
+    * )
+    */
+    public function unlinkKnowledge(Request $request, $project_id){
+        $validatedData = $request->validate([
+            'knowledge_id' => ['required', 'integer'],
+        ]);
+
+        $project = Project::find($project_id);
+
+        if (!$project) {
+            return response()->json([
+                'message' => 'Project not found'
+            ], 404);
+        }
+
+        $edito = Edito::where('project_id', $project_id)->first();
+
+        if (!$edito) {
+            return response()->json([
+                'message' => 'Edito not found'
+            ], 404);
+        }
+
+        if(!$edito->knowledges()->where('knowledge_id',$validatedData['knowledge_id'])->first()){
+            return response()->json([
+                'message' => 'Knowledge not found'
+            ], 400);
+        }
+
+        $edito->knowledges()->detach($validatedData['knowledge_id']);
+
+        // on charge les knowledges
+        $edito->load('knowledges');
 
         return response()->json($edito, 200);
     }

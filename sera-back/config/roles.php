@@ -15,7 +15,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["store","destroy","index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
-        "edito" => ["show", "index", "store", "update", "destroy","removeImage"],
+        "edito" => ["show", "index", "store", "update", "destroy","removeImage","addKnowledge","removeKnowledge"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
@@ -29,7 +29,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["store","destroy","index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
-        "edito" => ["show", "index", "store", "update", "destroy","removeImage"],
+        "edito" => ["show", "index", "store", "update", "destroy","removeImage","addKnowledge","removeKnowledge"],
 
     ],
     "professor" => [
@@ -111,7 +111,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["index","show"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
-        "edito" => ["show", "index", "store", "update", "destroy","removeImage"],
+        "edito" => ["show", "index", "store", "update", "destroy","removeImage","addKnowledge","removeKnowledge"],
         "transcriptions" => ["index","show"],
     ],
 ];
