@@ -10,6 +10,7 @@ import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { Button } from "@/components/ui/button";
 import { StepValidator } from "@/components/ui/stepValidator";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import { accessManager } from "@/lib/utils";
 
@@ -41,6 +42,14 @@ export const Capture = () => {
       const project = await axios.get(
         `/api/projects/${ProjectId}/steps?step=Capture`
       );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The capture step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
 
       return project.data[0];
     },
@@ -95,6 +104,9 @@ export const Capture = () => {
       navigate(`/dashboard/projects/${ProjectId}/editing`);
     },
   });
+
+  if (isLoading)
+    return <BigLoader bgColor="transparent" textColor="sera-jet" />;
 
   if (isLoading && !isSuccess && rushsQueryLoading)
     return <BigLoader bgColor="#F3F4F6" textColor="sera-jet" />;
