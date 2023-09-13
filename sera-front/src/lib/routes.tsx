@@ -1,20 +1,22 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
+import App from "@/pages/App";
+import { Capture } from "@/pages/Capture";
+import { Error404 } from "@/pages/Error404";
 import { Home } from "@/pages/Home";
+import { Login } from "@/pages/Login";
 import { Logout } from "@/pages/Logout";
-import { Planification } from "@/pages/Planification";
+import { Planning } from "@/pages/Planning";
 import Profile from "@/pages/Profile";
 import { Project } from "@/pages/Project";
 import { Projects } from "@/pages/Projects";
 import { Rooms } from "@/pages/Rooms";
+import { Subtitle } from "@/pages/Subtitle";
+import { Test } from "@/pages/Test";
 import { Tickets } from "@/pages/Tickets";
+import { Transcription } from "@/pages/Transcription";
 import { Users } from "@/pages/Users";
 import { VideoReview } from "@/pages/VideoReview";
-import { Error404 } from "@/pages/Error404";
-
-import App from "../pages/App";
-import { Login } from "../pages/Login";
-import { Test } from "../pages/Test";
 
 const paths = [
   {
@@ -103,8 +105,20 @@ const paths = [
         element: <Project />,
       },
       {
-        path: "projects/:ProjectId/planification",
-        element: <Planification />,
+        path: "projects/:ProjectId/prepare",
+        element: <Planning />,
+      },
+      {
+        path: "projects/:ProjectId/capture",
+        element: <Capture />,
+      },
+      {
+        path: "projects/:ProjectId/transcript",
+        element: <Transcription />,
+      },
+      {
+        path: "projects/:ProjectId/subs",
+        element: <Subtitle />,
       },
       {
         path: "projects/:ProjectId/editing",

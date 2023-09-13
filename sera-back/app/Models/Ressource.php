@@ -28,6 +28,10 @@ class Ressource extends Model
     public function getUrlAttribute($value)
     {
 
+        if ($this->type == 'Captation url' || $this->type == 'link') {
+            return $value;
+        }
+
         if (env('IS_LOCAL')) {
             $config = config('filesystems.disks.s3');
             $config['url'] = 'http://localhost:9000';
@@ -43,5 +47,10 @@ class Ressource extends Model
         );
 
         return $temporaryUrl;
+    }
+
+    public function subtitles()
+    {
+        return $this->hasMany(Subtitle::class);
     }
 }

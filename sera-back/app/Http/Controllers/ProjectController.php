@@ -6,10 +6,10 @@ use App\Models\Ressource;
 use Carbon\Carbon;
 use App\Models\Team;
 use App\Models\Project;
-use Illuminate\Support\Js;
 use App\Helpers\ColorHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+
 
 class ProjectController extends Controller
 {
@@ -79,10 +79,16 @@ class ProjectController extends Controller
             throw new \Exception('Invalid sort parameter. Only "asc" or "desc" allowed.');
         }
 
-
+        $user = $request->user();
         $query = Project::with('Team.users');
 
+        $query->whereHas('Team.users', function ($query) use ($user) {
+            $query->where('users.id', $user->id);
+        });
+
         $query->orderBy('updated_at', $sort);
+
+
 
         // Filter by status
         if ($request->has('status')) {
@@ -119,6 +125,7 @@ class ProjectController extends Controller
             }
 
         }
+
 
         return $projects;
     }
@@ -509,7 +516,7 @@ class ProjectController extends Controller
 
     /**
     * @OA\Post(
-    *     path="/api/projects/{project_id}/add-link",
+    *     path="/api/projects/{project_id}/add-rushs",
     *     summary="Add link to captation",
     *     description="Add link to captation",
     *     operationId="addLinkToCaptation",
@@ -623,4 +630,87 @@ class ProjectController extends Controller
         return response()->json($ressource, 201);
     }
 
+    /**
+    * @OA\Get(
+    *     path="/api/projects/{id}/get-rushs",
+    *     summary="Get link to captation",
+    *     description="Get link to captation",
+    *     operationId="getLinkToCaptation",
+    *     tags={"Projects"},
+    *     @OA\Parameter(
+    *         description="ID of project to update",
+    *         in="path",
+    *         name="id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Successful operation",
+    *         @OA\JsonContent(
+    *             @OA\Property(
+    *                 property="id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="project_request_id",
+    *                 type="integer"
+    *             ),
+    *             @OA\Property(
+    *                 property="title",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="description",
+    *                 type="string"
+    *             ),
+    *             @OA\Property(
+    *                 property="colors",
+    *                 type="string"
+    *             ),
+    *            @OA\Property(
+    *                property="created_at",
+    *               type="string"
+    *           ),
+    *           @OA\Property(
+    *             property="updated_at",
+    *            type="string"
+    *           ),
+    *        ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Bad request"
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Unauthenticated"
+    *     ),
+    *     @OA\Response(
+    *         response=403,
+    *         description="Forbidden"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Not found"
+    *     )
+    * )
+    */
+    function getCaptionUrl($idProject){
+
+        $project = Project::find($idProject);
+
+        if ($project === null) {
+            return response()->json(['message' => 'Project not found.'], 404);
+        }
+
+        $ressource = Ressource::where('project_id', $idProject)->where('type', 'Captation url')->first();
+
+        return response()->json([
+            'ressource' => $ressource
+        ], 200);
+
+    }
 }

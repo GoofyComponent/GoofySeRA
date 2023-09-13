@@ -47,6 +47,15 @@ class TranscriptionController extends Controller
     *              enum={"srt", "vtt"}
     *          )
     *      ),
+    *      @OA\Parameter(
+    *          name="final",
+    *          description="Get only final transcriptions",
+    *          required=false,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="boolean"
+    *          )
+    *      ),
     *      @OA\Response(
     *          response=200,
     *          description="successful operation",
@@ -97,7 +106,8 @@ class TranscriptionController extends Controller
     {
         $request->validate([
             'version' => 'integer',
-            'file_type' => 'string|in:srt,vtt'
+            'file_type' => 'string|in:srt,vtt',
+            'final' => 'boolean'
         ]);
 
         $project = Project::find($projectId);
@@ -108,7 +118,21 @@ class TranscriptionController extends Controller
             ], 404);
         }
 
-        $transcriptions = $project->transcriptions();
+        $transcriptions = $project->transcriptions()->with('ressource');
+
+        if ($request->has('final') && $request->final == true) {
+            $transcriptions = $transcriptions->where('is_valid', true);
+            $transcriptions = $transcriptions->with('ressource')->get();
+
+            $tranformTranscriptions = [];
+            foreach ($transcriptions as $transcription) {
+                $tranformTranscriptions[$transcription->version][$transcription->file_type] = $transcription;
+            }
+            return response()->json([
+                'data' => $tranformTranscriptions
+            ], 200);
+
+        }
 
         if ($request->has('version')) {
             $transcriptions = $transcriptions->where('version', $request->version);
@@ -255,7 +279,7 @@ class TranscriptionController extends Controller
             $transcriptionName = 'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.srt';
 
             $path = $request->file('srt')->storeAs(
-                'ressources/' . $projectId . '/transcriptions/' . ($lastVersion + 1),
+                'ressources/' . $projectId . '/transcriptions',
                 $transcriptionName,
                 's3'
             );
@@ -296,7 +320,7 @@ class TranscriptionController extends Controller
             $transcriptionName = 'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.vtt';
 
             $path = $request->file('vtt')->storeAs(
-                'ressources/' . $projectId . '/transcriptions/' . ($lastVersion + 1),
+                'ressources/' . $projectId . '/transcriptions',
                 $transcriptionName,
                 's3'
             );
@@ -327,24 +351,21 @@ class TranscriptionController extends Controller
 
         // en fonction de transcriptionsSRT ou transcriptionsVTT, on va créer un fichier vtt ou srt
         if (isset($transcriptionSRT) && !isset($transcriptionVTT)) {
-            $subtitles = Subtitles::convert($request->file('srt')->getRealPath(), 'vtt');
+            $srt = Subtitles::loadFromFile($request->file('srt')->getRealPath(), 'srt');
+            $vtt = $srt->content('vtt');
 
-            $path = $request->file('srt')->storeAs(
-                'ressources/' . $projectId . '/transcriptions/' . ($lastVersion + 1),
-                'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.vtt',
-                's3'
-            );
+            $transcriptionName = 'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.vtt';
+            $isUpload = Storage::disk('s3')->put('ressources/' . $projectId . '/transcriptions/' . $transcriptionName, $vtt);
 
-            if (!$path) {
+            if (!$isUpload) {
                 return response()->json([
                     'message' => 'Error while storing the file'
                 ], 500);
             }
-
             $newRessource = new Ressource();
-            $newRessource->name = 'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.vtt';
+            $newRessource->name = $transcriptionName;
             $newRessource->type = 'transcription';
-            $newRessource->url = $path;
+            $newRessource->url ='ressources/' . $projectId . '/transcriptions/' . $transcriptionName;
             $newRessource->project_id = $projectId;
             $newRessource->save();
 
@@ -356,19 +377,23 @@ class TranscriptionController extends Controller
             ]);
         }
 
-        if (isset($transcriptionVTT) && !isset($transcriptionSRT)) {
-            $subtitles = Subtitles::convert($request->file('vtt')->getRealPath(), 'srt');
+        if (!isset($transcriptionSRT) && isset($transcriptionVTT)) {
+            $vtt = Subtitles::loadFromFile($request->file('vtt')->getRealPath(), 'vtt');
+            $srt = $vtt->content('srt');
 
-            $path = $request->file('vtt')->storeAs(
-                'ressources/' . $projectId . '/transcriptions/' . ($lastVersion + 1),
-                'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.srt',
-                's3'
-            );
+            $transcriptionName = 'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.srt';
+            $isUpload = Storage::disk('s3')->put('ressources/' . $projectId . '/transcriptions/' . $transcriptionName, $srt);
+
+            if (!$isUpload) {
+                return response()->json([
+                    'message' => 'Error while storing the file'
+                ], 500);
+            }
 
             $newRessource = new Ressource();
-            $newRessource->name = 'transcription_' . $projectId . '_version_' . ($lastVersion + 1) . '.srt';
+            $newRessource->name = $transcriptionName;
             $newRessource->type = 'transcription';
-            $newRessource->url = $path;
+            $newRessource->url = 'ressources/' . $projectId . '/transcriptions/' . $transcriptionName;
             $newRessource->project_id = $projectId;
             $newRessource->save();
 
@@ -380,9 +405,6 @@ class TranscriptionController extends Controller
             ]);
         }
 
-        // return srt and vtt files
-        $transcriptionVTT->load('ressource');
-        $transcriptionSRT->load('ressource');
 
         return response()->json([
             'data' => [

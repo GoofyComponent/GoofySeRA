@@ -813,4 +813,34 @@ class UserController extends Controller
         return response()->json($reservations);
     }
 
+    /**
+    *  @OA\Get(
+    *       path="/api/iso",
+    *       summary="Get the iso list",
+    *       tags={"Users"},
+    *       @OA\Response(
+    *           response=200,
+    *           description="The iso list",
+    *           @OA\JsonContent(
+    *               type="array",
+    *               @OA\Items(
+    *                   type="object",
+    *                   @OA\Property(
+    *                       property="code",
+    *                       type="string",
+    *                   ),
+    *                   @OA\Property(
+    *                       property="name",
+    *                       type="string",
+    *                   ),
+    *               ),
+    *           ),
+    *       ),
+    *   )
+    */
+    function getIsoList(){
+        $languages = \ResourceBundle::getLocales('');
+        return response()->json($languages);
+    }
+
 }

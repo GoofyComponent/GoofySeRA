@@ -22,11 +22,12 @@ class ProjectFactory extends Factory
         $statusArray = ["ongoing", "completed", "cancelled"];
         $defaultSteps = config('steps');
         $projectRequest = ProjectRequest::factory()->create();
+
         return [
             'project_request_id' => $projectRequest->id,
-            'title' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(3),
-            'status' => $this->faker->randomElement($statusArray),
+            'title' => $this->faker->realText(20),
+            'description' => $this->faker->realText(100),
+            'status' => "ongoing",
             'start_date' => Carbon::now()->addDays(1)->format('Y-m-d'),
             'end_date' => Carbon::now()->addDays(2)->format('Y-m-d'),
             'colors' => json_encode(ColorHelper::prettyHexadecimal(150)),

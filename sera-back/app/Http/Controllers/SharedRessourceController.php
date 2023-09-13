@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Ressource;
 use App\Models\Project;
+use App\Models\Ressource;
+use App\Models\VideoReview;
+use Illuminate\Http\Request;
+use App\Models\Transcription;
 use Illuminate\Support\Facades\Storage;
 
 class SharedRessourceController extends Controller
@@ -48,8 +50,12 @@ class SharedRessourceController extends Controller
     *     ),
     * )
     */
-    public function index($projectId)
+    public function index(Request $request, $projectId)
     {
+        $validated = $request->validate([
+            'filter' => 'string',
+        ]);
+
         $project = Project::find($projectId);
 
         if (!$project) {
@@ -58,8 +64,35 @@ class SharedRessourceController extends Controller
             ], 400);
         }
 
-        $ressources = $project->ressources()->get();
-        return response()->json($ressources);
+        $filter = $request->filter;
+
+        if ($filter === 'video'){
+            return response()->json([
+                'message' => 'Vous n\'etes pas autorisés à accéder aux vidéos'
+            ], 400);
+        }
+
+        if ($filter) {
+            $ressources = Ressource::where('project_id', $projectId)->where('type', $filter)->get();
+        } else {
+
+            $ressources = Ressource::where('project_id', $projectId)->where('type', '!=', 'video')->where('type', '!=', 'transcription')->get();
+
+            $videoReview = VideoReview::where('project_id', $projectId)->where('validated', 1)->first();
+            if ($videoReview) {
+                $ressource = Ressource::find($videoReview->ressource_id);
+                $ressources->prepend($ressource);
+            }
+
+            $transcriptions = Transcription::where('project_id', $projectId)->where('is_valid', 1)->get();
+            foreach ($transcriptions as $transcription) {
+                $ressource = Ressource::find($transcription->ressource_id);
+                $ressources->prepend($ressource);
+            }
+
+        }
+
+        return response()->json($ressources, 201);
     }
 
         /**
@@ -412,6 +445,28 @@ class SharedRessourceController extends Controller
 
         return response()->json([
             'message' => 'La ressource a bien été supprimée'
+        ], 200);
+    }
+
+    public function getRessourcesTypes(Request $request, $projectId)
+    {
+        $project = Project::find($projectId);
+
+        if (!$project) {
+            return response()->json([
+                'message' => 'Le projet n\'existe pas'
+            ], 400);
+        }
+
+        $ressources = $project->ressources()->get();
+
+        $ressourcesTypes = $ressources->pluck('type')->unique();
+        $ressourcesTypes = $ressourcesTypes->filter(function ($value, $key) {
+            return $value != 'video' && $value != 'transcription' && $value != 'subtitle';
+        });
+
+        return response()->json([
+            $ressourcesTypes
         ], 200);
     }
 }

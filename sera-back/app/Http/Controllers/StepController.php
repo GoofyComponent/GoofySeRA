@@ -508,32 +508,150 @@ class StepController extends Controller
             return response()->json(['error' => 'Post-Production is not ongoing.'], 400);
         }
 
-        $review = $project->videoReviews;
+        $review = $project->videoReviews()->get();
 
         if($review === null){
             return response()->json(['error' => 'Project has no video review.'], 400);
         }
 
-        // on cherche la review avec la version
         $review = $review->where('version', $request->version)->first();
 
         if($review === null){
             return response()->json(['error' => 'Project has no video review with this version.'], 400);
         }
 
-        $review->validated = true;
-        $review->save();
-
-        // on mets Post-Production en done
         $steps->{'Post-Production'}->status = 'done';
         $steps->{'Transcription'}->status = 'ongoing';
-        $steps->{'Subtitling'}->status = 'ongoing';
 
         $project->steps = json_encode($steps);
         $project->save();
 
+        $review->validated = true;
+        $review->save();
 
         return response()->json($review, 200);
 
+    }
+
+
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{project_id}/validate/transcription",
+    *     tags={"Step"},
+    *     summary="Validate transcription",
+    *     description="Validate transcription",
+    *     operationId="ValidateTranscription",
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\RequestBody(
+    *         required=true,
+    *         description="Validate transcription",
+    *         @OA\JsonContent(
+    *             required={"version"},
+    *             @OA\Property(property="version", type="integer", example="1"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Transcription",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="version", type="integer", example="1"),
+    *             @OA\Property(property="link", type="string", example="https://www.youtube.com/watch?v=1"),
+    *             @OA\Property(property="is_valid", type="boolean", example="false"),
+    *             @OA\Property(property="project_id", type="integer", example="1"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Bad request",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="Transcription is not ongoing."),
+    *         ),
+    *     ),
+    * )
+    */
+    public function validateTranscription(Request $request, $project_id){
+
+        $request->validate([
+            'version' => 'required|integer',
+        ]);
+
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        if(!isset($steps->{'Transcription'}) || $steps->{'Transcription'}->status !== 'ongoing'){
+            return response()->json(['error' => 'Transcription is not ongoing.'], 400);
+        }
+
+        // on doit vérifier qu'on a la version de la transcription
+        $transcriptions = $project->transcriptions()->get();
+
+        if($transcriptions === null){
+            return response()->json(['error' => 'Project has no transcription.'], 400);
+        }
+
+        // si il a déjà une transcription validée on return 400
+        $isAlreadyValid = $transcriptions->where('is_valid', true)->first();
+
+        if($isAlreadyValid !== null){
+            return response()->json(['error' => 'Project has already a transcription validated.'], 400);
+        }
+
+        $transcription = $transcriptions->where('version', $request->version)->first();
+
+        if($transcription === null){
+            return response()->json(['error' => 'Project has no transcription with this version.'], 400);
+        }
+
+
+        // si dans steps -> Transcription -> status not ongoing return 400
+
+        if(!isset($steps->{'Transcription'}) || $steps->{'Transcription'}->status !== 'ongoing'){
+            return response()->json(['error' => 'Transcription is not ongoing.'], 400);
+        }
+
+        $steps->{'Transcription'}->status = 'done';
+
+        $steps->{'Subtitling'}->status = 'ongoing';
+
+        $steps->{'Editorial'}->status = 'ongoing';
+
+        $transcriptions = $transcriptions->where('version', $request->version)->all();
+
+        foreach ($transcriptions as $transcription) {
+            $transcription->is_valid = true;
+            $transcription->save();
+
+            $subtitles = new \App\Models\Subtitle();
+            $subtitles->ressource_id = $transcription->ressource_id;
+            $subtitles->project_id = $transcription->project_id;
+            $subtitles->file_type =  $transcription->file_type;
+            $subtitles->lang = "vo";
+            $subtitles->save();
+        }
+
+
+        $project->steps = json_encode($steps);
+
+        $project->save();
+
+
+        return response()->json($transcriptions, 200);
     }
 }

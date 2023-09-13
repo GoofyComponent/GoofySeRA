@@ -5,6 +5,396 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/knowledges": {
+            "get": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Get list of knowledges",
+                "description": "Returns list of knowledges",
+                "operationId": "getKnowledgesList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Knowledge 1"
+                                            },
+                                            "infos": {
+                                                "type": "string",
+                                                "example": "Infos about knowledge 1"
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "video"
+                                            },
+                                            "imageURL": {
+                                                "type": "string",
+                                                "example": "https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2021-05-20 08:55:00"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2021-05-20 08:55:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Store new knowledge",
+                "description": "Returns knowledge data",
+                "operationId": "storeKnowledge",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "infos",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Knowledge 1"
+                                    },
+                                    "infos": {
+                                        "type": "string",
+                                        "example": "Infos about knowledge 1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "video"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Knowledge 1"
+                                        },
+                                        "infos": {
+                                            "type": "string",
+                                            "example": "Infos about knowledge 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "imageURL": {
+                                            "type": "string",
+                                            "example": "https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/knowledges/{id}": {
+            "get": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Get knowledge information",
+                "description": "Returns knowledge data",
+                "operationId": "getKnowledgeById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Knowledge id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Knowledge 1"
+                                        },
+                                        "infos": {
+                                            "type": "string",
+                                            "example": "Infos about knowledge 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "imageURL": {
+                                            "type": "string",
+                                            "example": "https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Knowledge not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Update existing knowledge",
+                "description": "Returns updated knowledge data",
+                "operationId": "updateKnowledge",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Knowledge id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "infos",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Knowledge 1"
+                                    },
+                                    "infos": {
+                                        "type": "string",
+                                        "example": "Infos about knowledge 1"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "video"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Knowledge 1"
+                                        },
+                                        "infos": {
+                                            "type": "string",
+                                            "example": "Infos about knowledge 1"
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "video"
+                                        },
+                                        "imageURL": {
+                                            "type": "string",
+                                            "example": "https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2021-05-20 08:55:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Knowledge not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Knowledges"
+                ],
+                "summary": "Delete existing knowledge",
+                "description": "Deletes a record and returns no content",
+                "operationId": "deleteKnowledge",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Knowledge id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Knowledge deleted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Knowledge not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
         "/api/projects": {
             "get": {
                 "tags": [
@@ -360,7 +750,7 @@
                 }
             }
         },
-        "/api/projects/{project_id}/add-link": {
+        "/api/projects/{project_id}/add-rushs": {
             "post": {
                 "tags": [
                     "Projects"
@@ -396,6 +786,74 @@
                         }
                     }
                 },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "project_request_id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "colors": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "updated_at": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/api/projects/{id}/get-rushs": {
+            "get": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Get link to captation",
+                "description": "Get link to captation",
+                "operationId": "getLinkToCaptation",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of project to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -2658,6 +3116,449 @@
                 }
             }
         },
+        "/api/projects/{project_id}/validate/transcription": {
+            "post": {
+                "tags": [
+                    "Step"
+                ],
+                "summary": "Validate transcription",
+                "description": "Validate transcription",
+                "operationId": "ValidateTranscription",
+                "parameters": [
+                    {
+                        "name": "project_id",
+                        "in": "path",
+                        "description": "Project id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Validate transcription",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "version"
+                                ],
+                                "properties": {
+                                    "version": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transcription",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "version": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "link": {
+                                            "type": "string",
+                                            "example": "https://www.youtube.com/watch?v=1"
+                                        },
+                                        "is_valid": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "project_id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "example": "2021-05-05T14:48:00.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Transcription is not ongoing."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects/{projectId}/subtitles": {
+            "get": {
+                "tags": [
+                    "Subtitles"
+                ],
+                "summary": "Get subtitles",
+                "description": "Get subtitles",
+                "operationId": "getSubtitles",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "lang",
+                        "in": "query",
+                        "description": "Language of the subtitle",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subtitles successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "subtitles": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "lang": {
+                                                        "type": "string",
+                                                        "example": "fr"
+                                                    },
+                                                    "srt": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "lang": {
+                                                                "type": "string",
+                                                                "example": "fr"
+                                                            },
+                                                            "file_type": {
+                                                                "type": "string",
+                                                                "example": "srt"
+                                                            },
+                                                            "ressource_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "project_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2021-05-04T09:00:00.000000Z"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "example": "2021-05-04T09:00:00.000000Z"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "lang": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The lang field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Project not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Subtitles"
+                ],
+                "summary": "Upload a subtitle",
+                "description": "Upload a subtitle",
+                "operationId": "uploadSubtitle",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Subtitle object that needs to be added to the store",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "srt": {
+                                        "description": "SRT file to upload",
+                                        "type": "file",
+                                        "format": "file"
+                                    },
+                                    "vtt": {
+                                        "description": "VTT file to upload",
+                                        "type": "file",
+                                        "format": "file"
+                                    },
+                                    "lang": {
+                                        "description": "Language of the subtitle",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "srt": "file.srt",
+                                    "vtt": "file.vtt",
+                                    "lang": "fr"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Subtitle successfully uploaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Subtitle successfully uploaded"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You must provide a srt or vtt file"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Project not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error while storing the file",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error while storing the file"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Subtitles"
+                ],
+                "summary": "Delete subtitles",
+                "description": "Delete subtitles",
+                "operationId": "deleteSubtitles",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "lang",
+                        "in": "query",
+                        "description": "Language of the subtitle",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subtitles successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Subtitles successfully deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "lang": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The lang field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Project not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/teams": {
             "get": {
                 "tags": [
@@ -4041,6 +4942,38 @@
                 }
             }
         },
+        "/api/iso": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get the iso list",
+                "operationId": "0c05bbf66661578923e6ecaa7a2aaeb0",
+                "responses": {
+                    "200": {
+                        "description": "The iso list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "code": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/projects/{projectId}/videos": {
             "get": {
                 "tags": [
@@ -4257,6 +5190,35 @@
                     },
                     "404": {
                         "description": "Project not found"
+                    }
+                }
+            }
+        },
+        "/api/projects/{projectId}/videos/validated": {
+            "get": {
+                "tags": [
+                    "Video Review"
+                ],
+                "summary": "Get the validated video review of a project",
+                "operationId": "154d11a501fe0ba16c38cf4d1bff08d3",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "description": "Id of the project",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Video review found"
+                    },
+                    "404": {
+                        "description": "Video review not found"
                     }
                 }
             }

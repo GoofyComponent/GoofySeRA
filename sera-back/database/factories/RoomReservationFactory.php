@@ -18,12 +18,15 @@ class RoomReservationFactory extends Factory
      */
     public function definition(): array
     {
+
+        $projectsId = [2, 3, 4, 5, 6, 7];
+
         $rooms = \App\Models\Room::all()->pluck('id')->toArray();
         if (empty($rooms)) {
             \App\Models\Room::factory()->count(10)->create();
         }
 
-        $projects = \App\Models\Project::all()->pluck('id')->toArray();
+        $projects = \App\Models\Project::whereIn('id', $projectsId)->pluck('id')->toArray();
         if (empty($projects)) {
             \App\Models\Project::factory()->count(10)->create();
         }
@@ -67,7 +70,7 @@ class RoomReservationFactory extends Factory
             'date' => $date,
             'start_time' => $start_time->format('H:i'),
             'end_time' => $end_time->format('H:i'),
-            'title' => $this->faker->sentence(3),
+            'title' => $this->faker->realText(20),
             'users' => json_encode($users),
         ];
     }

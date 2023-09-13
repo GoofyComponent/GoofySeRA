@@ -1,4 +1,5 @@
 import { ClassValue, clsx } from "clsx";
+import { matchPath } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface Member {
@@ -13,6 +14,9 @@ interface Member {
   updated_at: string;
   laravel_through_key: number;
 }
+
+export const SERA_JET_HEXA = "#413B41";
+export const SERA_PERIWINKLE_HEXA = "#E5D1FF";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -156,25 +160,25 @@ export const teamChecker = (team: Member[]) => {
 export const stepLinkExtractor = (step: number) => {
   switch (step) {
     case 1:
-      return "planification";
+      return "prepare";
       break;
     case 2:
-      return "captation";
+      return "capture";
       break;
     case 3:
-      return "review-video";
+      return "editing";
       break;
     case 4:
-      return "transcription";
+      return "transcript";
       break;
     case 5:
-      return "traduction";
+      return "subs";
       break;
     case 6:
       return "edito";
       break;
     default:
-      return "";
+      return "prepare";
       break;
   }
 };
@@ -203,4 +207,36 @@ export const videoTimeDeserializer = (time: string) => {
   const seconds = parseInt(timeArray[2]);
 
   return hours * 3600 + minutes * 60 + seconds;
+};
+
+export const checkLastSeenProject = (
+  pathName: string,
+  lastSeenProjectId: string
+) => {
+  let isLastSeen = false;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}`))
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/prepare`))
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/capture`))
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/editing`))
+    isLastSeen = true;
+
+  if (
+    matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/transcript`)
+  )
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/subs`))
+    isLastSeen = true;
+
+  if (matchPath(pathName, `/dashboard/projects/${lastSeenProjectId}/edito`))
+    isLastSeen = true;
+
+  return isLastSeen;
 };

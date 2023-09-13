@@ -41,6 +41,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::resource('users', 'App\Http\Controllers\UserController')->except(['store']);
     Route::post('users', 'App\Http\Controllers\Auth\RegisteredUserController@store')->name('users.store');
     Route::get('roles', 'App\Http\Controllers\UserController@getRoles')->name('users.roles');
+    Route::get('iso', 'App\Http\Controllers\UserController@getIsoList')->name('users.iso');
 
     /*****************************/
 
@@ -51,9 +52,11 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::get('projects/{id}/steps', 'App\Http\Controllers\StepController@getSteps')->name('projects.stepsGet');
     Route::post('projects/steps/update-date', 'App\Http\Controllers\StepController@updateDateToAStep')->name('projects.stepsUpdateDate');
     Route::post('projects/{project_id}/planification-to-captation', 'App\Http\Controllers\StepController@planificationToCaptation')->name('projects.planificationToCaptation');
-    Route::post('projects/{project_id}/add-link', 'App\Http\Controllers\ProjectController@addLinkToCaptation')->name('projects.addLink');
+    Route::get('projects/{project_id}/get-rushs', 'App\Http\Controllers\ProjectController@getCaptionUrl')->name('projects.getCaptionUrl');
+    Route::post('projects/{project_id}/add-rushs', 'App\Http\Controllers\ProjectController@addLinkToCaptation')->name('projects.addLink');
     Route::post('projects/{project_id}/captation-to-postproduction', 'App\Http\Controllers\StepController@captationToPostProd')->name('projects.captationToPostproduction');
     Route::post('projects/{project_id}/validate/postproduction', 'App\Http\Controllers\StepController@validatePostProd')->name('projects.validatePostProd');
+    Route::post('projects/{project_id}/validate/transcription', 'App\Http\Controllers\StepController@validateTranscription')->name('projects.validateTranscription');
 
         /****TEAM ****/
 
@@ -76,6 +79,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
 
         /***** Video Review *****/
+        Route::get('projects/{projectId}/videos/validated', 'App\Http\Controllers\VideoReviewController@getVideoValidated')->name('video-reviews.getVideoValidated');
         Route::get('projects/{projectId}/videos/getuploadurl', 'App\Http\Controllers\VideoReviewController@getTemporaryUploadUrl')->name('video-reviews.getTemporaryUploadUrl');
         Route::get('projects/{projectId}/videos', 'App\Http\Controllers\VideoReviewController@getReviewsByProjectId')->name('video-reviews.getReviewsByProjectId');
         Route::post('projects/{projectId}/videos', 'App\Http\Controllers\VideoReviewController@store')->name('video-reviews.store');
@@ -91,6 +95,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         Route::post('projects/{projectId}/ressources', 'App\Http\Controllers\SharedRessourceController@store')->name('ressources.store');
         Route::post('ressources/{ressourceId}/update', 'App\Http\Controllers\SharedRessourceController@update')->name('ressources.update');
         Route::delete('ressources/{ressourceId}', 'App\Http\Controllers\SharedRessourceController@destroy')->name('ressources.destroy');
+        Route::get('ressources/{projectId}/types', 'App\Http\Controllers\SharedRessourceController@getRessourcesTypes')->name('ressources.getTypes');
 
         /************************/
 
@@ -106,7 +111,18 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         Route::delete('projects/{projectId}/transcriptions', 'App\Http\Controllers\TranscriptionController@destroy')->name('transcriptions.destroy');
         /************************/
 
-    Route::resource('rooms', 'App\Http\Controllers\RoomController');
+        /***** Subtitles *****/
+        Route::get('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@index')->name('subtitles.index');
+        Route::post('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@store')->name('subtitles.store');
+        Route::delete('projects/{projectId}/subtitles', 'App\Http\Controllers\SubtitleController@destroy')->name('subtitles.destroy');
+        /************************/
+
+        /***** Knowledge *****/
+
+        Route::resource('knowledges', 'App\Http\Controllers\KnowledgeController')->except(['update']);
+        Route::post('knowledges/{id}', 'App\Http\Controllers\KnowledgeController@update')->name('knowledges.update');
+
+        /************************/
 
     /*********************************/
 

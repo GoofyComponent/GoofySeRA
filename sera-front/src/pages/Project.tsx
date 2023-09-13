@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
@@ -15,16 +16,16 @@ import {
 import { axios } from "@/lib/axios";
 
 import { BigLoader } from "./skeletons/BigLoader";
-import { useParams } from "react-router-dom";
 
 export const Project = () => {
-  const { ProjectId: id } = useParams<{ ProjectId: string }>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { ProjectId: id } = useParams<{ ProjectId: string }>();
 
   const {
     data: projectData,
     isLoading,
-    error,
     isSuccess,
   } = useQuery({
     queryKey: ["project", { id }],
@@ -35,15 +36,17 @@ export const Project = () => {
   });
 
   useEffect(() => {
+    if (!searchParams.get("section")) {
+      navigate(`/dashboard/projects/${id}?section=resume`);
+    }
+  }, []);
+
+  useEffect(() => {
     if (isSuccess && id && !isLoading && projectData) {
       dispatch(setLastSeenProjectId(id));
       dispatch(setLastSeenProjectName(projectData.title));
     }
   }, [isSuccess, id, projectData]);
-
-  useEffect(() => {
-    console.log(error);
-  }, [error]);
 
   if (isLoading)
     return (
@@ -58,35 +61,51 @@ export const Project = () => {
         title={projectData.title && projectData.title}
         projectStatus={projectData.status && projectData.status}
         previousTitle="Projects"
+        linkPath={`/dashboard/projects`}
       />
       <div className="flex justify-between">
-        <Tabs defaultValue="resume" className="ml-6 w-8/12">
+        <Tabs
+          className="ml-6 w-8/12"
+          value={searchParams.get("section") || "resume"}
+        >
           <TabsList className="bg-transparent p-0">
             <TabsTrigger
               value="resume"
               className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+              onClick={() =>
+                navigate(`/dashboard/projects/${id}?section=resume`)
+              }
             >
-              Résumé
+              Resume
             </TabsTrigger>
             <TabsTrigger
               value="ressources"
               className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+              onClick={() =>
+                navigate(`/dashboard/projects/${id}?section=ressources`)
+              }
             >
-              Ressources partagées
+              Shared ressources
             </TabsTrigger>
             {projectData.team && (
               <TabsTrigger
                 value="members"
                 className="rounded-b-none rounded-t-sm text-xl data-[state=active]:bg-sera-jet data-[state=active]:text-sera-periwinkle"
+                onClick={() =>
+                  navigate(`/dashboard/projects/${id}?section=members`)
+                }
               >
-                Membres
+                Members
               </TabsTrigger>
             )}
           </TabsList>
 
           <Separator className="mb-2 h-0.5 w-full bg-sera-jet"></Separator>
 
-          <TabsContent value="resume">
+          <TabsContent value="resume" className="text-sera-jet">
+            <h3 className="mb-4 text-4xl font-medium text-sera-jet">
+              Resume :
+            </h3>
             <div className="flex justify-start">
               <h3 className="text-xl font-semibold">Project name :</h3>
               <p className="mt-auto">{projectData.title}</p>
@@ -95,9 +114,7 @@ export const Project = () => {
             <p className="text-normal mt-2">{projectData.description}</p>
             <div>
               <h3 className="text-xl font-semibold">What&apos;s next ?</h3>
-              <p className="text-normal mt-2">
-                BLABLABLA VOUS DEVEZ ENCORE FAIRE CA POUR VALIDERR LETAPE
-              </p>
+              <p className="text-normal mt-2">---------------------</p>
             </div>
           </TabsContent>
           <TabsContent value="ressources">

@@ -16,16 +16,12 @@ class TeamSeeder extends Seeder
         // on récupère tous les projets
         $projects = \App\Models\Project::all();
 
-        // si aucun projet n'existe, on en crée 3
-        if ($projects->count() === 0) {
-            $projects = \App\Models\Project::factory()->count(3)->create();
-        }
         foreach ($projects as $project) {
             $teams[] = \App\Models\Team::factory()->create([
                 'project_id' => $project->id,
             ]);
         }
-        // On va créer pour chacune des équipes créées un membre de chaque type
+        //  On va créer pour chacune des équipes créées un membre de chaque type
         $roles = array_keys(config('roles'));
 
         foreach ($teams as $team) {
@@ -43,50 +39,6 @@ class TeamSeeder extends Seeder
                 ]);
             }
         }
-
-
-        // on récupère le premier projet et on va lui ajouter un membre de chaque type
-        $project = \App\Models\Project::find(1);
-        foreach ($roles as $role) {
-            $user = User::where('role', $role)->first();
-            if ($user === null) {
-                $user = User::factory()->create([
-                    'role' => $role,
-                ]);
-            }
-
-            // on regarde si un team existe déjà pour ce projet
-            $team = \App\Models\Team::where('project_id', $project->id)->first();
-
-            if ($team === null) {
-                $team = \App\Models\Team::factory()->create([
-                    'project_id' => $project->id,
-                ]);
-            }
-            //  hasUser
-            if (!$team->hasUser($user->id)) {
-                $team->addUser($user->id, $team->id);
-            }
-        }
-
-
-        // on va prendre 6 projets au hasard et supprimer tous leurs roles sauf le directeur de projet
-        $projects = \App\Models\Project::inRandomOrder()->limit(6)->get();
-        foreach ($projects as $project) {
-            $teams = \App\Models\Team::where('project_id', $project->id)->get();
-            foreach ($teams as $team) {
-                $users = $team->users;
-                foreach ($users as $user) {
-                    if ($user->role !== 'project_manager') {
-                        $team->removeUser($user->id, $team->id);
-                    }
-                }
-                $team->save();
-            }
-        }
-
-
-
     }
 
 
