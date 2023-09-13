@@ -49,7 +49,15 @@ RUN apt-get update && apt-get install -y \
     && pecl install imagick \
     && docker-php-ext-enable imagick
 
-RUN ls -la
+# install intl and ICU
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
+RUN apt-get update && apt-get install -y \
+    libxslt-dev \
+    && docker-php-ext-install xsl
 
 # on copy les env de dev dans le container
 #COPY .env /var/www/html/.env

@@ -35,6 +35,15 @@ RUN apt-get update && apt-get install -y \
     && pecl install imagick \
     && docker-php-ext-enable imagick
 
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
+RUN apt-get update && apt-get install -y \
+    libxslt-dev \
+    && docker-php-ext-install xsl
+
 #The index.php file is the entry point of the application. And he is in the public folder.
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
@@ -51,9 +60,5 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html && chown -R 1000:1000 /root && chmod -R 755 /root
 RUN mkdir -p /var/www/.mc && chown -R 1000:1000 /var/www/.mc && chmod -R 755 /var/www/.mc
 
-RUN ls -la
-
-# on copy les env de dev dans le container
-#COPY .env /var/www/html/.env
 
 CMD ["apache2-foreground"]
