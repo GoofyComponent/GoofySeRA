@@ -33,4 +33,9 @@ class Knowledge extends Model
 
         return $temporaryUrl;
     }
+
+    public function editos()
+    {
+        return $this->belongsToMany(Edito::class, 'edito_links_knowledge', 'knowledge_id', 'edito_id');
+    }
 }

@@ -13,4 +13,9 @@ class Edito extends Model
     {
         return $this->hasOne(Project::class);
     }
+
+    public function knowledges()
+    {
+        return $this->belongsToMany(Knowledge::class, 'edito_links_knowledge', 'edito_id', 'knowledge_id');
+    }
 }
