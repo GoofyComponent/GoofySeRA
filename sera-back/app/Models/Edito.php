@@ -16,6 +16,6 @@ class Edito extends Model
 
     public function knowledges()
     {
-        return $this->belongsToMany(Knowledge::class, 'edito_links_knowledge', 'edito_id', 'knowledge_id');
+        return $this->belongsToMany(Knowledge::class, 'edito_knowledge', 'edito_id', 'knowledge_id');
     }
 }

@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('edito_links_knowledge', function (Blueprint $table) {
+        Schema::create('edito_knowledge', function (Blueprint $table) {
             $table->id();
-            $table->ForeignId('knowledge_id')->constrained('knowledges')->onDelete('cascade');
-            $table->ForeignId('edito_id')->constrained('edito')->onDelete('cascade');
+            $table->unsignedBigInteger('knowledge_id');
+            $table->unsignedBigInteger('edito_id');
+
+            $table->timestamps();
         });
     }
 
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('edito_links_knowledge');
+        Schema::dropIfExists('edito_knowledge');
     }
 };
