@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { Download } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -26,7 +27,6 @@ import { axios } from "@/lib/axios";
 import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
-import { Download } from "lucide-react";
 
 export const Transcription = () => {
   const parser = new srtParser2();

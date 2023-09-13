@@ -39,10 +39,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import { UsersEntity } from "@/lib/types/types";
 import { getInitials, selectRoleDisplay } from "@/lib/utils";
-import { toast } from "@/components/ui/use-toast";
 
 export const Users = () => {
   const [page, setPage] = useState(1);
@@ -749,13 +749,20 @@ export const Users = () => {
                   users.data.map((user: UsersEntity) => (
                     <React.Fragment key={user.id}>
                       {user.id === Number(UserId) && (
-                        <span
+                        <div
                           id="copyFirstname"
                           onClick={copyFirstname}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === "Space") {
+                              copyFirstname();
+                            }
+                          }}
+                          tabIndex={0}
+                          role="button"
                           className="cursor-pointer"
                         >
                           {user.firstname}
-                        </span>
+                        </div>
                       )}
                     </React.Fragment>
                   ))}
@@ -768,13 +775,20 @@ export const Users = () => {
                   users.data.map((user: UsersEntity) => (
                     <React.Fragment key={user.id}>
                       {user.id === Number(UserId) && (
-                        <span
+                        <div
                           id="copyLastname"
                           onClick={copyLastname}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === "Space") {
+                              copyLastname();
+                            }
+                          }}
+                          tabIndex={0}
+                          role="button"
                           className="cursor-pointer"
                         >
                           {user.lastname}
-                        </span>
+                        </div>
                       )}
                     </React.Fragment>
                   ))}
@@ -787,13 +801,20 @@ export const Users = () => {
                   users.data.map((user: UsersEntity) => (
                     <React.Fragment key={user.id}>
                       {user.id === Number(UserId) && (
-                        <span
+                        <div
                           id="copyEmail"
                           onClick={copyEmail}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === "Space") {
+                              copyEmail();
+                            }
+                          }}
+                          tabIndex={0}
+                          role="button"
                           className="cursor-pointer"
                         >
                           {user.email}
-                        </span>
+                        </div>
                       )}
                     </React.Fragment>
                   ))}

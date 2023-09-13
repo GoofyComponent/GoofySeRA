@@ -1,10 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 
 import logo from "@/assets/images/sera-logo.svg";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
   Popover,
   PopoverContent,
@@ -21,16 +28,8 @@ import { formatName, getInitials, selectRoleDisplay } from "@/lib/utils";
 
 import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { UserInfosSummarySkeletons } from "./skeletons/ProfilePopover";
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import clsx from "clsx";
 import { BigLoader } from "./skeletons/BigLoader";
+import { UserInfosSummarySkeletons } from "./skeletons/ProfilePopover";
 
 function App() {
   const errorState = useSelector((state: any) => state.app.appError);
