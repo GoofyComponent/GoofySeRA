@@ -345,7 +345,6 @@ export const DeleteKnowledgeModal = () => {
       const knowledge = await axios.get(
         `/api/knowledges/${searchParams.get("knowledgeID")}`
       );
-      console.log(knowledge.data);
       return knowledge.data;
     },
   });
@@ -355,7 +354,6 @@ export const DeleteKnowledgeModal = () => {
       const knowledge = await axios.delete(
         `/api/knowledges/${searchParams.get("knowledgeID")}`
       );
-      console.log("knowledge deleted", knowledge.data);
       return knowledge.data;
     },
     onSuccess: () => {
