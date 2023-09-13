@@ -26,6 +26,7 @@ import { axios } from "@/lib/axios";
 import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
+import { Download } from "lucide-react";
 
 export const Transcription = () => {
   const parser = new srtParser2();
@@ -232,6 +233,33 @@ export const Transcription = () => {
   if (isTranscriptLoading && isStepStatusLoading && validatedVideoIsLoading)
     return <BigLoader bgColor="transparent" textColor="sera-jet" />;
 
+  const downloadVideo = async () => {
+    if (
+      !plyrSourceObject ||
+      !plyrSourceObject.sources ||
+      !plyrSourceObject.sources[0]
+    ) {
+      return;
+    }
+
+    const videoUrl = plyrSourceObject.sources[0].src;
+
+    try {
+      const response = await fetch(videoUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `video.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error : ", error);
+    }
+  };
+
   return (
     <>
       <HeaderTitle
@@ -270,7 +298,7 @@ export const Transcription = () => {
           )}
         </section>
         <section className="my-auto w-1/2 px-2">
-          <p className="text-center text-sm font-extralight italic">
+          <p className="mr-5 text-center text-sm font-extralight italic">
             The subtitle displayed on the player is the latest uploaded version.
           </p>
           {plyrSourceObject && (
@@ -290,6 +318,15 @@ export const Transcription = () => {
               />
             </div>
           )}
+          <div className="mt-2 flex justify-end">
+            <Button
+              onClick={downloadVideo}
+              className="my-auto mr-8 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            >
+              <Download size={20} className="mr-2" />
+              Download
+            </Button>
+          </div>
         </section>
       </div>
       <Separator className="mx-auto my-4 h-0.5 w-11/12 bg-sera-jet/75" />

@@ -147,6 +147,33 @@ export const Subtitle = () => {
     getFile.refetch();
   }, [selectedFile]);
 
+  const downloadVideo = async () => {
+    if (
+      !validatedVideoData ||
+      !validatedVideoData.video ||
+      !validatedVideoData.video.json
+    ) {
+      return;
+    }
+
+    const videoUrl = validatedVideoData.video.json.sources[0].src;
+
+    try {
+      const response = await fetch(videoUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `video.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error : ", error);
+    }
+  };
+
   return (
     <>
       <HeaderTitle
@@ -183,6 +210,15 @@ export const Subtitle = () => {
               />
             </div>
           )}
+          <div className="mt-2 flex justify-end">
+            <Button
+              onClick={downloadVideo}
+              className="my-auto mr-8 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            >
+              <Download size={20} className="mr-2" />
+              Download
+            </Button>
+          </div>
         </section>
       </div>
       <Separator className="mx-auto my-4 h-0.5 w-11/12 bg-sera-jet/75" />
