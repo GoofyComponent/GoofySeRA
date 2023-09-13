@@ -376,10 +376,9 @@ class EditoController extends Controller
     *      ),
     * )
     */
-    public function destroy($id)
+    public function destroy($project_id)
     {
-        $edito = Edito::find($id);
-
+        $edito = Edito::where('project_id', $project_id)->first();
         if (!$edito) {
             return response()->json([
                 'message' => 'Edito not found'
