@@ -1,5 +1,6 @@
-import { ExternalLink, File, Image, Video } from "lucide-react";
+import { Download, ExternalLink, File, Image, Video } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 import {
   Dialog,
@@ -204,6 +205,18 @@ const VideoResource = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const download = async () => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    const a = document.createElement("a");
+    a.href = window.URL.createObjectURL(blob);
+    a.download = `${name}.mp4`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <>
       <button
@@ -249,6 +262,15 @@ const VideoResource = ({
                 ],
               }}
             />
+            <div className="mt-2 flex justify-end">
+              <Button
+                onClick={download}
+                className="my-auto bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+              >
+                <Download size={20} className="mr-2" />
+                Download Video
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

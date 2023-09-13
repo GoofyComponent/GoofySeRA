@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import {
   Select,
@@ -16,6 +16,7 @@ export const SubtitleSelectCell = ({ subtitleData }: { subtitleData: any }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [addFileModal, setAddFileModal] = useState(false);
+  const { ProjectId } = useParams<{ ProjectId: string }>();
   const langKey = ["en", "fr", "es", "de", "it", "pt", "zh", "ja"];
 
   return (
@@ -34,7 +35,7 @@ export const SubtitleSelectCell = ({ subtitleData }: { subtitleData: any }) => {
         <Select
           onValueChange={(value) => {
             if (!value) return;
-            navigate(`/dashboard/projects/1/subs?lang=${value}`);
+            navigate(`/dashboard/projects/${ProjectId}/subs?lang=${value}`);
           }}
         >
           <SelectTrigger className="w-full">
@@ -52,7 +53,7 @@ export const SubtitleSelectCell = ({ subtitleData }: { subtitleData: any }) => {
             })}
           </SelectContent>
         </Select>
-        {searchParams.get("lang") && subtitleData && (
+        {searchParams.get("lang") && subtitleData && subtitleData.srt && (
           <div>
             <p className="text-right font-extralight italic">
               Last updated on{" "}
