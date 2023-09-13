@@ -51,14 +51,16 @@ export const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
               >
                 <TableCell className="text-base text-black">
                   <p className="h-8 w-4">
-                    <Avatar className="ml-2 h-10 w-10 transition-all hover:opacity-75">
-                      <AvatarImage src={user.avatar_filename} />
-                      <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
-                        {!user.lastname && !user.firstname
-                          ? "USR"
-                          : getInitials(user.lastname, user.firstname)}
-                      </AvatarFallback>
-                    </Avatar>
+                    <Link to={`/dashboard/users/${user.id}?action=profile`}>
+                      <Avatar className="ml-2 h-10 w-10 transition-all hover:opacity-75">
+                        <AvatarImage src={user.avatar_filename} />
+                        <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
+                          {!user.lastname && !user.firstname
+                            ? "USR"
+                            : getInitials(user.lastname, user.firstname)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Link>
                   </p>
                 </TableCell>
                 <TableCell className="text-base text-black">
