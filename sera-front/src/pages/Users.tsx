@@ -42,6 +42,7 @@ import {
 import { axios } from "@/lib/axios";
 import { UsersEntity } from "@/lib/types/types";
 import { getInitials, selectRoleDisplay } from "@/lib/utils";
+import { toast } from "@/components/ui/use-toast";
 
 export const Users = () => {
   const [page, setPage] = useState(1);
@@ -192,6 +193,51 @@ export const Users = () => {
       formData.append("role", data.role);
     }
     editUser.mutate({ UserId, formData });
+  };
+
+  const copyTextToClipboard = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast({
+          title: "Text copied to clipboard",
+          description: text,
+        });
+        return;
+      })
+      .catch((err) => {
+        toast({
+          title: "Failed to copy text",
+          description: err,
+        });
+      });
+  };
+
+  const copyFirstname = () => {
+    if (users && users.data) {
+      const user = users.data.find((user: any) => user.id === Number(UserId));
+      if (user) {
+        copyTextToClipboard(user.firstname);
+      }
+    }
+  };
+
+  const copyLastname = () => {
+    if (users && users.data) {
+      const user = users.data.find((user: any) => user.id === Number(UserId));
+      if (user) {
+        copyTextToClipboard(user.lastname);
+      }
+    }
+  };
+
+  const copyEmail = () => {
+    if (users && users.data) {
+      const user = users.data.find((user: any) => user.id === Number(UserId));
+      if (user) {
+        copyTextToClipboard(user.email);
+      }
+    }
   };
 
   useEffect(() => {
@@ -702,7 +748,15 @@ export const Users = () => {
                 {users &&
                   users.data.map((user: UsersEntity) => (
                     <React.Fragment key={user.id}>
-                      {user.id === Number(UserId) && `${user.firstname}`}
+                      {user.id === Number(UserId) && (
+                        <span
+                          id="copyFirstname"
+                          onClick={copyFirstname}
+                          className="cursor-pointer"
+                        >
+                          {user.firstname}
+                        </span>
+                      )}
                     </React.Fragment>
                   ))}
               </div>
@@ -713,7 +767,15 @@ export const Users = () => {
                 {users &&
                   users.data.map((user: UsersEntity) => (
                     <React.Fragment key={user.id}>
-                      {user.id === Number(UserId) && `${user.lastname}`}
+                      {user.id === Number(UserId) && (
+                        <span
+                          id="copyLastname"
+                          onClick={copyLastname}
+                          className="cursor-pointer"
+                        >
+                          {user.lastname}
+                        </span>
+                      )}
                     </React.Fragment>
                   ))}
               </div>
@@ -724,7 +786,15 @@ export const Users = () => {
                 {users &&
                   users.data.map((user: UsersEntity) => (
                     <React.Fragment key={user.id}>
-                      {user.id === Number(UserId) && `${user.email}`}
+                      {user.id === Number(UserId) && (
+                        <span
+                          id="copyEmail"
+                          onClick={copyEmail}
+                          className="cursor-pointer"
+                        >
+                          {user.email}
+                        </span>
+                      )}
                     </React.Fragment>
                   ))}
               </div>
