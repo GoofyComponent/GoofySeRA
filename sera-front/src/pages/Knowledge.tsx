@@ -34,9 +34,6 @@ export const Knowledge = () => {
     },
   });
 
-  //A del
-  console.log(knowledgeData);
-
   useEffect(() => {
     console.log(dataId);
     if (searchParams.get("action") === "add") {
