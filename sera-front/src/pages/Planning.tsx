@@ -58,7 +58,12 @@ export const Planning = () => {
 
   return (
     <>
-      <HeaderTitle title="Planning" previousTitle={lastSeenProjectName} />
+      <HeaderTitle
+        title="Planning"
+        previousTitle={lastSeenProjectName}
+        /*         linkPath={`/dashboard/projects/${ProjectId}`}
+         */
+      />
 
       <div className="mx-auto w-11/12">
         <StepValidator

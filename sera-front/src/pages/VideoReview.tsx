@@ -181,7 +181,11 @@ export const VideoReview = () => {
   return (
     <div className="flex justify-start">
       <section className="w-2/3">
-        <HeaderTitle title="Review vidéo" previousTitle={lastSeenProjectName} />
+        <HeaderTitle
+          title="Review vidéo"
+          previousTitle={lastSeenProjectName}
+          linkPath={`/dashboard/projects/${ProjectId}`}
+        />
 
         <div className="mx-auto w-11/12">
           <StepValidator

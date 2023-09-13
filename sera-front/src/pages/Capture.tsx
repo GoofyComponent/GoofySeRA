@@ -100,7 +100,12 @@ export const Capture = () => {
 
   return (
     <>
-      <HeaderTitle title="Capture" previousTitle={lastSeenProjectName} />
+      <HeaderTitle
+        title="Capture"
+        previousTitle={lastSeenProjectName}
+        /*         linkPath={`/dashboard/projects/${ProjectId}`}
+         */
+      />
 
       <div className="mx-6">
         <StepValidator

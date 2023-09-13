@@ -61,6 +61,8 @@ export const Project = () => {
         title={projectData.title && projectData.title}
         projectStatus={projectData.status && projectData.status}
         previousTitle="Projects"
+        /*         linkPath={`/dashboard/projects`}
+         */
       />
       <div className="flex justify-between">
         <Tabs
