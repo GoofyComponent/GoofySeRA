@@ -86,6 +86,15 @@ axios.interceptors.response.use(
       cookies.remove("laravel_session");
       router.navigate("/login");
     }
+
+    if (error.response && error.response.status === 403) {
+      toast({
+        title: "A error occured.",
+        description: "You are not authorized to access this page.",
+      });
+      router.navigate("/dashboard");
+    }
+
     if (error.response && error.response.status === 500) {
       router.navigate("/404");
     }

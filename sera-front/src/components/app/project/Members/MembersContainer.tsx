@@ -130,7 +130,7 @@ export const MembersContainer = ({
           ))}
       </div>
       {isProjectPage && (
-        <Link to={`planification`} className="ml-auto mr-0">
+        <Link to={`prepare`} className="ml-auto mr-0">
           <p className="ml-auto mr-0 text-sera-jet underline hover:text-sera-jet/75">
             Manage the project team &gt;&gt;
           </p>
