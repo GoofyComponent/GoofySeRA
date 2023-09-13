@@ -237,8 +237,7 @@ export const Transcription = () => {
       <HeaderTitle
         title="Transcription"
         previousTitle={lastSeenProjectName}
-        /*         linkPath={`/dashboard/projects/${ProjectId}`}
-         */
+        linkPath={`/dashboard/projects/${ProjectId}`}
       />
       <div className="mx-6 flex justify-between">
         <section className="flex w-1/2 flex-col justify-evenly">
