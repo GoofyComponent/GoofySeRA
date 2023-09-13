@@ -11,8 +11,11 @@ import { SubtitleSelectCell } from "@/components/app/subtitle/SubtitleSelectCell
 import { Button } from "@/components/ui/button";
 import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+
+import { BigLoader } from "./skeletons/BigLoader";
 
 export const Subtitle = () => {
   const parser = new srtParser2();
@@ -28,6 +31,10 @@ export const Subtitle = () => {
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [srtArray, setSrtArray] = useState<any>(null);
   const [displayedLine, setDisplayedLine] = useState("");
+
+  useEffect(() => {
+    projectStepStatus.refetch();
+  }, []);
 
   const { data: subtitleData, isSuccess: isSubtitleSuccess } = useQuery({
     queryKey: ["subtitle", { ProjectId, selectedLanguage }],
@@ -80,6 +87,26 @@ export const Subtitle = () => {
       link.remove();
 
       return file.data;
+    },
+    enabled: false,
+  });
+
+  const projectStepStatus = useQuery({
+    queryKey: ["project-step-status", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(
+        `/api/projects/${ProjectId}/steps?step=Subtitling`
+      );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The transcription step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
+      return project.data[0].status;
     },
     enabled: false,
   });
@@ -169,6 +196,9 @@ export const Subtitle = () => {
       console.error("Error : ", error);
     }
   };
+
+  if (projectStepStatus.isLoading)
+    return <BigLoader bgColor="transparent" textColor="sera-jet" />;
 
   return (
     <>

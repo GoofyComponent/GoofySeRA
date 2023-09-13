@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { Separator } from "@/components/ui/separator";
 import { StepValidator } from "@/components/ui/stepValidator";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import {
   accessManager,
@@ -51,6 +52,29 @@ export const Transcription = () => {
   const [selectedVersion, setSelectedVersion] = useState<any>(null);
   const [srtArray, setSrtArray] = useState<any>([]);
   const [plyrSourceObject, setPlyrSourceObject] = useState<any>(null);
+
+  const {
+    data: projectStepStatus,
+    isLoading: isStepStatusLoading,
+    isSuccess: isStepStatusSuccess,
+  } = useQuery({
+    queryKey: ["project-step-status", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(
+        `/api/projects/${ProjectId}/steps?step=Transcription`
+      );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The transcription step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
+      return project.data[0].status;
+    },
+  });
 
   const {
     data: transcriptData,
@@ -90,20 +114,6 @@ export const Transcription = () => {
         return project.data;
       },
     });
-
-  const {
-    data: projectStepStatus,
-    isLoading: isStepStatusLoading,
-    isSuccess: isStepStatusSuccess,
-  } = useQuery({
-    queryKey: ["project-step-status", { ProjectId }],
-    queryFn: async () => {
-      const project = await axios.get(
-        `/api/projects/${ProjectId}/steps?step=Transcription`
-      );
-      return project.data[0].status;
-    },
-  });
 
   const getFile = useQuery({
     queryKey: ["project-transcript-file"],
@@ -263,6 +273,9 @@ export const Transcription = () => {
       console.error("Error : ", error);
     }
   };
+
+  if (isStepStatusLoading)
+    return <BigLoader bgColor="transparent" textColor="sera-jet" />;
 
   return (
     <>

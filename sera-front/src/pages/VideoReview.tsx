@@ -9,6 +9,7 @@ import { ChatContainer } from "@/components/app/videoReview/ChatContainer";
 import { ReviewActions } from "@/components/app/videoReview/ReviewActions";
 import { PlyrSection } from "@/components/ui/plyrSection";
 import { StepValidator } from "@/components/ui/stepValidator";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import { accessManager } from "@/lib/utils";
 
@@ -61,6 +62,15 @@ export const VideoReview = () => {
       const project = await axios.get(
         `/api/projects/${ProjectId}/steps?step=Post-Production`
       );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The video review step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
       return project.data[0].status;
     },
   });
@@ -163,6 +173,9 @@ export const VideoReview = () => {
     if (editingData.length === 0) return;
     setIsEditingValid(true);
   }, [editingData]);
+
+  if (projectStepIsLoading)
+    return <BigLoader bgColor="transparent" textColor="sera-jet" />;
 
   if (
     (projectStepIsLoading && !projectStepIsSuccess) ||
