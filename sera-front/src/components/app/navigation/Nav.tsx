@@ -64,7 +64,7 @@ export const Nav = () => {
           className={clsx(
             "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
             "flex text-sera-jet",
-            matchPath(pathname.pathname, "/dashboard/users") &&
+            pathname.pathname.match(/^\/dashboard\/users/) &&
               "bg-sera-jet text-sera-periwinkle",
             "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
           )}
@@ -79,7 +79,7 @@ export const Nav = () => {
           className={clsx(
             "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
             "flex text-sera-jet",
-            matchPath(pathname.pathname, "/dashboard/knowledge") &&
+            pathname.pathname.match(/^\/dashboard\/knowledge/) &&
               "bg-sera-jet text-sera-periwinkle",
             "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
           )}
@@ -94,7 +94,7 @@ export const Nav = () => {
           className={clsx(
             "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
             "flex text-sera-jet",
-            matchPath(pathname.pathname, "/dashboard/rooms") &&
+            pathname.pathname.match(/^\/dashboard\/rooms/) &&
               "bg-sera-jet text-sera-periwinkle",
             "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
           )}
@@ -109,7 +109,7 @@ export const Nav = () => {
           className={clsx(
             "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
             "flex   text-sera-jet",
-            matchPath(pathname.pathname, "/dashboard/tickets") &&
+            pathname.pathname.match(/^\/dashboard\/tickets/) &&
               "bg-sera-jet text-sera-periwinkle",
             "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
           )}
