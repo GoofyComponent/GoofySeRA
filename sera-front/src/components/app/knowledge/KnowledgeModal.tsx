@@ -210,7 +210,6 @@ export const EditKnowledgeModal = () => {
       const knowledge = await axios.get(
         `/api/knowledges/${searchParams.get("knowledgeID")}`
       );
-      console.log(knowledge.data);
       return knowledge.data;
     },
   });
@@ -236,7 +235,6 @@ export const EditKnowledgeModal = () => {
           },
         }
       );
-      console.log("knowledge updated", knowledge.data);
       return knowledge.data;
     },
     onSuccess: () => {
