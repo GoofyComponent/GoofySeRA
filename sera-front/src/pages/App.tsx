@@ -1,6 +1,6 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 
@@ -29,10 +29,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import clsx from "clsx";
+import { BigLoader } from "./skeletons/BigLoader";
 
 function App() {
   const errorState = useSelector((state: any) => state.app.appError);
   const userData = useSelector((state: any) => state.user.infos);
+  const [notifNonRead, setNotifNonRead] = useState(0);
   const dispatch = useDispatch();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -68,16 +71,44 @@ function App() {
     },
   });
 
-  const { data: userNotifications } = useQuery({
+  const {
+    data: userNotifications,
+    refetch: refetchNotifications,
+    isLoading: loadingNotification,
+  } = useQuery({
     queryKey: ["notifications"],
+    refetchInterval: 180000,
     queryFn: async () => {
       const userNotifications = await axios.get("/api/notifications");
       return userNotifications.data;
     },
   });
 
+  const setAsRead = useMutation({
+    mutationFn: async (notificationId: number) => {
+      const formData = new URLSearchParams();
+
+      formData.append("is_read", JSON.stringify(1));
+
+      return await axios.put(`/api/notifications/${notificationId}`, formData, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+    },
+    onSuccess: (response: any) => {
+      if (response && response.data) {
+        refetchNotifications();
+      }
+    },
+  });
+
   useEffect(() => {
-    userNotifications && console.log("notif", userNotifications);
+    if (!userNotifications) return;
+    const nonRead = userNotifications.filter(
+      (notification: any) => notification.is_read === 0
+    );
+    setNotifNonRead(nonRead.length);
   }, [userNotifications]);
 
   return (
@@ -92,36 +123,76 @@ function App() {
           </h3>
         </div>
         <div className="my-auto flex justify-end">
-          <div className="relative my-auto mr-2 flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-sera-periwinkle">
+          <div className="relative my-auto mr-2 flex h-10 w-10 shrink-0 rounded-full bg-sera-periwinkle">
             <Popover>
-              <PopoverTrigger className="m-auto">
+              <PopoverTrigger
+                className={clsx(
+                  notifNonRead > 0 &&
+                    "after:absolute after:right-[-5px] after:top-0 after:h-4 after:w-4 after:rounded-full after:bg-red-500",
+                  "m-auto"
+                )}
+              >
                 <Bell className="m-auto text-[#916AF6]" />
               </PopoverTrigger>
-              <PopoverContent className="mt-4 flex flex-col divide-y text-lg font-medium text-sera-jet">
+              <PopoverContent className="mt-4 flex max-h-96 w-96 flex-col divide-y p-0  text-lg font-medium text-sera-jet">
                 <div>
-                  <div className="flex justify-start text-base">
-                    <p>Notification</p>
+                  <div className="flex h-1/6 w-full justify-start border-b bg-white">
+                    <p className=" p-3 text-xl">Notification</p>
                   </div>
-                  <Separator />
-                  <Accordion type="single" collapsible className="w-full">
-                    {userNotifications &&
-                      userNotifications.length > 0 &&
-                      userNotifications.map((notification: any, i: number) => {
-                        return (
-                          <>
-                            <AccordionItem value={`item-${i}`}>
-                              <AccordionTrigger className="flex justify-start bg-transparent text-left ">
-                                <p>{notification.title}</p>
-                              </AccordionTrigger>
-                              <AccordionContent>
-                                <p>{notification.description}</p>
-                              </AccordionContent>
-                            </AccordionItem>
-                            <Separator />
-                          </>
-                        );
-                      })}
-                  </Accordion>
+                  {loadingNotification && (
+                    <BigLoader
+                      loaderSize={42}
+                      bgColor="sera-periwinkle/25"
+                      textColor="sera-jet"
+                    />
+                  )}
+                  {!loadingNotification && userNotifications ? (
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className=" h-[331px] w-full overflow-y-scroll"
+                    >
+                      {userNotifications &&
+                        userNotifications.length > 0 &&
+                        userNotifications.map(
+                          (notification: any, i: number) => {
+                            return (
+                              <>
+                                <AccordionItem value={`item-${i}`}>
+                                  <AccordionTrigger
+                                    className={clsx(
+                                      notification.is_read === 1
+                                        ? "bg-transparent"
+                                        : "bg-sera-periwinkle/30",
+                                      "flex justify-start px-3 pt-2 text-left"
+                                    )}
+                                    onClick={() =>
+                                      setAsRead.mutate(notification.id)
+                                    }
+                                  >
+                                    <p>{notification.title}</p>
+                                  </AccordionTrigger>
+                                  <AccordionContent className="px-3">
+                                    <p className="mt-1">
+                                      {notification.description}
+                                    </p>
+                                  </AccordionContent>
+                                </AccordionItem>
+                                {notification.is_read === 0 && (
+                                  <Separator className="" />
+                                )}
+                              </>
+                            );
+                          }
+                        )}
+                    </Accordion>
+                  ) : (
+                    !loadingNotification && (
+                      <p className="text-center text-lg font-semibold">
+                        No notifications
+                      </p>
+                    )
+                  )}
                 </div>
               </PopoverContent>
             </Popover>
