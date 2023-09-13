@@ -1,8 +1,8 @@
 import { Edit, Trash } from "lucide-react";
 import React from "react";
-import { UsersEntity } from "@/lib/types/types";
 import { Link } from "react-router-dom";
-import { getInitials, selectRoleDisplay } from "@/lib/utils";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Table,
   TableBody,
@@ -11,8 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { UsersEntity } from "@/lib/types/types";
+import { getInitials, selectRoleDisplay } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface UsersTableProps {
   users?: UsersEntity[];
