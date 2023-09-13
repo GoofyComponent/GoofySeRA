@@ -22,7 +22,7 @@ export const Nav = () => {
   );
 
   return (
-    <nav className="h-[90vh] w-[14%] border-r-2 border-[#D3D4D5]">
+    <nav className="h-[calc(100vh_-_100px)] w-[14%] border-r-2 border-[#D3D4D5]">
       <ul className="flex h-full flex-col justify-start py-4">
         {lastSeenProject && (
           <>
