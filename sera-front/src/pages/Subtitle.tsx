@@ -67,7 +67,6 @@ export const Subtitle = () => {
         (item: any) => item.file_type === "srt"
       );
 
-      console.log("srtObject", srtObject);
       if (!srtObject) throw new Error("No transcription file");
 
       console.log(srtObject);

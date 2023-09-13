@@ -35,21 +35,16 @@ export const Knowledge = () => {
   });
 
   useEffect(() => {
-    console.log(dataId);
     if (searchParams.get("action") === "add") {
-      console.log("add");
       setTicketDialogOpen(true);
     }
     if (searchParams.get("action") === "infos") {
-      console.log("infos");
       setTicketDialogOpen(true);
     }
     if (searchParams.get("action") === "edit") {
-      console.log("edit");
       setTicketDialogOpen(true);
     }
     if (searchParams.get("action") === "delete") {
-      console.log("delete");
       setTicketDialogOpen(true);
     }
   }, [dataId]);
