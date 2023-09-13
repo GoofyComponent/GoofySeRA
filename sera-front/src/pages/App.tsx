@@ -281,9 +281,9 @@ function App() {
           </Popover>
         </div>
       </header>
-      <div className="flex min-h-[90vh] justify-start overflow-auto bg-[#FBF5F3]">
+      <div className="flex h-[calc(100vh_-_100px)] justify-start overflow-auto bg-[#FBF5F3]">
         <Nav />
-        <main className="max-h-[90vh] w-[86%] overflow-y-auto pb-4 scrollbar scrollbar-track-sera-jet/50 scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3">
+        <main className="h-[calc(100vh_-_100px)] w-[86%] overflow-y-auto pb-4 scrollbar scrollbar-track-sera-jet/50 scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3">
           <Outlet />
           <Toaster />
         </main>
