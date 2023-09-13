@@ -39,6 +39,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials, selectRoleDisplay } from "@/lib/utils";
 
 export const Users = () => {
   const [page, setPage] = useState(1);
@@ -53,6 +55,7 @@ export const Users = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const isDelete = useMatch("/dashboard/users/:UserId/delete");
   const [openEdit, setOpenEdit] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   const isEdit = useMatch("/dashboard/users/:UserId/edit");
   const [editedUserData] = useState<UsersEntity>();
   const [UserData, setUserData] = useState({
@@ -206,6 +209,12 @@ export const Users = () => {
       setOpenEdit(true);
     } else {
       setOpenEdit(false);
+    }
+
+    if (searchParams.get("action") === "profile") {
+      setOpenProfile(true);
+    } else {
+      setOpenProfile(false);
     }
 
     if (isDelete && UserId) {
@@ -644,6 +653,92 @@ export const Users = () => {
                   </Button>
                 </DialogFooter>
               </DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      {searchParams.get("action") === "profile" && (
+        <Dialog
+          open={openProfile}
+          onOpenChange={(isOpenProfile) => {
+            if (isOpenProfile === true) return;
+            setOpenProfile(false);
+            navigate(`/dashboard/users`);
+          }}
+        >
+          <DialogContent>
+            <DialogTitle className="mb-2">Profile</DialogTitle>
+            {users &&
+              users.data.map((user: UsersEntity) => (
+                <React.Fragment key={user.id}>
+                  {user.id === Number(UserId)}
+                </React.Fragment>
+              ))}
+            <div>
+              <div className="mb-4 flex flex-col items-center">
+                {users &&
+                  users.data.map((user: UsersEntity) => {
+                    if (user.id === Number(UserId)) {
+                      return (
+                        <React.Fragment key={user.id}>
+                          <Avatar className="ml-2 h-40 w-40 transition-all">
+                            <AvatarImage src={user.avatar_filename} />
+                            <AvatarFallback className="bg-sera-periwinkle text-7xl font-semibold text-[#916AF6]">
+                              {!user.lastname && !user.firstname
+                                ? "USR"
+                                : getInitials(user.lastname, user.firstname)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </React.Fragment>
+                      );
+                    }
+                  })}
+              </div>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="firstname">
+                  Firstname
+                </Label>
+                {users &&
+                  users.data.map((user: UsersEntity) => (
+                    <React.Fragment key={user.id}>
+                      {user.id === Number(UserId) && `${user.firstname}`}
+                    </React.Fragment>
+                  ))}
+              </div>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="lastname">
+                  Lastname
+                </Label>
+                {users &&
+                  users.data.map((user: UsersEntity) => (
+                    <React.Fragment key={user.id}>
+                      {user.id === Number(UserId) && `${user.lastname}`}
+                    </React.Fragment>
+                  ))}
+              </div>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="email">
+                  Email
+                </Label>
+                {users &&
+                  users.data.map((user: UsersEntity) => (
+                    <React.Fragment key={user.id}>
+                      {user.id === Number(UserId) && `${user.email}`}
+                    </React.Fragment>
+                  ))}
+              </div>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="role">
+                  Role
+                </Label>
+                {users &&
+                  users.data.map((user: UsersEntity) => (
+                    <React.Fragment key={user.id}>
+                      {user.id === Number(UserId) &&
+                        selectRoleDisplay(user.role)}
+                    </React.Fragment>
+                  ))}
+              </div>
             </div>
           </DialogContent>
         </Dialog>

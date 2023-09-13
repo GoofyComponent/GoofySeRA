@@ -89,6 +89,10 @@ const paths = [
                 element: <Users />,
               },
               {
+                path: "profile",
+                element: <Users />,
+              },
+              {
                 path: "*",
                 element: <Navigate to="/404" replace />,
               },
