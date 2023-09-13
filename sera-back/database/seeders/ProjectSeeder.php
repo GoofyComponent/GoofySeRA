@@ -312,6 +312,12 @@ class ProjectSeeder extends Seeder
         $voSubtitle2 ->lang = 'vo';
         $voSubtitle2->save();
 
+        // use edito factory to create 1 edito and associate it to project 8
+        $edito = \App\Models\Edito::factory()->create(
+            [
+                'project_id' => $project->id,
+            ]
+        );
 
     }
 }

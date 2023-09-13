@@ -124,6 +124,14 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
 
         /************************/
 
+        /***** Edito *****/
+        Route::get('projects/{projectId}/edito', 'App\Http\Controllers\EditoController@index')->name('edito.index');
+        Route::post('projects/{projectId}/edito', 'App\Http\Controllers\EditoController@store')->name('edito.store');
+        Route::post('projects/{projectId}/edito/update', 'App\Http\Controllers\EditoController@update')->name('edito.update');
+        Route::delete('projects/{projectId}/edito', 'App\Http\Controllers\EditoController@destroy')->name('edito.destroy');
+        Route::post('projects/{projectId}/edito/remove-image', 'App\Http\Controllers\EditoController@removeImage')->name('edito.removeImage');
+        /************************/
+
     /*********************************/
 
 

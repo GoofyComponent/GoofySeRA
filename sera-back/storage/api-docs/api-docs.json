@@ -5,6 +5,71 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/projects/{project_id}/edito": {
+            "get": {
+                "tags": [
+                    "Edito"
+                ],
+                "summary": "Get Edito by project id",
+                "description": "Returns Edito data",
+                "operationId": "getEditoByProjectId",
+                "parameters": [
+                    {
+                        "name": "project_id",
+                        "in": "path",
+                        "description": "Project id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "images": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "project_id": {
+                                            "type": "integer"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "updated_at": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Edito not found"
+                    },
+                    "400": {
+                        "description": "Project not found"
+                    }
+                }
+            }
+        },
         "/api/knowledges": {
             "get": {
                 "tags": [

@@ -54,4 +54,9 @@ class Project extends Model
     {
         return $this->hasMany(Subtitle::class);
     }
+
+    public function edito()
+    {
+        return $this->hasOne(Edito::class);
+    }
 }
