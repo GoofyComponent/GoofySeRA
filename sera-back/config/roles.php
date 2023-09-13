@@ -15,6 +15,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["store","destroy","index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
+        "edito" => ["show", "index", "store", "update", "destroy","removeImage"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
@@ -28,6 +29,8 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["store","destroy","index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
+        "edito" => ["show", "index", "store", "update", "destroy","removeImage"],
+
     ],
     "professor" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -38,6 +41,8 @@ return [
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["index"],
+        "edito" => ["show", "index"],
+
     ],
     "video_team" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -48,6 +53,8 @@ return [
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["index"],
+        "edito" => ["show", "index"],
+
     ],
     "video_editor" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -58,6 +65,8 @@ return [
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["index"],
+        "edito" => ["show", "index"],
+
     ],
     "transcription_team" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -69,6 +78,8 @@ return [
         "transcriptions" => ["index", "store", "destroy"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["store","destroy","index"],
+        "edito" => ["show", "index"],
+
     ],
     "traduction_team" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -79,6 +90,8 @@ return [
         "ressources" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["store","destroy","index"],
+        "edito" => ["show", "index"],
+
     ],
     "editorial_team" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],
@@ -90,5 +103,7 @@ return [
         "notifications" => ["index", "store", "show", "update", "destroy"],
         "subtitles" => ["index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
+        "edito" => ["show", "index", "store", "update", "destroy","removeImage"],
+
     ],
 ];
