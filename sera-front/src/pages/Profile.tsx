@@ -1,7 +1,7 @@
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
+import { ImageForm } from "@/components/app/profile/ImageForm";
 import { PasswordForm } from "@/components/app/profile/PasswordForm";
 import { UserForm } from "@/components/app/profile/UserForm";
-import { ImageForm } from "@/components/app/profile/ImageForm";
 
 export default function Profile() {
   return (
