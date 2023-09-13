@@ -61,8 +61,7 @@ export const Planning = () => {
       <HeaderTitle
         title="Planning"
         previousTitle={lastSeenProjectName}
-        /*         linkPath={`/dashboard/projects/${ProjectId}`}
-         */
+        linkPath={`/dashboard/projects/${ProjectId}`}
       />
 
       <div className="mx-auto w-11/12">
