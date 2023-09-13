@@ -156,7 +156,7 @@ function App() {
                         userNotifications.map(
                           (notification: any, i: number) => {
                             return (
-                              <>
+                              <div key={i}>
                                 <AccordionItem value={`item-${i}`}>
                                   <AccordionTrigger
                                     className={clsx(
@@ -180,7 +180,7 @@ function App() {
                                 {notification.is_read === 0 && (
                                   <Separator className="" />
                                 )}
-                              </>
+                              </div>
                             );
                           }
                         )}
@@ -239,44 +239,12 @@ function App() {
                 Profile
               </Link>
 
-              {/*               <Separator className="my-2" /><Link
-                to="/dashboard/settings"
-                className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
-              >
-                Settings
-              </Link> */}
               <Link
                 to="/logout"
                 className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
               >
                 Logout
               </Link>
-
-              <button
-                className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
-                onClick={() => {
-                  dispatch(
-                    setAppError({
-                      title: "An error occured",
-                      description:
-                        "We are unable to log you out for the moment. Please try again later.",
-                    })
-                  );
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    dispatch(
-                      setAppError({
-                        title: "An error occured",
-                        description:
-                          "We are unable to log you out for the moment. Please try again later.",
-                      })
-                    );
-                  }
-                }}
-              >
-                TriggerToast
-              </button>
             </PopoverContent>
           </Popover>
         </div>

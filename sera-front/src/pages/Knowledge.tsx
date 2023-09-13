@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { axios } from "@/lib/axios";
+import { accessManager } from "@/lib/utils";
 
 export const Knowledge = () => {
   const navigate = useNavigate();
@@ -21,6 +22,12 @@ export const Knowledge = () => {
 
   const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+
+  useEffect(() => {
+    if (!accessManager("knowledge_base", undefined)) {
+      return navigate("/dashboard");
+    }
+  }, []);
 
   const { data: knowledgeData, refetch: refetchKnowledge } = useQuery({
     queryKey: ["knowledge"],

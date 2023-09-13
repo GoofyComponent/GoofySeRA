@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { convertDate } from "@/lib/utils";
+import { accessManager, convertDate } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
 export const RoomsTable = ({
@@ -77,12 +77,17 @@ export const RoomsTable = ({
                     <Link to={`/dashboard/rooms/${room.id}?action=infos`}>
                       <Info className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
                     </Link>
-                    <Link to={`/dashboard/rooms/${room.id}?action=edit`}>
-                      <PenBox className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
-                    </Link>
-                    <Link to={`/dashboard/rooms/${room.id}?action=delete`}>
-                      <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
-                    </Link>
+                    {accessManager(undefined, "edit_room") && (
+                      <Link to={`/dashboard/rooms/${room.id}?action=edit`}>
+                        <PenBox className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
+                      </Link>
+                    )}
+
+                    {accessManager(undefined, "delete_room") && (
+                      <Link to={`/dashboard/rooms/${room.id}?action=delete`}>
+                        <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
+                      </Link>
+                    )}
                   </TableCell>
                 </TableRow>
               );

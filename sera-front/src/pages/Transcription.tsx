@@ -23,8 +23,13 @@ import { Label } from "@/components/ui/label";
 import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { Separator } from "@/components/ui/separator";
 import { StepValidator } from "@/components/ui/stepValidator";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
-import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+import {
+  accessManager,
+  SERA_JET_HEXA,
+  SERA_PERIWINKLE_HEXA,
+} from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -47,6 +52,29 @@ export const Transcription = () => {
   const [selectedVersion, setSelectedVersion] = useState<any>(null);
   const [srtArray, setSrtArray] = useState<any>([]);
   const [plyrSourceObject, setPlyrSourceObject] = useState<any>(null);
+
+  const {
+    data: projectStepStatus,
+    isLoading: isStepStatusLoading,
+    isSuccess: isStepStatusSuccess,
+  } = useQuery({
+    queryKey: ["project-step-status", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(
+        `/api/projects/${ProjectId}/steps?step=Transcription`
+      );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The transcription step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
+      return project.data[0].status;
+    },
+  });
 
   const {
     data: transcriptData,
@@ -86,20 +114,6 @@ export const Transcription = () => {
         return project.data;
       },
     });
-
-  const {
-    data: projectStepStatus,
-    isLoading: isStepStatusLoading,
-    isSuccess: isStepStatusSuccess,
-  } = useQuery({
-    queryKey: ["project-step-status", { ProjectId }],
-    queryFn: async () => {
-      const project = await axios.get(
-        `/api/projects/${ProjectId}/steps?step=Transcription`
-      );
-      return project.data[0].status;
-    },
-  });
 
   const getFile = useQuery({
     queryKey: ["project-transcript-file"],
@@ -260,6 +274,9 @@ export const Transcription = () => {
     }
   };
 
+  if (isStepStatusLoading)
+    return <BigLoader bgColor="transparent" textColor="sera-jet" />;
+
   return (
     <>
       <HeaderTitle
@@ -269,16 +286,18 @@ export const Transcription = () => {
       />
       <div className="mx-6 flex justify-between">
         <section className="flex w-1/2 flex-col justify-evenly">
-          <StepValidator
-            projectStepStatus={projectStepStatus}
-            isprojectStatusLoading={isStepStatusLoading}
-            isprojectStatusSuccess={isStepStatusSuccess}
-            isCurrentStepValid={isTranscriptValid}
-            mutationMethod={validateStep}
-            buttonMessage="Validate this step"
-            cannotValidateMessage="You can't validate this step until you have at least one transcription file."
-            validateAvertissement="You are about to validate the file currently selected. You won't be able to modify it after validation."
-          />
+          {accessManager(undefined, "validate_project_step") && (
+            <StepValidator
+              projectStepStatus={projectStepStatus}
+              isprojectStatusLoading={isStepStatusLoading}
+              isprojectStatusSuccess={isStepStatusSuccess}
+              isCurrentStepValid={isTranscriptValid}
+              mutationMethod={validateStep}
+              buttonMessage="Validate this step"
+              cannotValidateMessage="You can't validate this step until you have at least one transcription file."
+              validateAvertissement="You are about to validate the file currently selected. You won't be able to modify it after validation."
+            />
+          )}
 
           <h3 className="mb-2 mt-0 text-4xl font-medium text-sera-jet">
             Transcript file :

@@ -42,7 +42,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import { UsersEntity } from "@/lib/types/types";
-import { getInitials, selectRoleDisplay } from "@/lib/utils";
+import { accessManager, getInitials, selectRoleDisplay } from "@/lib/utils";
 
 export const Users = () => {
   const [page, setPage] = useState(1);
@@ -68,6 +68,12 @@ export const Users = () => {
     password_confirmation: "",
     role: "",
   });
+
+  useEffect(() => {
+    if (!accessManager("users", undefined)) {
+      return navigate("/dashboard");
+    }
+  }, []);
 
   const {
     data: users,
