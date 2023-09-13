@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('knowledge_id');
             $table->unsignedBigInteger('edito_id');
-
-            $table->timestamps();
         });
     }
 
