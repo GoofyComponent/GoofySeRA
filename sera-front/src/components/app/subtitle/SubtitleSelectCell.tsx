@@ -17,7 +17,7 @@ export const SubtitleSelectCell = ({ subtitleData }: { subtitleData: any }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [addFileModal, setAddFileModal] = useState(false);
-  const langKey = ["en", "fr", "es", "de", "it", "pt", "zh", "ja"];
+  const langKey = ["en", "fr", "es", "de", "it", "pt", "zh", "ja", "vo"];
 
   return (
     <>
@@ -60,7 +60,7 @@ export const SubtitleSelectCell = ({ subtitleData }: { subtitleData: any }) => {
             <p className="text-right font-extralight italic">
               Last updated on{" "}
               {formatDate(
-                subtitleData[searchParams.get("lang") || "en"].srt.updated_at
+                subtitleData[searchParams.get("lang") || "vo"].srt.updated_at
               )}
             </p>
           </div>
