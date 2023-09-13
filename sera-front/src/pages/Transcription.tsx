@@ -227,7 +227,7 @@ export const Transcription = () => {
     if (plyrRef?.current?.plyr?.source) {
       return offFuncs;
     }
-  }, [plyrRef && plyrRef.current, srtArray]);
+  }, [plyrRef && plyrRef.current, srtArray, plyrSourceObject]);
 
   if (isTranscriptLoading && isStepStatusLoading && validatedVideoIsLoading)
     return <BigLoader bgColor="transparent" textColor="sera-jet" />;

@@ -11,6 +11,7 @@ import Profile from "@/pages/Profile";
 import { Project } from "@/pages/Project";
 import { Projects } from "@/pages/Projects";
 import { Rooms } from "@/pages/Rooms";
+import { Subtitle } from "@/pages/Subtitle";
 import { Test } from "@/pages/Test";
 import { Tickets } from "@/pages/Tickets";
 import { Transcription } from "@/pages/Transcription";
@@ -114,6 +115,10 @@ const paths = [
       {
         path: "projects/:ProjectId/transcript",
         element: <Transcription />,
+      },
+      {
+        path: "projects/:ProjectId/subs",
+        element: <Subtitle />,
       },
       {
         path: "projects/:ProjectId/editing",
