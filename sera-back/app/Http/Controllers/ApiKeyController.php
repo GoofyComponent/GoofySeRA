@@ -54,7 +54,7 @@ class ApiKeyController extends Controller
         $validated = $request->validate([
             'name' => 'required|string',
             'description' => 'nullable|string',
-            'expires_at' => 'required|date',
+            'expires_at' => 'date',
             'never_expires' => 'required|boolean',
         ]);
 

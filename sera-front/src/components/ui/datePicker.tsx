@@ -6,7 +6,12 @@ import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
-export const DatePicker = ({ date, setDate, hideToday = false }: any) => {
+export const DatePicker = ({
+  date,
+  setDate,
+  hideToday = false,
+  disabled = false,
+}: any) => {
   const today = new Date();
 
   if (hideToday) {
@@ -22,6 +27,7 @@ export const DatePicker = ({ date, setDate, hideToday = false }: any) => {
             "w-full justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
+          disabled={disabled}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? convertDateFromDateType(date) : <span>Pick a date</span>}

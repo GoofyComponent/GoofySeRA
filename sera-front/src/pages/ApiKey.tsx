@@ -39,7 +39,7 @@ export const ApiKey = () => {
     }
   }, [location]);
 
-  const { data: apiKeyData } = useQuery({
+  const { data: apiKeyData, refetch: apiKeyRefetch } = useQuery({
     queryKey: ["api-key"],
     queryFn: async () => {
       const keys = await axios.get(`/api/api-keys`);
@@ -69,6 +69,7 @@ export const ApiKey = () => {
       <Dialog
         onOpenChange={() => {
           navigate("/dashboard/api");
+          apiKeyRefetch();
           setAddApiKeyDialog(false);
         }}
         open={addApiKeyDialog}

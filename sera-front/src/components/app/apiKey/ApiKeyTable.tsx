@@ -52,16 +52,18 @@ export const ApiKeyTable = ({ data }: { data: any }) => {
                   <p>{keyElement.name}</p>
                 </TableCell>
                 <TableCell className="text-base text-sera-jet">
-                  <p>{keyElement.description}</p>
+                  <p>{keyElement.description ? keyElement.description : ""}</p>
                 </TableCell>
                 <TableCell className="text-base text-sera-jet">
-                  <p>{convertDateFromDateType(keyElement.expiration)}</p>
+                  <p>
+                    {keyElement.expires_at ? keyElement.expires_at : "Never"}
+                  </p>
                 </TableCell>
                 <TableCell className="flex justify-end">
-                  <Link to={`/dashboard/api/id?action=renew`}>
+                  <Link to={`/dashboard/api/${keyElement.id}?action=renew`}>
                     <RefreshCw className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
                   </Link>
-                  <Link to={`/dashboard/api/id?action=delete`}>
+                  <Link to={`/dashboard/api/${keyElement.id}?action=delete`}>
                     <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
                   </Link>
                 </TableCell>
