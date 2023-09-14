@@ -231,6 +231,7 @@ class ProjectSeeder extends Seeder
         $project->steps->{'Post-Production'}->status = 'done';
         $project->steps->{'Transcription'}->status = 'done';
         $project->steps->{'Subtitling'}->status = 'ongoing';
+        $project->steps->{'Editorial'}->status = 'ongoing';
         $project->steps = json_encode($project->steps);
         $project->save();
 
