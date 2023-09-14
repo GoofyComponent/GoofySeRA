@@ -211,7 +211,7 @@ const VideoResource = ({
 
     const a = document.createElement("a");
     a.href = window.URL.createObjectURL(blob);
-    a.download = `${name}.mp4`;
+    a.download = `final_video_project_name_${name}.mp4`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -264,11 +264,10 @@ const VideoResource = ({
             />
             <div className="mt-2 flex justify-end">
               <Button
+                className="my-auto mb-2 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
                 onClick={download}
-                className="my-auto bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
               >
-                <Download size={20} className="mr-2" />
-                Download Video
+                Download final video <Download size={24} className="ml-2" />
               </Button>
             </div>
           </div>
