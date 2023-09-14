@@ -1,7 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/datePicker";
@@ -227,6 +227,22 @@ export const RenewKeyDialog = () => {
 };
 
 export const DeleteKeyDialog = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { keyId } = useParams<{ keyId: string }>();
+
+  const deleteKey = useMutation({
+    mutationFn: async () => {
+      const key = await axios.delete(`/api/api-keys/${keyId}`);
+
+      return key.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["api-key"]);
+      navigate("/dashboard/api");
+    },
+  });
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -244,10 +260,11 @@ export const DeleteKeyDialog = () => {
           type="submit"
           className="w-full bg-red-600 text-white hover:bg-red-600 hover:opacity-60"
           onClick={() => {
-            console.log("delete");
+            deleteKey.mutate();
           }}
+          disabled={deleteKey.isLoading}
         >
-          I understand, delete API Key
+          {deleteKey.isLoading ? "Loading..." : "I understand, delete API Key"}
         </Button>
       </DialogFooter>
     </DialogContent>
