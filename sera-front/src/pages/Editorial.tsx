@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { axios } from "@/lib/axios";
 import { PlyrSection } from "@/components/ui/plyrSection";
-import { Addknowledge } from "@/components/app/edito/addKnowledge";
 import {
   Dialog,
   DialogContent,
@@ -25,6 +24,7 @@ import { BigLoader } from "./skeletons/BigLoader";
 import { Textarea } from "@/components/ui/textarea";
 import { StepValidator } from "@/components/ui/stepValidator";
 import { SERA_PERIWINKLE_HEXA, SERA_JET_HEXA } from "@/lib/utils";
+import { Addknowledge } from "@/components/app/edito/Addknowledge";
 
 export const Editorial = () => {
   const navigate = useNavigate();
