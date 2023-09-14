@@ -70,9 +70,7 @@ export const Subtitle = () => {
       const project = await axios.get(
         `/api/projects/${ProjectId}/transcriptions?final=1`
       );
-      const srtObject = project.data.data.find(
-        (item: any) => item.file_type === "srt"
-      );
+      const srtObject = project.data.data["1"].srt;
 
       if (!srtObject) throw new Error("No transcription file");
 
