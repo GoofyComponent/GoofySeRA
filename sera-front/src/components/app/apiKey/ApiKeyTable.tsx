@@ -1,6 +1,6 @@
-import { TrashIcon } from "lucide-react";
+import { RefreshCw, Trash } from "lucide-react";
+import { Link } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -49,16 +49,13 @@ export const ApiKeyTable = ({ data }: { data: any }) => {
                 <TableCell className="text-base text-sera-jet">
                   <p>{convertDateFromDateType(keyElement.expiration)}</p>
                 </TableCell>
-                <TableCell>
-                  <Button
-                    variant="outline"
-                    className="text-sera-jet hover:text-sera-periwinkle"
-                    onClick={() => {
-                      console.log(keyElement);
-                    }}
-                  >
-                    <TrashIcon className="h-4 w-4" />
-                  </Button>
+                <TableCell className="flex justify-end">
+                  <Link to={`/dashboard/api/id?action=renew`}>
+                    <RefreshCw className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
+                  </Link>
+                  <Link to={`/dashboard/api/id?action=delete`}>
+                    <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
+                  </Link>
                 </TableCell>
               </TableRow>
             );

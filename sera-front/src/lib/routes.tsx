@@ -32,6 +32,12 @@ const paths = [
       {
         path: "api",
         element: <ApiKey />,
+        children: [
+          {
+            path: ":keyId",
+            element: <ApiKey />,
+          },
+        ],
       },
       {
         path: "rooms",
