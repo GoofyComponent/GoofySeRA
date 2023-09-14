@@ -18,6 +18,9 @@ Route::get('/', function () {
 });
 
 
+Route::get('/courses', 'App\Http\Controllers\CourseController@index')->name('courses.index');
+Route::get('/courses/{course}', 'App\Http\Controllers\CourseController@show')->name('courses.show');
+
 // Route::get('/test', 'App\Http\Controllers\UserController@test')->name('test');
 
 require __DIR__.'/auth.php';
