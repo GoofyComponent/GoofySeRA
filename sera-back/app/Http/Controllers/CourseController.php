@@ -7,6 +7,23 @@ use App\Models\Project;
 
 class CourseController extends Controller
 {
+    /**
+    * @OA\Get(
+    *      path="/courses",
+    *      operationId="getCourseList",
+    *      tags={"Courses"},
+    *      summary="Get list of courses",
+    *      description="Returns list of courses",
+    *      @OA\Response(
+    *          response=200,
+    *          description="successful operation",
+    *       ),
+    *       @OA\Response(
+    *          response=401,
+    *          description="Unauthorized",
+    *       ),
+    *     )
+    */
     public function index()
     {
         $projects = Project::where('status', 'published')
@@ -19,6 +36,37 @@ class CourseController extends Controller
         );
     }
 
+    /**
+    * @OA\Get(
+    *      path="/courses/{id}",
+    *      operationId="getCourseById",
+    *      tags={"Courses"},
+    *      summary="Get course information",
+    *      description="Returns course data",
+    *      @OA\Parameter(
+    *          name="id",
+    *          description="Course id",
+    *          required=true,
+    *          in="path",
+    *          @OA\Schema(
+    *              type="integer",
+    *              format="int64"
+    *          )
+    *      ),
+    *      @OA\Response(
+    *          response=200,
+    *          description="successful operation",
+    *       ),
+    *       @OA\Response(
+    *          response=401,
+    *          description="Unauthorized",
+    *       ),
+    *       @OA\Response(
+    *          response=404,
+    *          description="Not found",
+    *       ),
+    *     )
+    */
     public function show($id)
     {
         $project = Project::with(['videoReviews' => function ($query) {

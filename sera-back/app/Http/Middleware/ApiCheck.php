@@ -16,6 +16,12 @@ class ApiCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+        // si l'appel est fait en local, on ne vérifie pas le token
+        if (env('APP_ENV') === 'local') {
+            return $next($request);
+        }
+
         // on récupère le token appelé "api_token" dans le header de la requête
         $token = $request->header('api_token');
         // on vérifie que le token existe
