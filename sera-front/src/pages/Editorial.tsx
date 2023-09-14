@@ -23,24 +23,24 @@ import { useEffect, useRef, useState } from "react";
 import { BigLoader } from "./skeletons/BigLoader";
 import { Textarea } from "@/components/ui/textarea";
 import { StepValidator } from "@/components/ui/stepValidator";
-import clsx from "clsx";
-import { SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+import { SERA_PERIWINKLE_HEXA, SERA_JET_HEXA } from "@/lib/utils";
 
 export const Editorial = () => {
   const navigate = useNavigate();
   const [addProjectData, setAddProjectData] = useState<any>({
     displayName: "",
     description: "",
-    editorialImages: [],
+    images: [],
   });
-  const [editorialImages, setEditorialImages] = useState<any>([]);
+  const [images, setimages] = useState<any>([]);
   const { ProjectId } = useParams<{ ProjectId: string }>();
+  const [imgSlide, setImgSlide] = useState<any>([]);
   const plyrRef = useRef(null);
 
   //slider settings
   const sliderRef = useRef<Slider | null>(null);
   var settings = {
-    dots: true,
+    dots: false,
     infinite: false,
     speed: 500,
     slidesToShow: 3,
@@ -103,17 +103,38 @@ export const Editorial = () => {
     },
   });
 
+  const onSubmitAddEditorialForm = async (addProjectData: {
+    displayName: string;
+    description: string;
+    images: any;
+  }) => {
+    addEditorial.mutate();
+    console.log(addProjectData);
+  };
+
   const addEditorial = useMutation({
-    mutationFn: async (formData: any) => {
-      const ticket = await axios.post("api/projects-requests", formData);
-      return ticket;
+    mutationFn: async () => {
+      const formData = new FormData();
+      formData.append("title", addProjectData.displayName);
+      formData.append("description", addProjectData.description);
+      // formData.append("images", images);
+      for (let i = 0; i < images.length; i++) {
+        formData.append("images[]", images[i]);
+      }
+      console.log(formData);
+      const editorial = await axios.post(
+        `/api/projects/${ProjectId}/edito`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      return editorial;
     },
     onSuccess: () => {
       editorialRefetch();
       setAddProjectData({
-        displayName: "",
+        title: "",
         description: "",
-        editorialImages: [],
+        images: [],
       });
     },
     onError: () => {
@@ -121,34 +142,41 @@ export const Editorial = () => {
     },
   });
 
-  // when new editorialImages is added to editorialImages state add editorialImages to addProjectData
+  const deleteEditorial = useMutation({
+    mutationFn: async () => {
+      const editorial = await axios.delete(`/api/projects/${ProjectId}/edito`);
+      return editorial;
+    },
+    onSuccess: () => {
+      editorialRefetch();
+      setAddProjectData({
+        title: "",
+        description: "",
+        images: [],
+      });
+    },
+    onError: () => {
+      return console.log("error");
+    },
+  });
+
+  // when new images is added to images state add images to addProjectData
 
   useEffect(() => {
     setAddProjectData({
       ...addProjectData,
-      editorialImages: editorialImages,
+      images: images,
     });
-  }, [editorialImages]);
+  }, [images]);
+
+  useEffect(() => {
+    console.log("imgSlide", imgSlide);
+  }, [imgSlide]);
 
   useEffect(() => {
     addEditorial;
     console.log(addProjectData);
   }, [addProjectData]);
-
-  const onSubmitAddEditorialForm = async (addProjectData: {
-    displayName: string;
-    description: string;
-    editorialImages: any;
-  }) => {
-    const formData = new FormData();
-    formData.append("displayName", addProjectData.displayName);
-    formData.append("description", addProjectData.description);
-    formData.append("editorialImages", editorialImages);
-    formData.append("needs", "1");
-
-    addEditorial.mutate(formData);
-    console.log(addProjectData);
-  };
 
   return (
     <>
@@ -164,6 +192,7 @@ export const Editorial = () => {
             cannotValidateMessage="You can't validate this step until you set one video rushs drive"
             buttonMessage="Validate this step"
           />
+          <Button onClick={() => deleteEditorial.mutate()}>delete</Button>
         </div>
       </div>
       {!editorialsIsLoading ? (
@@ -213,41 +242,30 @@ export const Editorial = () => {
                   </Label>
                   <div className="flex">
                     <Input
+                      name="image[]"
+                      multiple
                       className=" mr-2 cursor-pointer border-sera-jet"
                       id="image"
                       type="file"
-                      // add image to const editorialImages
                       onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        console.log(file);
+                        // add url
+                        setImgSlide;
+                        const files = e.target.files?.[0];
                         const reader = new FileReader();
                         reader.onloadend = () => {
-                          setEditorialImages([
-                            ...editorialImages,
-                            {
-                              nom: file?.name,
-                              fichier: file,
-                              url: reader.result,
-                            },
-                          ]);
+                          setImgSlide([...imgSlide, files]);
                         };
-                        file && reader.readAsDataURL(file);
+                        files && reader.readAsDataURL(files);
                         (e.target as HTMLInputElement).value = "";
+
+                        setimages(e.target.files);
                       }}
                     />
                   </div>
-                  <div
-                    className={
-                      clsx(
-                        editorialImages?.length > 3
-                          ? "h-[170px] "
-                          : "h-[140px] "
-                      ) + "relative mx-2 mt-2"
-                    }
-                  >
-                    {editorialImages && editorialImages.length > 0 ? (
+                  <div className={"relative mx-2 mt-2"}>
+                    {imgSlide.length > 0 ? (
                       <>
-                        {editorialImages.length > 3 && (
+                        {imgSlide.length > 3 && (
                           <div
                             className="previous absolute right-full top-1/2 cursor-pointer"
                             onClick={goToPrevious}
@@ -255,25 +273,29 @@ export const Editorial = () => {
                             <ChevronLeft className="duration-100 ease-in hover:scale-[1.2] " />
                           </div>
                         )}
-
                         <Slider ref={sliderRef} {...settings}>
-                          {editorialImages.map((image: any) => {
+                          {imgSlide.map((file: any) => {
+                            const img = new Blob([file], {
+                              type: "image/png",
+                            });
+                            const url = URL.createObjectURL(img);
                             return (
-                              <Dialog key={image.nom}>
+                              <Dialog key={file.name}>
                                 <DialogTrigger className="w-full">
                                   <div className="relative">
                                     <img
                                       className="aspect-square w-full rounded object-cover p-1"
-                                      src={image.url}
-                                      alt={image.nom}
+                                      src={url}
+                                      alt={file.name}
                                     />
 
                                     <div
                                       className="absolute right-0 top-0 cursor-pointer"
                                       onClick={() => {
-                                        setEditorialImages(
-                                          editorialImages.filter(
-                                            (img: any) => img.nom !== image.nom
+                                        setImgSlide(
+                                          imgSlide.filter(
+                                            (item: any) =>
+                                              item.name !== file.name
                                           )
                                         );
                                       }}
@@ -284,12 +306,12 @@ export const Editorial = () => {
                                 </DialogTrigger>
                                 <DialogContent>
                                   <DialogHeader>
-                                    <DialogTitle>{image.nom}</DialogTitle>
+                                    <DialogTitle>{file.name}</DialogTitle>
                                     <DialogDescription>
                                       <img
                                         className=""
-                                        src={image.url}
-                                        alt={image.nom}
+                                        src={url}
+                                        alt={file.name}
                                       />
                                     </DialogDescription>
                                   </DialogHeader>
@@ -298,7 +320,7 @@ export const Editorial = () => {
                             );
                           })}
                         </Slider>
-                        {editorialImages.length > 3 && (
+                        {imgSlide.length > 3 && (
                           <div
                             className="next absolute left-full top-1/2 cursor-pointer"
                             onClick={goToNext}
@@ -309,7 +331,9 @@ export const Editorial = () => {
                       </>
                     ) : (
                       <>
-                        <p className="text-center">No images selected</p>
+                        <p className="flex h-[140px] items-center justify-center text-center">
+                          No images selected
+                        </p>
                       </>
                     )}
                   </div>

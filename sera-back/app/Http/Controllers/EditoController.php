@@ -168,12 +168,13 @@ class EditoController extends Controller
     */
     public function store(Request $request, $project_id)
     {
+       
         $validatedData = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg'],
         ]);
-
+        
         $project = Project::find($project_id);
 
         if (!$project) {
@@ -298,7 +299,7 @@ class EditoController extends Controller
         $validatedData = $request->validate([
             'title' => ['string', 'max:255'],
             'description' => ['string'],
-            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg'],
         ]);
 
         $project = Project::find($project_id);
