@@ -9,4 +9,5 @@ class ApiKey extends Model
 {
     use HasFactory;
 
+
 }
