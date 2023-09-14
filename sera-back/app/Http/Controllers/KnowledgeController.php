@@ -17,6 +17,15 @@ class KnowledgeController extends Controller
     *      tags={"Knowledges"},
     *      summary="Get list of knowledges",
     *      description="Returns list of knowledges",
+    *      @OA\Parameter(
+    *          name="search",
+    *          description="Search string",
+    *          required=false,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="string",
+    *          )
+    *      ),
     *      @OA\Response(
     *          response=200,
     *          description="Successful operation",
@@ -28,7 +37,7 @@ class KnowledgeController extends Controller
     *                  @OA\Property(property="name", type="string", example="Knowledge 1"),
     *                  @OA\Property(property="infos", type="string", example="Infos about knowledge 1"),
     *                  @OA\Property(property="type", type="string", example="video"),
-    *                  @OA\Property(property="imageURL", type="string", example="https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"),
+    *                  @OA\Property(property="image", type="string", example="https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"),
     *                  @OA\Property(property="created_at", type="string", format="date-time", example="2021-05-20 08:55:00"),
     *                  @OA\Property(property="updated_at", type="string", format="date-time", example="2021-05-20 08:55:00"),
     *              )
@@ -44,9 +53,19 @@ class KnowledgeController extends Controller
     *       )
     *     )
     */
-    public function index()
+    public function index(Request $request)
     {
-        $knowledges = Knowledge::get();
+        $validated = $request->validate([
+            'search' => 'string',
+        ]);
+
+        $knowledges = Knowledge::all();
+
+        if ($request->filled('search')){
+            $knowledges = Knowledge::where('name', 'like', '%'.$validated['search'].'%')
+            ->orWhere('infos', 'like', '%'.$validated['search'].'%')
+            ->get();
+        }
 
         return response()->json($knowledges, 201);
     }
@@ -77,7 +96,7 @@ class KnowledgeController extends Controller
     *              @OA\Property(property="name", type="string", example="Knowledge 1"),
     *              @OA\Property(property="infos", type="string", example="Infos about knowledge 1"),
     *              @OA\Property(property="type", type="string", example="video"),
-    *              @OA\Property(property="imageURL", type="string", example="https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"),
+    *              @OA\Property(property="image", type="string", example="https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"),
     *              @OA\Property(property="created_at", type="string", format="date-time", example="2021-05-20 08:55:00"),
     *              @OA\Property(property="updated_at", type="string", format="date-time", example="2021-05-20 08:55:00"),
     *          )
@@ -124,7 +143,7 @@ class KnowledgeController extends Controller
                     'message' => 'Erreur lors de l\'upload du fichier'
                 ], 400);
             }
-            $knowledge->imageURL = $path;
+            $knowledge->image = $path;
         }
 
         $knowledge->save();
@@ -158,7 +177,7 @@ class KnowledgeController extends Controller
     *              @OA\Property(property="name", type="string", example="Knowledge 1"),
     *              @OA\Property(property="infos", type="string", example="Infos about knowledge 1"),
     *              @OA\Property(property="type", type="string", example="video"),
-    *              @OA\Property(property="imageURL", type="string", example="https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"),
+    *              @OA\Property(property="image", type="string", example="https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"),
     *              @OA\Property(property="created_at", type="string", format="date-time", example="2021-05-20 08:55:00"),
     *              @OA\Property(property="updated_at", type="string", format="date-time", example="2021-05-20 08:55:00"),
     *          )
@@ -224,7 +243,7 @@ class KnowledgeController extends Controller
     *              @OA\Property(property="name", type="string", example="Knowledge 1"),
     *              @OA\Property(property="infos", type="string", example="Infos about knowledge 1"),
     *              @OA\Property(property="type", type="string", example="video"),
-    *              @OA\Property(property="imageURL", type="string", example="https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"),
+    *              @OA\Property(property="image", type="string", example="https://sera-bucket.s3.eu-west-3.amazonaws.com/knowledges/1621538100.jpg"),
     *              @OA\Property(property="created_at", type="string", format="date-time", example="2021-05-20 08:55:00"),
     *              @OA\Property(property="updated_at", type="string", format="date-time", example="2021-05-20 08:55:00"),
     *          )
@@ -274,7 +293,7 @@ class KnowledgeController extends Controller
             $knowledge->type = $validated['type'];
         }
         if ($request->image != null) {
-            $previousPath = $knowledge->imageURL;
+            $previousPath = $knowledge->image;
             if ($previousPath != null){
                 Storage::disk('s3')->delete($previousPath);
             }
@@ -290,7 +309,7 @@ class KnowledgeController extends Controller
                     'message' => 'Erreur lors de l\'upload du fichier'
                 ], 400);
             }
-            $knowledge->imageURL = $path;
+            $knowledge->image = $path;
         }
 
         $knowledge->save();
@@ -345,8 +364,8 @@ class KnowledgeController extends Controller
         }
 
 
-        if ($knowledge->imageURL != null){
-            Storage::disk('s3')->delete($knowledge->imageURL);
+        if ($knowledge->image != null){
+            Storage::disk('s3')->delete($knowledge->image);
         }
 
         $knowledge->delete();

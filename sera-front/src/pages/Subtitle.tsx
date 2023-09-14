@@ -11,8 +11,11 @@ import { SubtitleSelectCell } from "@/components/app/subtitle/SubtitleSelectCell
 import { Button } from "@/components/ui/button";
 import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+
+import { BigLoader } from "./skeletons/BigLoader";
 
 export const Subtitle = () => {
   const parser = new srtParser2();
@@ -29,10 +32,14 @@ export const Subtitle = () => {
   const [srtArray, setSrtArray] = useState<any>(null);
   const [displayedLine, setDisplayedLine] = useState("");
 
+  useEffect(() => {
+    projectStepStatus.refetch();
+  }, []);
+
   const { data: subtitleData, isSuccess: isSubtitleSuccess } = useQuery({
     queryKey: ["subtitle", { ProjectId, selectedLanguage }],
     queryFn: async () => {
-      const response = await axios.get(`/api/projects/1/subtitles`);
+      const response = await axios.get(`/api/projects/${ProjectId}/subtitles`);
       return response.data.subtitles;
     },
   });
@@ -63,18 +70,12 @@ export const Subtitle = () => {
       const project = await axios.get(
         `/api/projects/${ProjectId}/transcriptions?final=1`
       );
-      const srtObject = project.data.data.find(
-        (item: any) => item.file_type === "srt"
-      );
+      const srtObject = project.data.data["1"].srt;
 
-      console.log("srtObject", srtObject);
       if (!srtObject) throw new Error("No transcription file");
-
-      console.log(srtObject);
 
       const file = await axios.get(srtObject.ressource.url);
 
-      console.log(file.data);
       //Download the file
       const blob = new Blob([file.data], { type: "text/srt" });
       const link = document.createElement("a");
@@ -84,6 +85,26 @@ export const Subtitle = () => {
       link.remove();
 
       return file.data;
+    },
+    enabled: false,
+  });
+
+  const projectStepStatus = useQuery({
+    queryKey: ["project-step-status", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(
+        `/api/projects/${ProjectId}/steps?step=Subtitling`
+      );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The transcription step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
+      return project.data[0].status;
     },
     enabled: false,
   });
@@ -126,7 +147,7 @@ export const Subtitle = () => {
 
   useEffect(() => {
     if (!selectedLanguage) {
-      navigate(`/dashboard/projects/${ProjectId}/subs?lang=en`);
+      navigate(`/dashboard/projects/${ProjectId}/subs?lang=vo`);
     }
 
     if (subtitleData && selectedLanguage) {
@@ -147,39 +168,80 @@ export const Subtitle = () => {
     getFile.refetch();
   }, [selectedFile]);
 
+  const downloadVideo = async () => {
+    if (
+      !validatedVideoData ||
+      !validatedVideoData.video ||
+      !validatedVideoData.video.json
+    ) {
+      return;
+    }
+
+    const videoUrl = validatedVideoData.video.json.sources[0].src;
+
+    try {
+      const response = await fetch(videoUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `final_video_project_${ProjectId}.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error : ", error);
+    }
+  };
+
+  if (projectStepStatus.isLoading)
+    return <BigLoader bgColor="transparent" textColor="sera-jet" />;
+
   return (
     <>
-      <HeaderTitle title="Subtitle" previousTitle={lastSeenProjectName} />
+      <HeaderTitle
+        title="Subtitle"
+        previousTitle={lastSeenProjectName}
+        linkPath={`/dashboard/projects/${ProjectId}`}
+      />
       <div className="mx-6 flex justify-between">
         <section className="flex w-1/2 flex-col justify-evenly">
           <h3 className="mb-2 mt-0 text-4xl font-medium text-sera-jet">
             Subtitle language :
           </h3>
-
           {subtitleData && isSubtitleSuccess && (
             <SubtitleSelectCell subtitleData={subtitleData} />
           )}
-
-          {(!subtitleData || subtitleData.length === 0) &&
-            isSubtitleSuccess && <NoSubtitleCell />}
+          {!subtitleData && isSubtitleSuccess && <NoSubtitleCell />}
         </section>
         <section className="my-auto w-1/2 px-2">
           {srtArray && validatedVideoData && (
-            <div
-              className="mx-auto aspect-video w-11/12 overflow-hidden rounded-lg"
-              style={{
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                //@ts-ignore
-                "--plyr-color-main": SERA_JET_HEXA,
-                "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
-              }}
-            >
-              <RaptorPlyr
-                ref={plyrRef}
-                source={validatedVideoData.video.json}
-                className="aspect-video"
-              />
-            </div>
+            <>
+              <div className="mt-2 flex justify-end">
+                <Button
+                  className="my-auto mb-2 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                  onClick={downloadVideo}
+                >
+                  Download final video <Download size={24} className="ml-2" />
+                </Button>
+              </div>
+              <div
+                className="mx-auto aspect-video w-full overflow-hidden rounded-lg"
+                style={{
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  //@ts-ignore
+                  "--plyr-color-main": SERA_JET_HEXA,
+                  "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
+                }}
+              >
+                <RaptorPlyr
+                  ref={plyrRef}
+                  source={validatedVideoData.video.json}
+                  className="aspect-video"
+                />
+              </div>
+            </>
           )}
         </section>
       </div>
@@ -187,8 +249,10 @@ export const Subtitle = () => {
       <section id="srt-checker" className="mx-6">
         <div className="flex justify-between">
           <h3 className="my-2 text-4xl font-medium text-sera-jet">
-            Currently viewing &quot;{selectedLanguage?.toUpperCase()}&quot;
-            subtitle
+            {plyrRef && plyrRef.current && plyrRef.current?.plyr.source
+              ? `Currently viewing "${selectedLanguage?.toUpperCase()}"
+            subtitle`
+              : "Transcription file (select a lang)"}
           </h3>
           <Button
             className="my-auto bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"

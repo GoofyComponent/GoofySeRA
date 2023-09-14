@@ -24,6 +24,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import {
+  accessManager,
   formatName,
   getInitials,
   selectRoleDisplay,
@@ -106,16 +107,17 @@ export const MembersContainer = ({
       </h3>
 
       <div className="mx-auto flex flex-row flex-wrap">
-        {!isProjectPage && (
-          <button
-            className="m-2 flex h-20 w-96 justify-start rounded-lg border-2 border-dashed border-sera-jet px-4 py-2 transition-all hover:opacity-50"
-            onClick={() => setUserSearchModal(true)}
-            aria-label="Open the user search modal"
-          >
-            <Plus className="m-auto" />
-            <p className="m-auto text-xl">ADD A NEW MEMBER</p>
-          </button>
-        )}
+        {!isProjectPage &&
+          accessManager(undefined, "add_project_team_member") && (
+            <button
+              className="m-2 flex h-20 w-96 justify-start rounded-lg border-2 border-dashed border-sera-jet px-4 py-2 transition-all hover:opacity-50"
+              onClick={() => setUserSearchModal(true)}
+              aria-label="Open the user search modal"
+            >
+              <Plus className="m-auto" />
+              <p className="m-auto text-xl">ADD A NEW MEMBER</p>
+            </button>
+          )}
         {projectMembers &&
           projectMembers.users.map((member: any) => (
             <UserCard
@@ -125,12 +127,17 @@ export const MembersContainer = ({
               email={member.email}
               user_role={member.role}
               avatar={member.avatar_filename}
-              action={!isProjectPage ? "delete" : undefined}
+              action={
+                !isProjectPage &&
+                accessManager(undefined, "remove_project_team_member")
+                  ? "delete"
+                  : undefined
+              }
             />
           ))}
       </div>
       {isProjectPage && (
-        <Link to={`planification`} className="ml-auto mr-0">
+        <Link to={`prepare`} className="ml-auto mr-0">
           <p className="ml-auto mr-0 text-sera-jet underline hover:text-sera-jet/75">
             Manage the project team &gt;&gt;
           </p>
@@ -228,7 +235,11 @@ export const MembersContainer = ({
                       email={user.email}
                       user_role={user.role}
                       avatar={user.avatar_filename}
-                      action={"add"}
+                      action={
+                        accessManager(undefined, "add_project_team_member")
+                          ? "add"
+                          : undefined
+                      }
                     />
                   );
                 })}

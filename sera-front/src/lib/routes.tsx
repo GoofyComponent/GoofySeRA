@@ -4,6 +4,7 @@ import App from "@/pages/App";
 import { Capture } from "@/pages/Capture";
 import { Error404 } from "@/pages/Error404";
 import { Home } from "@/pages/Home";
+import { Knowledge } from "@/pages/Knowledge";
 import { Login } from "@/pages/Login";
 import { Logout } from "@/pages/Logout";
 import { Planning } from "@/pages/Planning";
@@ -89,10 +90,24 @@ const paths = [
                 element: <Users />,
               },
               {
+                path: "profile",
+                element: <Users />,
+              },
+              {
                 path: "*",
                 element: <Navigate to="/404" replace />,
               },
             ],
+          },
+        ],
+      },
+      {
+        path: "knowledge",
+        element: <Knowledge />,
+        children: [
+          {
+            path: ":dataId",
+            element: <Knowledge />,
           },
         ],
       },

@@ -7,7 +7,11 @@ import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
 import { ReservationContainer } from "@/components/app/project/Reservation/ReservationContainer";
 import { StepValidator } from "@/components/ui/stepValidator";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
+import { accessManager } from "@/lib/utils";
+
+import { BigLoader } from "./skeletons/BigLoader";
 
 export const Planning = () => {
   const { ProjectId } = useParams<{ ProjectId: string }>();
@@ -31,6 +35,15 @@ export const Planning = () => {
       const project = await axios.get(
         `/api/projects/${ProjectId}/steps?step=Planning`
       );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The planning step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
       return project.data[0].status;
     },
   });
@@ -56,6 +69,9 @@ export const Planning = () => {
     }
   }, [teamIsValid, reservationIsValid]);
 
+  if (isLoading)
+    return <BigLoader bgColor="transparent" textColor="sera-jet" />;
+
   return (
     <>
       <HeaderTitle
@@ -64,17 +80,19 @@ export const Planning = () => {
         linkPath={`/dashboard/projects/${ProjectId}`}
       />
 
-      <div className="mx-auto w-11/12">
-        <StepValidator
-          projectStepStatus={projectStepStatus}
-          isprojectStatusLoading={isLoading}
-          isprojectStatusSuccess={isSuccess}
-          isCurrentStepValid={isPlanificationValid}
-          mutationMethod={passToCaptation}
-          cannotValidateMessage="You can't validate this step until your team is complete and you have at least one reservation."
-          buttonMessage="Validate this step"
-        />
-      </div>
+      {accessManager(undefined, "validate_project_step") && (
+        <div className="mx-auto w-11/12">
+          <StepValidator
+            projectStepStatus={projectStepStatus}
+            isprojectStatusLoading={isLoading}
+            isprojectStatusSuccess={isSuccess}
+            isCurrentStepValid={isPlanificationValid}
+            mutationMethod={passToCaptation}
+            cannotValidateMessage="You can't validate this step until your team is complete and you have at least one reservation."
+            buttonMessage="Validate this step"
+          />
+        </div>
+      )}
 
       <div id="planification" className="mx-6 flex flex-col justify-start">
         <section id="planification-team" className="">

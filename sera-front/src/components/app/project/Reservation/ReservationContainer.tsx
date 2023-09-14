@@ -32,6 +32,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { axios } from "@/lib/axios";
 import {
+  accessManager,
   cn,
   convertDate,
   convertDateFromDateType,
@@ -86,14 +87,17 @@ export const ReservationContainer = ({
         )}
       </h3>
       <div className="mx-auto flex flex-row flex-wrap">
-        <button
-          className="m-2 flex min-h-full w-96 justify-start rounded-lg border-2 border-dashed border-sera-jet px-4 py-2"
-          onClick={() => setRoomSearchModal(true)}
-          aria-label="Open the user search modal"
-        >
-          <Plus className="m-auto" />
-          <p className="m-auto text-xl">ADD A RESERVATION</p>
-        </button>
+        {accessManager(undefined, "add_reservations") && (
+          <button
+            className="m-2 flex min-h-full w-96 justify-start rounded-lg border-2 border-dashed border-sera-jet px-4 py-2"
+            onClick={() => setRoomSearchModal(true)}
+            aria-label="Open the user search modal"
+          >
+            <Plus className="m-auto" />
+            <p className="m-auto text-xl">ADD A RESERVATION</p>
+          </button>
+        )}
+
         {projectReservations &&
           projectReservations.map((reservation: any) => (
             <ReservationCard
@@ -168,13 +172,15 @@ const ReservationCard = ({
           <p className="text-normal truncate">{roomName}</p>
           <p className="text-normal  truncate">{roomDescription}</p>
         </div>
-        <Button
-          className="my-auto ml-auto mr-0 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          aria-label={`Remove ${name} from the project`}
-          onClick={() => setRoomModal(true)}
-        >
-          <PenBox size={28} strokeWidth={2.25} />
-        </Button>
+        {accessManager(undefined, "remove_reservations") && (
+          <Button
+            className="my-auto ml-auto mr-0 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            aria-label={`Remove ${name} from the project`}
+            onClick={() => setRoomModal(true)}
+          >
+            <PenBox size={28} strokeWidth={2.25} />
+          </Button>
+        )}
       </div>
 
       <Dialog

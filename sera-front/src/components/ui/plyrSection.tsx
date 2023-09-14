@@ -78,7 +78,6 @@ export const RaptorPlyr = React.forwardRef<APITypes, PlyrProps>(
       options,
     }) as React.MutableRefObject<HTMLVideoElement>;
 
-    // eslint-disable-next-line jsx-a11y/media-has-caption
     return (
       // eslint-disable-next-line jsx-a11y/media-has-caption
       <video

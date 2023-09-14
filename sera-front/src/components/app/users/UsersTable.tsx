@@ -1,8 +1,8 @@
-import { Edit, Trash } from "lucide-react";
+import { Edit, Trash, Info } from "lucide-react";
 import React from "react";
-import { UsersEntity } from "@/lib/types/types";
 import { Link } from "react-router-dom";
-import { getInitials, selectRoleDisplay } from "@/lib/utils";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Table,
   TableBody,
@@ -11,8 +11,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { UsersEntity } from "@/lib/types/types";
+import { getInitials, selectRoleDisplay } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface UsersTableProps {
   users?: UsersEntity[];
@@ -51,14 +52,16 @@ export const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
               >
                 <TableCell className="text-base text-black">
                   <p className="h-8 w-4">
-                    <Avatar className="ml-2 h-10 w-10 transition-all hover:opacity-75">
-                      <AvatarImage src={user.avatar_filename} />
-                      <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
-                        {!user.lastname && !user.firstname
-                          ? "USR"
-                          : getInitials(user.lastname, user.firstname)}
-                      </AvatarFallback>
-                    </Avatar>
+                    <Link to={`/dashboard/users/${user.id}?action=profile`}>
+                      <Avatar className="ml-2 h-10 w-10 transition-all">
+                        <AvatarImage src={user.avatar_filename} />
+                        <AvatarFallback className="bg-sera-periwinkle font-semibold text-[#916AF6]">
+                          {!user.lastname && !user.firstname
+                            ? "USR"
+                            : getInitials(user.lastname, user.firstname)}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Link>
                   </p>
                 </TableCell>
                 <TableCell className="text-base text-black">
@@ -75,8 +78,11 @@ export const UsersTable: React.FC<UsersTableProps> = ({ users }) => {
                   </p>
                 </TableCell>
                 <TableCell className="flex justify-end">
+                  <Link to={`/dashboard/users/${user.id}?action=profile`}>
+                    <Info className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
+                  </Link>
                   <Link to={`/dashboard/users/${user.id}?action=edit`}>
-                    <Edit className="mr-2 hover:cursor-pointer hover:text-sera-jet" />
+                    <Edit className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
                   </Link>
                   <Link to={`/dashboard/users/${user.id}?action=delete`}>
                     <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />

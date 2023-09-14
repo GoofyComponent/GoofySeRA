@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
-import { Label } from "@/components/ui/label";
 
 export const ImageForm = () => {
   const oldUserData = useSelector((state: any) => state.user.infos);

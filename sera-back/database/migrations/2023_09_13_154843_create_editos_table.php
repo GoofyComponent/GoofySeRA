@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('knowledge', function (Blueprint $table) {
-            $types = config('knowledge-type');
+        Schema::create('editos', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable(false);
-            $table->enum('type', $types)->nullable(false);
-            $table->text('infos')->nullable(false);
-            $table->string('image')->nullable(true);
+            $table->foreignId('project_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->text('description');
+            $table->json('images')->nullable(false)->default('[]');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('knowledge');
+        Schema::dropIfExists('editos');
     }
 };

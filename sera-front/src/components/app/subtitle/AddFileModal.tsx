@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -29,6 +29,7 @@ export const AddFileModal = ({
   addFileModal: boolean;
   setAddFileModal: (value: boolean) => void;
 }) => {
+  const queryClient = useQueryClient();
   const { ProjectId } = useParams<{ ProjectId: string }>();
 
   const [subtiltleFileSubmitted, setSubtiltleFileSubmitted] =
@@ -63,6 +64,11 @@ export const AddFileModal = ({
         }
       );
       return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["subtitle", { ProjectId }]);
+      setAddFileModal(false);
+      setSubtiltleFileSubmitted(null);
     },
   });
 

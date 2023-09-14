@@ -2,7 +2,7 @@
 
 return [
     "Location",
-    "Personalitie",
+    "Personality",
     "Instrument",
     "Music",
     "Event",

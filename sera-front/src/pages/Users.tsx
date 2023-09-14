@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { axios } from "@/lib/axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import React from "react";
 import {
   Link,
   useMatch,
@@ -8,26 +8,8 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+
 import UsersTable from "@/components/app/users/UsersTable";
-import { Pagination } from "@/components/ui/pagination";
-import { UsersEntity } from "@/lib/types/types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +20,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Pagination } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
+import { axios } from "@/lib/axios";
+import { UsersEntity } from "@/lib/types/types";
+import { accessManager, getInitials, selectRoleDisplay } from "@/lib/utils";
 
 export const Users = () => {
   const [page, setPage] = useState(1);
@@ -53,6 +57,7 @@ export const Users = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const isDelete = useMatch("/dashboard/users/:UserId/delete");
   const [openEdit, setOpenEdit] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   const isEdit = useMatch("/dashboard/users/:UserId/edit");
   const [editedUserData] = useState<UsersEntity>();
   const [UserData, setUserData] = useState({
@@ -63,6 +68,12 @@ export const Users = () => {
     password_confirmation: "",
     role: "",
   });
+
+  useEffect(() => {
+    if (!accessManager("users", undefined)) {
+      return navigate("/dashboard");
+    }
+  }, []);
 
   const {
     data: users,
@@ -190,6 +201,51 @@ export const Users = () => {
     editUser.mutate({ UserId, formData });
   };
 
+  const copyTextToClipboard = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        toast({
+          title: "Text copied to clipboard",
+          description: text,
+        });
+        return;
+      })
+      .catch((err) => {
+        toast({
+          title: "Failed to copy text",
+          description: err,
+        });
+      });
+  };
+
+  const copyFirstname = () => {
+    if (users && users.data) {
+      const user = users.data.find((user: any) => user.id === Number(UserId));
+      if (user) {
+        copyTextToClipboard(user.firstname);
+      }
+    }
+  };
+
+  const copyLastname = () => {
+    if (users && users.data) {
+      const user = users.data.find((user: any) => user.id === Number(UserId));
+      if (user) {
+        copyTextToClipboard(user.lastname);
+      }
+    }
+  };
+
+  const copyEmail = () => {
+    if (users && users.data) {
+      const user = users.data.find((user: any) => user.id === Number(UserId));
+      if (user) {
+        copyTextToClipboard(user.email);
+      }
+    }
+  };
+
   useEffect(() => {
     if (users) {
       setTotalPages(users.last_page);
@@ -206,6 +262,12 @@ export const Users = () => {
       setOpenEdit(true);
     } else {
       setOpenEdit(false);
+    }
+
+    if (searchParams.get("action") === "profile") {
+      setOpenProfile(true);
+    } else {
+      setOpenProfile(false);
     }
 
     if (isDelete && UserId) {
@@ -644,6 +706,137 @@ export const Users = () => {
                   </Button>
                 </DialogFooter>
               </DialogFooter>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      {searchParams.get("action") === "profile" && (
+        <Dialog
+          open={openProfile}
+          onOpenChange={(isOpenProfile) => {
+            if (isOpenProfile === true) return;
+            setOpenProfile(false);
+            navigate(`/dashboard/users`);
+          }}
+        >
+          <DialogContent>
+            <DialogTitle className="mb-2">Profile</DialogTitle>
+            {users &&
+              users.data.map((user: UsersEntity) => (
+                <React.Fragment key={user.id}>
+                  {user.id === Number(UserId)}
+                </React.Fragment>
+              ))}
+            <div>
+              <div className="mb-4 flex flex-col items-center">
+                {users &&
+                  users.data.map((user: UsersEntity) => {
+                    if (user.id === Number(UserId)) {
+                      return (
+                        <React.Fragment key={user.id}>
+                          <Avatar className="ml-2 h-40 w-40 transition-all">
+                            <AvatarImage src={user.avatar_filename} />
+                            <AvatarFallback className="bg-sera-periwinkle text-7xl font-semibold text-[#916AF6]">
+                              {!user.lastname && !user.firstname
+                                ? "USR"
+                                : getInitials(user.lastname, user.firstname)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </React.Fragment>
+                      );
+                    }
+                  })}
+              </div>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="firstname">
+                  Firstname
+                </Label>
+                {users &&
+                  users.data.map((user: UsersEntity) => (
+                    <React.Fragment key={user.id}>
+                      {user.id === Number(UserId) && (
+                        <div
+                          id="copyFirstname"
+                          onClick={copyFirstname}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === "Space") {
+                              copyFirstname();
+                            }
+                          }}
+                          tabIndex={0}
+                          role="button"
+                          className="cursor-pointer"
+                        >
+                          {user.firstname}
+                        </div>
+                      )}
+                    </React.Fragment>
+                  ))}
+              </div>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="lastname">
+                  Lastname
+                </Label>
+                {users &&
+                  users.data.map((user: UsersEntity) => (
+                    <React.Fragment key={user.id}>
+                      {user.id === Number(UserId) && (
+                        <div
+                          id="copyLastname"
+                          onClick={copyLastname}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === "Space") {
+                              copyLastname();
+                            }
+                          }}
+                          tabIndex={0}
+                          role="button"
+                          className="cursor-pointer"
+                        >
+                          {user.lastname}
+                        </div>
+                      )}
+                    </React.Fragment>
+                  ))}
+              </div>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="email">
+                  Email
+                </Label>
+                {users &&
+                  users.data.map((user: UsersEntity) => (
+                    <React.Fragment key={user.id}>
+                      {user.id === Number(UserId) && (
+                        <div
+                          id="copyEmail"
+                          onClick={copyEmail}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === "Space") {
+                              copyEmail();
+                            }
+                          }}
+                          tabIndex={0}
+                          role="button"
+                          className="cursor-pointer"
+                        >
+                          {user.email}
+                        </div>
+                      )}
+                    </React.Fragment>
+                  ))}
+              </div>
+              <div className="mb-4 flex flex-col">
+                <Label className="mb-2" htmlFor="role">
+                  Role
+                </Label>
+                {users &&
+                  users.data.map((user: UsersEntity) => (
+                    <React.Fragment key={user.id}>
+                      {user.id === Number(UserId) &&
+                        selectRoleDisplay(user.role)}
+                    </React.Fragment>
+                  ))}
+              </div>
             </div>
           </DialogContent>
         </Dialog>

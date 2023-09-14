@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { accessManager } from "@/lib/utils";
 
 export const ReviewActions = ({
   editingData,
@@ -41,14 +42,16 @@ export const ReviewActions = ({
         </SelectContent>
       </Select>
 
-      <div className="my-auto w-1/3">
-        <Button
-          className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-          onClick={() => setOpenAddVideo(true)}
-        >
-          Upload a new version
-        </Button>
-      </div>
+      {accessManager(undefined, "add_video_version") && (
+        <div className="my-auto w-1/3">
+          <Button
+            className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+            onClick={() => setOpenAddVideo(true)}
+          >
+            Upload a new version
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

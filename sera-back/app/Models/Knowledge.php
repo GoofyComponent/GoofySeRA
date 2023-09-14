@@ -10,7 +10,7 @@ class Knowledge extends Model
 {
     use HasFactory;
 
-    public function getImageURLAttribute($value)
+    public function getimageAttribute($value)
     {
         // si value null, return null
         if (!$value) {
@@ -32,5 +32,10 @@ class Knowledge extends Model
         );
 
         return $temporaryUrl;
+    }
+
+    public function editos()
+    {
+        return $this->belongsToMany(Edito::class, 'edito_knowledge', 'knowledge_id', 'edito_id');
     }
 }

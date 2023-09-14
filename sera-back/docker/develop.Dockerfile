@@ -43,7 +43,21 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html && chown -R 1000:1000 /root && chmod -R 755 /root
 RUN mkdir -p /var/www/.mc && chown -R 1000:1000 /var/www/.mc && chmod -R 755 /var/www/.mc
 
-RUN ls -la
+# ImageMagick module not available with this PHP installation.
+RUN apt-get update && apt-get install -y \
+    libmagickwand-dev --no-install-recommends \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick
+
+# install intl and ICU
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
+RUN apt-get update && apt-get install -y \
+    libxslt-dev \
+    && docker-php-ext-install xsl
 
 # on copy les env de dev dans le container
 #COPY .env /var/www/html/.env

@@ -2,6 +2,8 @@ import { ClassValue, clsx } from "clsx";
 import { matchPath } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
+import store from "@/helpers/store";
+
 interface Member {
   id: number;
   email: string;
@@ -239,4 +241,149 @@ export const checkLastSeenProject = (
     isLastSeen = true;
 
   return isLastSeen;
+};
+
+export const accessManager = (page?: string, action?: string) => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  const role: null | string = store.getState().user.infos.role || null;
+
+  if (!role) return false;
+
+  if (role === "cursus_director") return true;
+
+  if (role === "project_manager") {
+    //Project request
+    if (action === "add_project_request") return false;
+    if (action === "delete_project_request") return false;
+
+    //Project
+    if (action === "validate_project_step") return true;
+
+    //Rooms
+    if (action === "add_room") return false;
+    if (action === "edit_room") return false;
+    if (action === "delete_room") return false;
+  }
+
+  if (role === "professor") {
+    if (page === "users") return false;
+    if (page === "rooms") return false;
+    if (page === "project_requests") return false;
+    if (page === "knowledge_base") return false;
+
+    //Project
+    if (action === "validate_project_step") return false;
+    if (action === "remove_project_team_member") return false;
+    if (action === "add_project_team_member") return false;
+    if (action === "remove_reservations") return false;
+    if (action === "add_reservations") return false;
+    if (action === "add_rush_link") return false;
+    if (action === "add_video_version") return false;
+    if (action === "add_transcript_file") return false;
+    if (action === "add_subs") return false;
+
+    //Ajouter pr l'edito et les subs
+  }
+
+  if (role === "video_team") {
+    if (page === "users") return false;
+    if (page === "rooms") return false;
+    if (page === "project_requests") return false;
+    if (page === "knowledge_base") return false;
+
+    //Project
+    if (action === "validate_project_step") return false;
+    if (action === "remove_project_team_member") return false;
+    if (action === "add_project_team_member") return false;
+    if (action === "remove_reservations") return false;
+    if (action === "add_reservations") return false;
+    if (action === "add_professor_notes") return false;
+    if (action === "add_video_version") return false;
+    if (action === "add_transcript") return false;
+    if (action === "add_subs") return false;
+
+    //Ajouter pr l'edito et les subs
+  }
+
+  if (role === "video_editor") {
+    if (page === "users") return false;
+    if (page === "rooms") return false;
+    if (page === "project_requests") return false;
+    if (page === "knowledge_base") return false;
+
+    //Project
+    if (action === "validate_project_step") return false;
+    if (action === "remove_project_team_member") return false;
+    if (action === "add_project_team_member") return false;
+    if (action === "remove_reservations") return false;
+    if (action === "add_reservations") return false;
+    if (action === "add_rush_link") return false;
+    if (action === "add_professor_notes") return false;
+    if (action === "add_transcript") return false;
+    if (action === "add_subs") return false;
+
+    //Ajouter pr l'edito et les subs
+  }
+
+  if (role === "transcription_team") {
+    if (page === "users") return false;
+    if (page === "rooms") return false;
+    if (page === "project_requests") return false;
+    if (page === "knowledge_base") return false;
+
+    //Project
+    if (action === "validate_project_step") return false;
+    if (action === "remove_project_team_member") return false;
+    if (action === "add_project_team_member") return false;
+    if (action === "remove_reservations") return false;
+    if (action === "add_reservations") return false;
+    if (action === "add_rush_link") return false;
+    if (action === "add_professor_notes") return false;
+    if (action === "add_video_version") return false;
+    if (action === "add_subs") return false;
+
+    //Ajouter pr l'edito et les subs
+  }
+
+  if (role === "traduction_team") {
+    if (page === "users") return false;
+    if (page === "rooms") return false;
+    if (page === "project_requests") return false;
+    if (page === "knowledge_base") return false;
+
+    //Project
+    if (action === "validate_project_step") return false;
+    if (action === "remove_project_team_member") return false;
+    if (action === "add_project_team_member") return false;
+    if (action === "remove_reservations") return false;
+    if (action === "add_reservations") return false;
+    if (action === "add_rush_link") return false;
+    if (action === "add_professor_notes") return false;
+    if (action === "add_video_version") return false;
+    if (action === "add_transcript") return false;
+
+    //Ajouter pr l'edito et les subs
+  }
+
+  if (role === "editorial_team") {
+    if (page === "users") return false;
+    if (page === "rooms") return false;
+    if (page === "project_requests") return false;
+    if (page === "knowledge_base") return false;
+
+    //Project
+    if (action === "validate_project_step") return false;
+    if (action === "remove_project_team_member") return false;
+    if (action === "add_project_team_member") return false;
+    if (action === "remove_reservations") return false;
+    if (action === "add_reservations") return false;
+    if (action === "add_rush_link") return false;
+    if (action === "add_professor_notes") return false;
+    if (action === "add_video_version") return false;
+    if (action === "add_transcript") return false;
+    if (action === "add_subs") return false;
+  }
+
+  return true;
 };

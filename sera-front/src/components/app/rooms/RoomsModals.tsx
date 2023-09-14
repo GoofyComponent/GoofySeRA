@@ -32,7 +32,6 @@ export const DeleteModal = ({
       return room;
     },
     onSuccess: () => {
-      console.log("success");
       roomsRefetch();
       navigate(`/dashboard/rooms`);
     },

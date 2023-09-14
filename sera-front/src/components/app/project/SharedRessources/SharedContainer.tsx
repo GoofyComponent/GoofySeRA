@@ -1,5 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BadgeHelp } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -28,6 +29,7 @@ import { SharedRessources } from "./sharedRessources";
 
 export const SharedContainer = () => {
   const { ProjectId } = useParams<{ ProjectId: string }>();
+  const queryClient = useQueryClient();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [ressourceType, setRessourceType] = useState("");
@@ -64,6 +66,10 @@ export const SharedContainer = () => {
         }
       );
       return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["ressources", { ProjectId }]);
+      setDialogOpen(false);
     },
   });
 
@@ -135,8 +141,12 @@ export const SharedContainer = () => {
                   <SelectValue placeholder="Select a type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="image">Image</SelectItem>
-                  <SelectItem value="document">Document</SelectItem>
+                  <SelectItem value="image">
+                    Image (JPEG, JPG, PNG, WEBP, GIF)
+                  </SelectItem>
+                  <SelectItem value="document">
+                    Document (PDF, DOCX, XLSX, PPTX, TXT)
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -145,6 +155,13 @@ export const SharedContainer = () => {
               <Input
                 type="file"
                 id="file"
+                accept={
+                  ressourceType === "image"
+                    ? "image/jpeg, image/jpg, image/png, image/webp, image/gif"
+                    : ressourceType === "document"
+                    ? ".pdf, .docx, .xlsx, .pptx, .txt"
+                    : ""
+                }
                 className="col-span-3"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   if (!e.target.files) return;
@@ -167,7 +184,11 @@ export const SharedContainer = () => {
               onClick={() => createRessource.mutate()}
               disabled={createRessource.isLoading}
             >
-              {createRessource.isLoading ? "Loading..." : "Add ressource"}
+              {createRessource.isLoading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Add ressource"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

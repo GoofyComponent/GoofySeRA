@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TicketsEntity } from "@/lib/types/types";
-import { capitalizeFirstLetter, formatDate } from "@/lib/utils";
+import { accessManager, capitalizeFirstLetter, formatDate } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
 export const TicketsTable = ({
@@ -126,9 +126,13 @@ export const TicketsTable = ({
                     >
                       <Check className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
                     </Link>
-                    <Link to={`/dashboard/tickets/${ticket.id}?action=delete`}>
-                      <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
-                    </Link>
+                    {accessManager(undefined, "delete_project_request") && (
+                      <Link
+                        to={`/dashboard/tickets/${ticket.id}?action=delete`}
+                      >
+                        <Trash className="ml-2 hover:cursor-pointer hover:text-sera-jet" />
+                      </Link>
+                    )}
                   </TableCell>
                 </TableRow>
               );

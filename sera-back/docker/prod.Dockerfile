@@ -21,11 +21,28 @@ RUN apt-get update && apt-get install -y \
     curl \
     vim
 
+
+
 RUN docker-php-ext-install pdo zip mbstring exif pcntl bcmath gd pdo_mysql mysqli
 RUN  curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer install --no-dev --optimize-autoloader --no-interaction \
     && chown -R www-data:www-data /var/www/html \
     && a2enmod rewrite
+
+# ImageMagick module not available with this PHP installation.
+RUN apt-get update && apt-get install -y \
+    libmagickwand-dev --no-install-recommends \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick
+
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
+RUN apt-get update && apt-get install -y \
+    libxslt-dev \
+    && docker-php-ext-install xsl
 
 #The index.php file is the entry point of the application. And he is in the public folder.
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -43,9 +60,5 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chown -R 1000:1000 /var/www/html && chmod -R 755 /var/www/html && chown -R 1000:1000 /root && chmod -R 755 /root
 RUN mkdir -p /var/www/.mc && chown -R 1000:1000 /var/www/.mc && chmod -R 755 /var/www/.mc
 
-RUN ls -la
-
-# on copy les env de dev dans le container
-#COPY .env /var/www/html/.env
 
 CMD ["apache2-foreground"]

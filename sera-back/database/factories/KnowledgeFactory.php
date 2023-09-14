@@ -20,7 +20,7 @@ class KnowledgeFactory extends Factory
             'name' => $this->faker->realText(20),
             'type' => $this->faker->randomElement(config('knowledge-type')),
             'infos' => $this->faker->realText(200),
-            'imageURL' => $this->faker->boolean() ? '/template.jpeg' : null,
+            'image' => $this->faker->boolean() ? '/template.jpeg' : null,
         ];
     }
 }

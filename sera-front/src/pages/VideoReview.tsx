@@ -9,7 +9,9 @@ import { ChatContainer } from "@/components/app/videoReview/ChatContainer";
 import { ReviewActions } from "@/components/app/videoReview/ReviewActions";
 import { PlyrSection } from "@/components/ui/plyrSection";
 import { StepValidator } from "@/components/ui/stepValidator";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
+import { accessManager } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -60,6 +62,15 @@ export const VideoReview = () => {
       const project = await axios.get(
         `/api/projects/${ProjectId}/steps?step=Post-Production`
       );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The video review step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
       return project.data[0].status;
     },
   });
@@ -115,9 +126,6 @@ export const VideoReview = () => {
       editingRefetch();
       setOpenAddVideo(false);
     },
-    onError: (error) => {
-      console.log(error);
-    },
   });
 
   const addComments = useMutation({
@@ -131,9 +139,6 @@ export const VideoReview = () => {
     },
     onSuccess: () => {
       editingRefetch();
-    },
-    onError: (error) => {
-      console.log(error);
     },
   });
 
@@ -150,9 +155,6 @@ export const VideoReview = () => {
     onSuccess: () => {
       projectStepRefetch();
       navigate(`/dashboard/projects/${ProjectId}`);
-    },
-    onError: (error) => {
-      console.log("error", error);
     },
   });
 
@@ -172,6 +174,9 @@ export const VideoReview = () => {
     setIsEditingValid(true);
   }, [editingData]);
 
+  if (projectStepIsLoading)
+    return <BigLoader bgColor="transparent" textColor="sera-jet" />;
+
   if (
     (projectStepIsLoading && !projectStepIsSuccess) ||
     (editingIsLoading && !editingIsSuccess)
@@ -187,18 +192,20 @@ export const VideoReview = () => {
           linkPath={`/dashboard/projects/${ProjectId}`}
         />
 
-        <div className="mx-auto w-11/12">
-          <StepValidator
-            projectStepStatus={projectStepStatus}
-            isprojectStatusLoading={projectStepIsLoading}
-            isprojectStatusSuccess={projectStepIsSuccess}
-            isCurrentStepValid={isEditingValid}
-            mutationMethod={passToTranscription}
-            cannotValidateMessage="You can't validate this step until your validate one version of the video"
-            validateAvertissement="You gonna validate the current edit your display on the player."
-            buttonMessage="Validate this version"
-          />
-        </div>
+        {accessManager(undefined, "validate_project_step") && (
+          <div className="mx-auto w-11/12">
+            <StepValidator
+              projectStepStatus={projectStepStatus}
+              isprojectStatusLoading={projectStepIsLoading}
+              isprojectStatusSuccess={projectStepIsSuccess}
+              isCurrentStepValid={isEditingValid}
+              mutationMethod={passToTranscription}
+              cannotValidateMessage="You can't validate this step until your validate one version of the video"
+              validateAvertissement="You gonna validate the current edit your display on the player."
+              buttonMessage="Validate this version"
+            />
+          </div>
+        )}
 
         {!editingIsLoading && editingIsSuccess && (
           <ReviewActions

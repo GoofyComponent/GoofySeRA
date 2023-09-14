@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { TicketsTable } from "@/components/app/tickets/TicketsTable";
 import { Button } from "@/components/ui/button";
 import { axios } from "@/lib/axios";
-import { useState } from "react";
 
 export const RecentTicketTable = () => {
   const [sort, setSort] = useState("desc");

@@ -1,10 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import clsx from "clsx";
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
 
 import logo from "@/assets/images/sera-logo.svg";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
   Popover,
   PopoverContent,
@@ -21,16 +28,8 @@ import { formatName, getInitials, selectRoleDisplay } from "@/lib/utils";
 
 import { Nav } from "../components/app/navigation/Nav";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
-import { UserInfosSummarySkeletons } from "./skeletons/ProfilePopover";
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import clsx from "clsx";
 import { BigLoader } from "./skeletons/BigLoader";
+import { UserInfosSummarySkeletons } from "./skeletons/ProfilePopover";
 
 function App() {
   const errorState = useSelector((state: any) => state.app.appError);
@@ -150,14 +149,14 @@ function App() {
                     <Accordion
                       type="single"
                       collapsible
-                      className=" h-[331px] w-full overflow-y-scroll"
+                      className=" h-[331px] w-full overflow-y-scroll scrollbar scrollbar-track-transparent scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3"
                     >
                       {userNotifications &&
                         userNotifications.length > 0 &&
                         userNotifications.map(
                           (notification: any, i: number) => {
                             return (
-                              <>
+                              <div key={i}>
                                 <AccordionItem value={`item-${i}`}>
                                   <AccordionTrigger
                                     className={clsx(
@@ -181,7 +180,7 @@ function App() {
                                 {notification.is_read === 0 && (
                                   <Separator className="" />
                                 )}
-                              </>
+                              </div>
                             );
                           }
                         )}
@@ -240,51 +239,19 @@ function App() {
                 Profile
               </Link>
 
-              {/*               <Separator className="my-2" /><Link
-                to="/dashboard/settings"
-                className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
-              >
-                Settings
-              </Link> */}
               <Link
                 to="/logout"
                 className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
               >
                 Logout
               </Link>
-
-              <button
-                className="w-fit border-b-2 border-transparent transition-all hover:border-sera-jet"
-                onClick={() => {
-                  dispatch(
-                    setAppError({
-                      title: "An error occured",
-                      description:
-                        "We are unable to log you out for the moment. Please try again later.",
-                    })
-                  );
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    dispatch(
-                      setAppError({
-                        title: "An error occured",
-                        description:
-                          "We are unable to log you out for the moment. Please try again later.",
-                      })
-                    );
-                  }
-                }}
-              >
-                TriggerToast
-              </button>
             </PopoverContent>
           </Popover>
         </div>
       </header>
-      <div className="flex min-h-[90vh] justify-start overflow-auto bg-[#FBF5F3]">
+      <div className="flex h-[calc(100vh_-_100px)] justify-start overflow-auto bg-[#FBF5F3]">
         <Nav />
-        <main className="max-h-[90vh] w-[86%] overflow-y-auto pb-4 scrollbar scrollbar-track-sera-jet/50 scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3">
+        <main className="h-[calc(100vh_-_100px)] w-[86%] overflow-y-auto pb-4 scrollbar scrollbar-track-sera-jet/50 scrollbar-thumb-sera-jet scrollbar-thumb-rounded-lg scrollbar-w-3">
           <Outlet />
           <Toaster />
         </main>
