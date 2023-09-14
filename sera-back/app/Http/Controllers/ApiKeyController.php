@@ -188,7 +188,8 @@ class ApiKeyController extends Controller
     *   )
     */
     public function index(){
-
-        return response()->json(ApiKey::all(), 200);
+        // get all api keys but remove key from the response
+        $apiKeys = ApiKey::all()->makeHidden('key');
+        return response()->json($apiKeys, 200);
     }
 }
