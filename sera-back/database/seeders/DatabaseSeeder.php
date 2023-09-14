@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             // VideoReviewSeeder::class,
             NotificationSeeder::class,
             KnowledgeSeeder::class,
+            ApiKey::class,
         ]);
     }
 }
