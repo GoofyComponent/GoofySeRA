@@ -16,6 +16,7 @@ return [
         "subtitles" => ["store","destroy","index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "edito" => ["show", "index", "store", "update", "destroy","removeImage","addKnowledge","removeKnowledge"],
+        "api-keys" => ["store", "recreate", "destroy","index"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
@@ -30,7 +31,7 @@ return [
         "subtitles" => ["store","destroy","index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "edito" => ["show", "index", "store", "update", "destroy","removeImage","addKnowledge","removeKnowledge"],
-
+        "api-keys" => ["store", "recreate", "destroy","index"],
     ],
     "professor" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],

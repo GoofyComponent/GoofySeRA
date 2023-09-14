@@ -136,6 +136,12 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         Route::post('projects/{projectId}/edito/remove-knowledge', 'App\Http\Controllers\EditoController@unlinkKnowledge')->name('edito.removeKnowledge');
         /************************/
 
+        /***** API Key *****/
+        Route::post('api-keys', 'App\Http\Controllers\ApiKeyController@store')->name('api-keys.store');
+        Route::post('api-keys/{apikey_id}/recreate', 'App\Http\Controllers\ApiKeyController@recreate')->name('api-keys.recreate');
+        Route::delete('api-keys/{apikey_id}', 'App\Http\Controllers\ApiKeyController@destroy')->name('api-keys.destroy');
+        Route::get('api-keys', 'App\Http\Controllers\ApiKeyController@index')->name('api-keys.index');
+
     /*********************************/
 
 
