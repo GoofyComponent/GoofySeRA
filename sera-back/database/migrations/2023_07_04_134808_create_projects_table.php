@@ -17,12 +17,11 @@ return new class extends Migration
 
         Schema::create('projects', function (Blueprint $table) {
             $defaultSteps = config('steps');
-
             $table->id();
             $table->foreignId('project_request_id')->constrained('project_requests')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title');
             $table->longText('description');
-            $table->enum('status', ['ongoing', 'completed', 'cancelled'])->default('ongoing');
+            $table->enum('status', ['ongoing', 'published', 'cancelled'])->default('ongoing');
             $table->string('start_date')->nullable();
             $table->string('end_date')->nullable();
             $table->json('colors')->nullable();
