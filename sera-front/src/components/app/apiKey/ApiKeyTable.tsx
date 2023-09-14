@@ -4,14 +4,18 @@ import { Link } from "react-router-dom";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { convertDateFromDateType } from "@/lib/utils";
+import { BigLoader } from "@/pages/skeletons/BigLoader";
 
 export const ApiKeyTable = ({ data }: { data: any }) => {
+  if (!data) return <BigLoader bgColor="transparent" textColor="sera-jet" />;
+
   return (
     <Table>
       <TableHeader>
@@ -30,6 +34,11 @@ export const ApiKeyTable = ({ data }: { data: any }) => {
           </TableHead>
         </TableRow>
       </TableHeader>
+      {data && data.length == 0 && (
+        <TableCaption className="h-full min-h-[15rem] text-xl font-semibold text-sera-jet">
+          No API keys at the moment
+        </TableCaption>
+      )}
       <TableBody>
         {data &&
           data.length > 0 &&

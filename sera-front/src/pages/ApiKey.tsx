@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   useLocation,
@@ -14,6 +15,7 @@ import {
 import { ApiKeyTable } from "@/components/app/apiKey/ApiKeyTable";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
+import { axios } from "@/lib/axios";
 import { accessManager } from "@/lib/utils";
 
 export const ApiKey = () => {
@@ -37,6 +39,15 @@ export const ApiKey = () => {
     }
   }, [location]);
 
+  const { data: apiKeyData } = useQuery({
+    queryKey: ["api-key"],
+    queryFn: async () => {
+      const keys = await axios.get(`/api/api-keys`);
+      console.log(keys.data);
+      return keys.data;
+    },
+  });
+
   return (
     <section className="flex h-full flex-col">
       <div className="mx-6 my-6 flex justify-between text-4xl font-semibold text-sera-jet">
@@ -53,7 +64,7 @@ export const ApiKey = () => {
         </div>
       </div>
 
-      <ApiKeyTable data={data} />
+      <ApiKeyTable data={apiKeyData} />
 
       <Dialog
         onOpenChange={() => {
@@ -71,16 +82,3 @@ export const ApiKey = () => {
     </section>
   );
 };
-
-const data = [
-  {
-    name: "test",
-    description: "test",
-    expiration: new Date("2023-08-01"),
-  },
-  {
-    name: "API key for the website 1",
-    description: "API key for the website 1",
-    expiration: new Date("2023-12-01"),
-  },
-];
