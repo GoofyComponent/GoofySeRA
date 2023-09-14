@@ -14,7 +14,7 @@ import { axios } from "@/lib/axios";
 import { accessManager } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
-import { SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+import { SERA_PERIWINKLE_HEXA, SERA_JET_HEXA } from "@/lib/utils";
 
 export const VideoReview = () => {
   const navigate = useNavigate();
