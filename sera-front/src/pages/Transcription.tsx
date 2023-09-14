@@ -264,7 +264,7 @@ export const Transcription = () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `video.mp4`;
+      a.download = `final_video_project_${ProjectId}.mp4`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -321,31 +321,32 @@ export const Transcription = () => {
             The subtitle displayed on the player is the latest uploaded version.
           </p>
           {plyrSourceObject && (
-            <div
-              className="mx-auto aspect-video w-11/12 overflow-hidden rounded-lg"
-              style={{
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                //@ts-ignore
-                "--plyr-color-main": SERA_JET_HEXA,
-                "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
-              }}
-            >
-              <RaptorPlyr
-                ref={plyrRef}
-                source={plyrSourceObject || validatedVideoData.video.json}
-                className="aspect-video"
-              />
-            </div>
+            <>
+              <div className="mt-2 flex justify-end">
+                <Button
+                  className="my-auto mb-2 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                  onClick={downloadVideo}
+                >
+                  Download final video <Download size={24} className="ml-2" />
+                </Button>
+              </div>
+              <div
+                className="mx-auto aspect-video w-full overflow-hidden rounded-lg"
+                style={{
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  //@ts-ignore
+                  "--plyr-color-main": SERA_JET_HEXA,
+                  "--plyr-video-control-color": SERA_PERIWINKLE_HEXA,
+                }}
+              >
+                <RaptorPlyr
+                  ref={plyrRef}
+                  source={plyrSourceObject || validatedVideoData.video.json}
+                  className="aspect-video"
+                />
+              </div>
+            </>
           )}
-          <div className="mt-2 flex justify-end">
-            <Button
-              onClick={downloadVideo}
-              className="my-auto mr-8 bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-            >
-              <Download size={20} className="mr-2" />
-              Download
-            </Button>
-          </div>
         </section>
       </div>
       <Separator className="mx-auto my-4 h-0.5 w-11/12 bg-sera-jet/75" />

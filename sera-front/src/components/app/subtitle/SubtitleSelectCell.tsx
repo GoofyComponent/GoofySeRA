@@ -49,6 +49,8 @@ export const SubtitleSelectCell = ({ subtitleData }: { subtitleData: any }) => {
                 return (
                   <SelectItem key={lang} value={lang}>
                     {lang.toUpperCase()}
+                    {lang === searchParams.get("lang") && " - current"}
+                    {lang === "vo" && " (transcription)"}
                   </SelectItem>
                 );
               }
