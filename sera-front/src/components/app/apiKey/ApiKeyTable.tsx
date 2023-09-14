@@ -31,13 +31,12 @@ export const ApiKeyTable = ({ data }: { data: any }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {console.log(data, data.length, data.length > 0)}
         {data &&
           data.length > 0 &&
-          data.map((keyElement: any) => {
+          data.map((keyElement: any, index: number) => {
             return (
               <TableRow
-                key={keyElement.id}
+                key={index}
                 className="odd:bg-sera-periwinkle/25 even:bg-sera-periwinkle/50 hover:odd:bg-sera-periwinkle/25 hover:even:bg-sera-periwinkle/50"
               >
                 <TableCell className="text-base text-sera-jet">
