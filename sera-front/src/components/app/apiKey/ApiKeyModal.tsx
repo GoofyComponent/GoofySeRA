@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,13 +25,14 @@ export const AddKeyDialog = () => {
   return (
     <DialogContent>
       <DialogHeader>
-        <h2 className="text-xl font-semibold text-sera-jet">
+        <DialogTitle className="text-xl font-semibold text-sera-jet">
           Create a new API key
-        </h2>
+        </DialogTitle>
+        <DialogDescription className="text-sm text-sera-jet">
+          Generate a new API key to use with the Sera API.
+        </DialogDescription>
       </DialogHeader>
-      <DialogDescription className="text-sm text-sera-jet">
-        Generate a new API key to use with the Sera API.
-      </DialogDescription>
+
       <div>
         <div className="flex flex-col">
           <Label htmlFor="keyExpiration" className="mb-2">
@@ -72,6 +74,66 @@ export const AddKeyDialog = () => {
           }}
         >
           Create API Key
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  );
+};
+
+export const RenewKeyDialog = () => {
+  const [apiKey, setApiKey] = useState<string>("");
+
+  return (
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle className="text-xl font-semibold text-sera-jet">
+          Regenerate this API key ?
+        </DialogTitle>
+        <DialogDescription className="text-sm text-sera-jet">
+          All the services using this API key will be unable to use the Sera API
+          anymore.
+          <br />
+          You&apos;ll need to add the api key to use it again
+        </DialogDescription>
+      </DialogHeader>
+
+      <DialogFooter className="w-full">
+        <Button
+          type="submit"
+          className="w-full bg-red-600 text-white hover:bg-red-600 hover:opacity-60"
+          onClick={() => {
+            console.log("renew");
+          }}
+        >
+          I understand, renew API Key
+        </Button>
+      </DialogFooter>
+    </DialogContent>
+  );
+};
+
+export const DeleteKeyDialog = () => {
+  return (
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle className="text-xl font-semibold text-sera-jet">
+          Delete this API key ?
+        </DialogTitle>
+        <DialogDescription className="text-sm text-sera-jet">
+          All the services using this API key will be unable to use the Sera API
+          anymore.
+        </DialogDescription>
+      </DialogHeader>
+
+      <DialogFooter className="w-full">
+        <Button
+          type="submit"
+          className="w-full bg-red-600 text-white hover:bg-red-600 hover:opacity-60"
+          onClick={() => {
+            console.log("delete");
+          }}
+        >
+          I understand, delete API Key
         </Button>
       </DialogFooter>
     </DialogContent>
