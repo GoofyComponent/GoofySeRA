@@ -57,6 +57,8 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::post('projects/{project_id}/captation-to-postproduction', 'App\Http\Controllers\StepController@captationToPostProd')->name('projects.captationToPostproduction');
     Route::post('projects/{project_id}/validate/postproduction', 'App\Http\Controllers\StepController@validatePostProd')->name('projects.validatePostProd');
     Route::post('projects/{project_id}/validate/transcription', 'App\Http\Controllers\StepController@validateTranscription')->name('projects.validateTranscription');
+    Route::post('projects/{project_id}/publish', 'App\Http\Controllers\StepController@publish')->name('projects.publish');
+    Route::post('projects/{project_id}/unpublish', 'App\Http\Controllers\StepController@unpublish')->name('projects.unpublish');
 
         /****TEAM ****/
 

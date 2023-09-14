@@ -19,7 +19,7 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $statusArray = ["ongoing", "completed", "cancelled"];
+        $statusArray = ["ongoing", "published", "cancelled"];
         $defaultSteps = config('steps');
         $projectRequest = ProjectRequest::factory()->create();
 

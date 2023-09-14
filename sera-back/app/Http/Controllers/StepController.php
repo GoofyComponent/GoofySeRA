@@ -654,4 +654,138 @@ class StepController extends Controller
 
         return response()->json($transcriptions, 200);
     }
+
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{project_id}/publish",
+    *     tags={"Projects"},
+    *     summary="Publish project",
+    *     description="Publish project",
+    *     operationId="PublishProject",
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Project published",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="title", type="string", example="Project title"),
+    *             @OA\Property(property="description", type="string", example="Project description"),
+    *             @OA\Property(property="status", type="string", example="published"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="project_request_id", type="integer", example="1"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Bad request",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="Project has no subtitles."),
+    *         ),
+    *     ),
+    * )
+    */
+    public function publish($project_id){
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $steps = json_decode($project->steps);
+
+        // il faut que toutes les steps soient done et que Subtitling soit ongoing
+        foreach ($steps as $step => $value) {
+            if($value->status !== 'done' && $step !== 'Subtitling' && $step !== 'Editorial'){
+                return response()->json(['error' => 'Step ' . $step . ' is not done.'], 400);
+            }
+        }
+
+        $subtitles = $project->subtitles()->get();
+
+        // is empty
+        if($subtitles->isEmpty()){
+            return response()->json(['error' => 'Project has no subtitles.'], 400);
+        }
+
+        $editorials = $project->edito()->get();
+
+        if($editorials->isEmpty()){
+            return response()->json(['error' => 'Project has no editorials.'], 400);
+        }
+        // on passe le status du projet à published
+        $project->status = 'published';
+
+        $project->save();
+
+        return response()->json('Project published' , 200);
+    }
+
+    /**
+    * @OA\Post(
+    *     path="/api/projects/{project_id}/unpublish",
+    *     tags={"Projects"},
+    *     summary="Unpublish project",
+    *     description="Unpublish project",
+    *     operationId="UnpublishProject",
+    *     @OA\Parameter(
+    *         description="Project id",
+    *         in="path",
+    *         name="project_id",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="integer",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Project unpublished",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="id", type="integer", example="1"),
+    *             @OA\Property(property="title", type="string", example="Project title"),
+    *             @OA\Property(property="description", type="string", example="Project description"),
+    *             @OA\Property(property="status", type="string", example="ongoing"),
+    *             @OA\Property(property="created_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="updated_at", type="string", example="2021-05-05T14:48:00.000000Z"),
+    *             @OA\Property(property="project_request_id", type="integer", example="1"),
+    *         ),
+    *     ),
+    *     @OA\Response(
+    *         response=400,
+    *         description="Bad request",
+    *         @OA\JsonContent(
+    *             @OA\Property(property="error", type="string", example="Project is not published."),
+    *         ),
+    *     ),
+    * )
+    */
+    public function unpublish($project_id){
+        $project = Project::find($project_id);
+
+        if ($project === null) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        // il faut que le status du projet soit published
+        if($project->status !== 'published'){
+            return response()->json(['error' => 'Project is not published.'], 400);
+        }
+
+        $project->status = 'ongoing';
+
+        $project->save();
+
+        return response()->json('Project unpublished' , 200);
+    }
+
 }

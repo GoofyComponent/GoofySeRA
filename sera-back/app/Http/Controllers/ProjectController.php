@@ -69,7 +69,7 @@ class ProjectController extends Controller
         $request->validate([
             'maxPerPage' => 'integer',
             'sort' => 'string|in:asc,desc',
-            'status' => 'string|in:ongoing,completed,cancelled',
+            'status' => 'string|in:ongoing,published,cancelled',
         ]);
 
         $maxPerPage = $request->input('maxPerPage', 10);
@@ -366,7 +366,7 @@ class ProjectController extends Controller
      *           @OA\Property(
      *             property="status",
      *             type="string",
-     *             enum={"ongoing", "completed", "cancelled"},
+     *             enum={"ongoing", "published", "cancelled"},
      *           ),
      *           @OA\Property(
      *             property="change_color",
@@ -435,7 +435,7 @@ class ProjectController extends Controller
             'description' => 'string',
             'start_date' => 'date',
             'end_date' => 'date',
-            'status' => 'string|in:ongoing,completed,cancelled',
+            'status' => 'string|in:ongoing,published,cancelled',
             'change_color' => 'boolean',
         ]);
 
