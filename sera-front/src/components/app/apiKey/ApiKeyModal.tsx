@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
+import { useParams } from "react-router";
 
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/datePicker";
@@ -62,43 +63,12 @@ export const AddKeyDialog = () => {
 
   if (apiKey && apiKey != "") {
     return (
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-sera-jet">
-            Create a new API key
-          </DialogTitle>
-          <DialogDescription className="text-sm text-sera-jet">
-            Generate a new API key to use with the Sera API.
-          </DialogDescription>
-        </DialogHeader>
-        <div>
-          <Label className="text-lg text-sera-jet">There is your API key</Label>
-          <p className="text-md text-sera-jet/75">
-            Copy it, and save it. You won&apos;t be able to see it again.
-          </p>
-        </div>
-        <div className="flex justify-between">
-          <Input className="w-11/12" value={apiKey} readOnly />
-          <button
-            type="button"
-            title="Copy API key to clipboard"
-            className="ml-2 w-1/12 rounded-lg border border-sera-jet transition-opacity hover:cursor-pointer hover:opacity-50"
-            onClick={() => {
-              navigator.clipboard.writeText(apiKey);
-              setCopyIndicator(true);
-              setTimeout(() => {
-                setCopyIndicator(false);
-              }, 1000);
-            }}
-          >
-            {copyIndicator ? (
-              <Check className="mx-auto my-2" size={24} />
-            ) : (
-              <Copy className="mx-auto my-2" size={24} />
-            )}
-          </button>
-        </div>
-      </DialogContent>
+      <Displaykey
+        apiKey={apiKey}
+        setCopyIndicator={setCopyIndicator}
+        copyIndicator={copyIndicator}
+        from="create"
+      />
     );
   }
 
@@ -186,8 +156,9 @@ export const AddKeyDialog = () => {
 
             createKey.mutate();
           }}
+          disabled={createKey.isLoading}
         >
-          Create API Key
+          {createKey.isLoading ? "Loading..." : "Create API Key"}
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -195,7 +166,35 @@ export const AddKeyDialog = () => {
 };
 
 export const RenewKeyDialog = () => {
+  const { keyId } = useParams<{ keyId: string }>();
+
   const [apiKey, setApiKey] = useState<string>("");
+  const [copyIndicator, setCopyIndicator] = useState<boolean>(false);
+
+  const renewKey = useMutation({
+    mutationFn: async () => {
+      const key = await axios.post(`/api/api-keys/${keyId}/recreate`);
+
+      return key.data;
+    },
+    onSuccess: (response) => {
+      console.log(response);
+      if (response) {
+        setApiKey(response.data.key);
+      }
+    },
+  });
+
+  if (apiKey && apiKey != "") {
+    return (
+      <Displaykey
+        apiKey={apiKey}
+        setCopyIndicator={setCopyIndicator}
+        copyIndicator={copyIndicator}
+        from="renew"
+      />
+    );
+  }
 
   return (
     <DialogContent>
@@ -216,10 +215,11 @@ export const RenewKeyDialog = () => {
           type="submit"
           className="w-full bg-red-600 text-white hover:bg-red-600 hover:opacity-60"
           onClick={() => {
-            console.log("renew");
+            renewKey.mutate();
           }}
+          disabled={renewKey.isLoading}
         >
-          I understand, renew API Key
+          {renewKey.isLoading ? "Loading..." : "I understand, renew API Key"}
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -250,6 +250,62 @@ export const DeleteKeyDialog = () => {
           I understand, delete API Key
         </Button>
       </DialogFooter>
+    </DialogContent>
+  );
+};
+
+const Displaykey = ({
+  apiKey,
+  setCopyIndicator,
+  copyIndicator,
+  from,
+}: {
+  apiKey: string;
+  setCopyIndicator: any;
+  copyIndicator: boolean;
+  from: string;
+}) => {
+  return (
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle className="text-xl font-semibold text-sera-jet">
+          {from === "create" && "Create a new API key"}
+          {from === "renew" && "Regenerate API key"}
+        </DialogTitle>
+        <DialogDescription className="text-sm text-sera-jet">
+          {from === "create" &&
+            "Generate a new API key to use with the Sera API."}
+          {from === "renew" &&
+            "All the services using this API key will be unable to use the Sera API anymore."}
+        </DialogDescription>
+      </DialogHeader>
+      <div>
+        <Label className="text-lg text-sera-jet">There is your API key</Label>
+        <p className="text-md text-sera-jet/75">
+          Copy it, and save it. You won&apos;t be able to see it again.
+        </p>
+      </div>
+      <div className="flex justify-between">
+        <Input className="w-11/12" value={apiKey} readOnly />
+        <button
+          type="button"
+          title="Copy API key to clipboard"
+          className="ml-2 w-1/12 rounded-lg border border-sera-jet transition-opacity hover:cursor-pointer hover:opacity-50"
+          onClick={() => {
+            navigator.clipboard.writeText(apiKey);
+            setCopyIndicator(true);
+            setTimeout(() => {
+              setCopyIndicator(false);
+            }, 1000);
+          }}
+        >
+          {copyIndicator ? (
+            <Check className="mx-auto my-2" size={24} />
+          ) : (
+            <Copy className="mx-auto my-2" size={24} />
+          )}
+        </button>
+      </div>
     </DialogContent>
   );
 };
