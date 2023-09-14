@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ApiCheck;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,9 +18,9 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
+Route::get('/courses', 'App\Http\Controllers\CourseController@index')->name('courses.index')->middleware(ApiCheck::class);
+Route::get('/courses/{course}', 'App\Http\Controllers\CourseController@show')->name('courses.show')->middleware(ApiCheck::class);
 
-Route::get('/courses', 'App\Http\Controllers\CourseController@index')->name('courses.index');
-Route::get('/courses/{course}', 'App\Http\Controllers\CourseController@show')->name('courses.show');
 
 // Route::get('/test', 'App\Http\Controllers\UserController@test')->name('test');
 
