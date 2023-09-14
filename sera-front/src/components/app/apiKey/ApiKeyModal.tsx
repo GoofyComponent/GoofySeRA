@@ -54,7 +54,6 @@ export const AddKeyDialog = () => {
       return key.data;
     },
     onSuccess: (response) => {
-      console.log(response);
       if (response) {
         setApiKey(response.data.key);
       }
@@ -178,7 +177,6 @@ export const RenewKeyDialog = () => {
       return key.data;
     },
     onSuccess: (response) => {
-      console.log(response);
       if (response) {
         setApiKey(response.data.key);
       }

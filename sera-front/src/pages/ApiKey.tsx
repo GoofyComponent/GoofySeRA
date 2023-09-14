@@ -31,10 +31,7 @@ export const ApiKey = () => {
       return navigate("/dashboard");
     }
 
-    console.log(searchParams.get("action"));
-
     if (searchParams.get("action") && !addApiKeyDialog) {
-      console.log("Inside openModal");
       setAddApiKeyDialog(true);
     }
   }, [location]);
@@ -43,7 +40,6 @@ export const ApiKey = () => {
     queryKey: ["api-key"],
     queryFn: async () => {
       const keys = await axios.get(`/api/api-keys`);
-      console.log(keys.data);
       return keys.data;
     },
   });
