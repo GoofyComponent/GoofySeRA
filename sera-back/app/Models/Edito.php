@@ -15,6 +15,11 @@ class Edito extends Model
         return $this->hasOne(Project::class);
     }
 
+    public function knowledges()
+    {
+        return $this->belongsToMany(Knowledge::class, 'edito_knowledge', 'edito_id', 'knowledge_id');
+    }
+
     public function getimagesAttribute($value)
     {
         // si value null, return null

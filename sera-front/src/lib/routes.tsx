@@ -141,7 +141,7 @@ const paths = [
         element: <VideoReview />,
       },
       {
-        path: "projects/:ProjectId/editorial",
+        path: "projects/:ProjectId/edito",
         element: <Editorial />,
       },
       {
