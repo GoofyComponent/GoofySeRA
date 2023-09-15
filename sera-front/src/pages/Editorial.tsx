@@ -191,10 +191,15 @@ export const Editorial = () => {
         <>
           <div className="flex w-full flex-row justify-evenly ">
             <div className="  flex w-[45%] flex-col ">
-              <h3 className="text-2xl font-semibold">Add Editorial</h3>
+              <h3 className="text-2xl font-semibold text-sera-jet">
+                Add Editorial
+              </h3>
               <div className="flex flex-col justify-start space-y-4 rounded-lg drop-shadow-2xl">
                 <div>
-                  <Label className="text-lg" htmlFor="displayName">
+                  <Label
+                    className="text-lg text-sera-jet"
+                    htmlFor="displayName"
+                  >
                     Display Name
                   </Label>
                   <Input
@@ -211,7 +216,10 @@ export const Editorial = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-lg" htmlFor="description">
+                  <Label
+                    className="text-lg text-sera-jet"
+                    htmlFor="description"
+                  >
                     Description
                   </Label>
                   <Textarea
@@ -230,7 +238,7 @@ export const Editorial = () => {
               </div>
               <div className=" flex w-full flex-col justify-end  space-y-6">
                 <div className="py-2">
-                  <Label className="text-lg" htmlFor="image">
+                  <Label className="text-lg text-sera-jet" htmlFor="image">
                     Image
                   </Label>
                   <div className="flex">
@@ -256,6 +264,7 @@ export const Editorial = () => {
                       <>
                         {imgSlide.length > 3 && (
                           <button
+                            title="button"
                             className="previous absolute right-full top-1/2 cursor-pointer"
                             onClick={goToPrevious}
                           >
@@ -279,6 +288,7 @@ export const Editorial = () => {
                                     />
 
                                     <button
+                                      title="button"
                                       className="absolute right-0 top-0 cursor-pointer"
                                       onClick={() => {
                                         setImgSlide(
@@ -311,6 +321,7 @@ export const Editorial = () => {
                         </Slider>
                         {imgSlide.length > 3 && (
                           <button
+                            title="button"
                             className="next absolute left-full top-1/2 cursor-pointer"
                             onClick={goToNext}
                           >
@@ -395,7 +406,10 @@ export const Editorial = () => {
               </div>
               <div className="flex flex-col justify-start space-y-4 rounded-lg drop-shadow-2xl">
                 <div>
-                  <Label className="text-lg" htmlFor="displayName">
+                  <Label
+                    className="text-lg text-sera-jet"
+                    htmlFor="displayName"
+                  >
                     Display Name
                   </Label>
                   <Input
@@ -412,7 +426,10 @@ export const Editorial = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-lg" htmlFor="description">
+                  <Label
+                    className="text-lg text-sera-jet"
+                    htmlFor="description"
+                  >
                     Description
                   </Label>
                   <Textarea
@@ -431,7 +448,7 @@ export const Editorial = () => {
               </div>
               <div className=" flex w-full flex-col justify-end  space-y-6">
                 <div className="py-2">
-                  <Label className="text-lg" htmlFor="image">
+                  <Label className="text-lg text-sera-jet" htmlFor="image">
                     Image
                   </Label>
                   <div className="flex">
@@ -460,6 +477,7 @@ export const Editorial = () => {
                       <>
                         {imgUpdateSlide && imgUpdateSlide.length > 3 && (
                           <button
+                            title="button"
                             className="previous absolute right-full top-1/2 cursor-pointer"
                             onClick={goToPrevious}
                           >
@@ -484,6 +502,7 @@ export const Editorial = () => {
                                       />
 
                                       <button
+                                        title="button"
                                         className="absolute right-0 top-0 cursor-pointer"
                                         onClick={() => {
                                           setImgUpdateSlide(
@@ -516,6 +535,7 @@ export const Editorial = () => {
                         </Slider>
                         {imgUpdateSlide && imgUpdateSlide.length > 3 && (
                           <button
+                            title="button"
                             className="next absolute left-full top-1/2 cursor-pointer"
                             onClick={goToNext}
                           >
