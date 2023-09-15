@@ -170,7 +170,6 @@ export const Project = () => {
 
               <div>
                 <h3 className="text-3xl font-semibold">What&apos;s next ?</h3>
-                {console.log("publishIsPossible", publishIsPossible)}
                 {projectData.status === "published" && (
                   <p className="text-normal mt-2">
                     There is nothing to do left you project is currently
