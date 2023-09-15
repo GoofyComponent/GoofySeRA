@@ -200,7 +200,7 @@ export const Project = () => {
                       setType("unpublish");
                       setDialogOpen(true);
                     }}
-                    disabled={!publishIsPossible}
+                    disabled={publishIsPossible}
                   >
                     Unpublish this course
                   </Button>
