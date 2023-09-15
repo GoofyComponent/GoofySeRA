@@ -54,7 +54,7 @@ export const HeaderTitle = ({
           className={clsx(
             projectStatus === "cancelled" && "bg-red-500 hover:bg-red-500",
             projectStatus === "ongoing" && "bg-yellow-200 hover:bg-yellow-200",
-            projectStatus === "completed" && "bg-lime-200 hover:bg-lime-200 ",
+            projectStatus === "published" && "bg-lime-200 hover:bg-lime-200 ",
             "my-auto ml-auto rounded px-2 py-1 text-xl font-normal text-sera-jet"
           )}
         >

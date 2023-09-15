@@ -6,7 +6,7 @@ return [
     "cursus_director" => [
         "projects-requests" => ["show", "index", "store", "update", "destroy"],
         "users" => ["iso","show", "index", "store", "update", "destroy", "roles", "image", "password","reservations","reservations"],
-        "projects" => ["validateTranscription","getCaptionUrl","show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
+        "projects" => ["unpublish","publish","validateTranscription","getCaptionUrl","show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "store", "update", "destroy", "reserve","unreserve","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
@@ -16,11 +16,12 @@ return [
         "subtitles" => ["store","destroy","index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "edito" => ["show", "index", "store", "update", "destroy","removeImage","addKnowledge","removeKnowledge"],
+        "api-keys" => ["store", "recreate", "destroy","index"],
     ],
     "project_manager" => [
         "projects-requests" => ["show", "index", "update"],
         "users" => ["iso","show", "index", "store", "update", "destroy", "roles", "image", "password","reservations"],
-        "projects" => ["validateTranscription","getCaptionUrl","show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
+        "projects" => ["unpublish","publish","validateTranscription","getCaptionUrl","show", "index", "store", "update", "destroy", "init","stepsGet","stepsUpdateDate","planificationToCaptation","addLink","captationToPostproduction","validatePostProd"],
         "teams" => ["add", "index", "show", "remove"],
         "rooms" => ["show", "index", "reserve","unreserve","available","showByProject"],
         "video-reviews" => ["getReviewsByProjectId","store","destroy","addAComment","getTemporaryUploadUrl","getVideoValidated"],
@@ -30,7 +31,7 @@ return [
         "subtitles" => ["store","destroy","index"],
         "knowledges" => ["show", "index", "store", "update", "destroy", "getTypes"],
         "edito" => ["show", "index", "store", "update", "destroy","removeImage","addKnowledge","removeKnowledge"],
-
+        "api-keys" => ["store", "recreate", "destroy","index"],
     ],
     "professor" => [
         "users" => ["iso","show", "index", "roles", "image", "password","reservations"],

@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
+import { NoUrlCell, UrlCell } from "@/components/app/capture/CaptureCells";
 import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { AddVideoDialog } from "@/components/app/videoReview/AddDialog";
 import { ChatContainer } from "@/components/app/videoReview/ChatContainer";
 import { ReviewActions } from "@/components/app/videoReview/ReviewActions";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { PlyrSection } from "@/components/ui/plyrSection";
 import { StepValidator } from "@/components/ui/stepValidator";
 import { toast } from "@/components/ui/use-toast";
@@ -23,6 +25,7 @@ export const VideoReview = () => {
   const [searchParams] = useSearchParams();
   const { ProjectId } = useParams<{ ProjectId: string }>();
 
+  const [openRushsModal, setOpenRushsModal] = useState(false);
   const [activeVersion, setActiveVersion] = useState<string>(
     searchParams.get("version") || "0"
   );
@@ -72,6 +75,15 @@ export const VideoReview = () => {
       }
 
       return project.data[0].status;
+    },
+  });
+
+  const { data: drivesRushs } = useQuery({
+    queryKey: ["drives-rushs", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(`/api/projects/${ProjectId}/get-rushs`);
+
+      return project.data.ressource;
     },
   });
 
@@ -207,12 +219,16 @@ export const VideoReview = () => {
           </div>
         )}
 
-        {!editingIsLoading && editingIsSuccess && (
-          <ReviewActions
-            editingData={editingData}
-            setActiveVersion={setActiveVersion}
-            setOpenAddVideo={setOpenAddVideo}
-          />
+        {projectStepStatus !== "done" && (
+          <>
+            {!editingIsLoading && editingIsSuccess && (
+              <ReviewActions
+                editingData={editingData}
+                setActiveVersion={setActiveVersion}
+                setOpenAddVideo={setOpenAddVideo}
+              />
+            )}
+          </>
         )}
 
         {editingData[activeVersion] && editingData[activeVersion].video && (
@@ -222,10 +238,29 @@ export const VideoReview = () => {
           />
         )}
 
+        {editingData[activeVersion] && editingData[activeVersion].video && (
+          <button
+            className="text-md mx-auto w-full text-center italic underline hover:cursor-pointer hover:opacity-70"
+            onClick={() => {
+              setOpenRushsModal(true);
+            }}
+          >
+            Get rushs link {">>>>>>>>"}
+          </button>
+        )}
+
         {!editingData[activeVersion] && (
           <div className="aspect-video min-h-[10em] w-full">
             <div className="m-auto flex h-full w-9/12 flex-col justify-center rounded-lg bg-black/75 text-white">
               <p className="m-auto  text-center">Upload a video first.</p>
+              <button
+                className="text-md mx-auto text-center italic underline hover:cursor-pointer hover:opacity-70"
+                onClick={() => {
+                  setOpenRushsModal(true);
+                }}
+              >
+                Get rushs link {">>>>>>>>"}
+              </button>
             </div>
           </div>
         )}
@@ -251,6 +286,29 @@ export const VideoReview = () => {
         setAddVideoFile={setAddVideoFile}
         addVideoMutation={addVideoMutation}
       />
+
+      <Dialog
+        open={openRushsModal}
+        onOpenChange={(value) => {
+          if (value) return;
+          setOpenRushsModal(false);
+        }}
+      >
+        <DialogContent className="">
+          <DialogHeader>Rush link :</DialogHeader>
+          <div className="w-11/12">
+            {drivesRushs && drivesRushs.url ? (
+              <UrlCell
+                title={drivesRushs.name || "Drive link"}
+                link={drivesRushs.url}
+                lastUpdate={drivesRushs.updated_at}
+              />
+            ) : (
+              <NoUrlCell />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

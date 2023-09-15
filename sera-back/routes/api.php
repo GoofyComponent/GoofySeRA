@@ -57,6 +57,8 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
     Route::post('projects/{project_id}/captation-to-postproduction', 'App\Http\Controllers\StepController@captationToPostProd')->name('projects.captationToPostproduction');
     Route::post('projects/{project_id}/validate/postproduction', 'App\Http\Controllers\StepController@validatePostProd')->name('projects.validatePostProd');
     Route::post('projects/{project_id}/validate/transcription', 'App\Http\Controllers\StepController@validateTranscription')->name('projects.validateTranscription');
+    Route::post('projects/{project_id}/publish', 'App\Http\Controllers\StepController@publish')->name('projects.publish');
+    Route::post('projects/{project_id}/unpublish', 'App\Http\Controllers\StepController@unpublish')->name('projects.unpublish');
 
         /****TEAM ****/
 
@@ -133,6 +135,12 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         Route::post('projects/{projectId}/edito/add-knowledge', 'App\Http\Controllers\EditoController@addKnowledge')->name('edito.addKnowledge');
         Route::post('projects/{projectId}/edito/remove-knowledge', 'App\Http\Controllers\EditoController@unlinkKnowledge')->name('edito.removeKnowledge');
         /************************/
+
+        /***** API Key *****/
+        Route::post('api-keys', 'App\Http\Controllers\ApiKeyController@store')->name('api-keys.store');
+        Route::post('api-keys/{apikey_id}/recreate', 'App\Http\Controllers\ApiKeyController@recreate')->name('api-keys.recreate');
+        Route::delete('api-keys/{apikey_id}', 'App\Http\Controllers\ApiKeyController@destroy')->name('api-keys.destroy');
+        Route::get('api-keys', 'App\Http\Controllers\ApiKeyController@index')->name('api-keys.index');
 
     /*********************************/
 

@@ -64,7 +64,7 @@ sh dev.sh
 
 - [@DestroyCom](https://github.com/DestroyCom)
 - [@ADR1811](https://github.com/ADR1811)
-- [@lucag322](https://github.com/ADR1811)
+- [@lucag322](https://github.com/lucag322)
 - [@ThomAzgo](https://github.com/ThomAzgo)
 - [@Hiteazel](https://github.com/Hiteazel)
 

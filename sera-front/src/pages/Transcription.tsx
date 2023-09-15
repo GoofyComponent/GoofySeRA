@@ -299,21 +299,25 @@ export const Transcription = () => {
             />
           )}
 
-          <h3 className="mb-2 mt-0 text-4xl font-medium text-sera-jet">
-            Transcript file :
-          </h3>
-          {selectedVersion &&
-          selectedVersion.srt &&
-          transcriptData &&
-          transcriptData.length > 0 ? (
-            <TranscriptFileCell
-              selectedVersion={selectedVersion}
-              transcriptData={transcriptData}
-              setAddFileModal={setAddFileModal}
-              setSelectedVersion={setSelectedVersion}
-            />
-          ) : (
-            <NoTranscriptFileCell setAddFileModal={setAddFileModal} />
+          {projectStepStatus !== "done" && (
+            <>
+              <h3 className="mb-2 mt-0 text-4xl font-medium text-sera-jet">
+                Transcript file :
+              </h3>
+              {selectedVersion &&
+              selectedVersion.srt &&
+              transcriptData &&
+              transcriptData.length > 0 ? (
+                <TranscriptFileCell
+                  selectedVersion={selectedVersion}
+                  transcriptData={transcriptData}
+                  setAddFileModal={setAddFileModal}
+                  setSelectedVersion={setSelectedVersion}
+                />
+              ) : (
+                <NoTranscriptFileCell setAddFileModal={setAddFileModal} />
+              )}
+            </>
           )}
         </section>
         <section className="my-auto w-1/2 px-2">
