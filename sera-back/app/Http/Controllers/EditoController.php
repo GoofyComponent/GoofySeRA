@@ -381,17 +381,29 @@ class EditoController extends Controller
     */
     public function destroy($id)
     {
-        $edito = Edito::find($id);
+
+        $project = Project::find($id);
+
+        if (!$project) {
+            return response()->json([
+                'message' => 'Project not found'
+            ], 404);
+        }
+
+        $edito = Edito::where('project_id', $id)->first();
 
         if (!$edito) {
             return response()->json([
                 'message' => 'Edito not found'
             ], 404);
         }
-        $project = Project::find($edito->project_id);
+
         $steps = json_decode($project->steps);
+
         $steps->{'Editorial'}->have_edito = false;
+
         $project->steps = json_encode($steps);
+
         $project->save();
 
         $edito->delete();
@@ -399,6 +411,7 @@ class EditoController extends Controller
         return response()->json([
             'message' => 'Edito deleted'
         ], 200);
+
     }
 
     /**
