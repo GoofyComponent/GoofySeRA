@@ -106,7 +106,6 @@ export const Editorial = () => {
 
   useEffect(() => {
     if (getEditorialIsSuccess && getEditorial) {
-      console.log("usefect edito", getEditorial);
       setAddUpdateEditorialData({
         displayName: getEditorial.title,
         description: getEditorial.description,
@@ -124,7 +123,6 @@ export const Editorial = () => {
       for (let i = 0; i < imgUpdate.length; i++) {
         formData.append("images[]", imgUpdate[i]);
       }
-      console.log(formData);
       const editorial = await axios.post(
         `/api/projects/${ProjectId}/edito/update`,
         formData,
@@ -135,10 +133,6 @@ export const Editorial = () => {
     onSuccess: () => {
       getEditorialRefetch();
       editorialRefetch();
-      console.log("success", getEditorial);
-    },
-    onError: () => {
-      return console.log("error");
     },
   });
 
@@ -151,7 +145,6 @@ export const Editorial = () => {
       for (let i = 0; i < images.length; i++) {
         formData.append("images[]", images[i]);
       }
-      console.log("form data create", formData);
       const editorial = await axios.post(
         `/api/projects/${ProjectId}/edito`,
         formData,
@@ -167,9 +160,6 @@ export const Editorial = () => {
         description: "",
         images: [],
       });
-    },
-    onError: () => {
-      return console.log("error");
     },
   });
 

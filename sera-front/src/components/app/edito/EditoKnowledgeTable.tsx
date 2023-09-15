@@ -86,10 +86,6 @@ const Row = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["editorial"]);
-      console.log("success delete knowledge");
-    },
-    onError: () => {
-      return console.log("error");
     },
   });
 

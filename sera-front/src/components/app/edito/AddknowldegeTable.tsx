@@ -91,9 +91,6 @@ const Row = ({
     onSuccess: () => {
       queryClient.invalidateQueries(["editorial"]);
     },
-    onError: () => {
-      return console.log("error");
-    },
   });
 
   return (
@@ -118,8 +115,6 @@ const Row = ({
             className="ml-2 hover:cursor-pointer hover:text-sera-jet"
             onClick={() => {
               onSubmitAddKnowledge(id);
-
-              console.log("add knowledge");
             }}
           />
         </div>
