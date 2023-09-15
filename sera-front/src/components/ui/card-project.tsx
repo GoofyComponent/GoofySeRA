@@ -22,7 +22,7 @@ const Card = ({
 }: CardsProps) => {
   if (status === "cancelled") {
     titleBgColor = "bg-red-500";
-  } else if (status === "completed") {
+  } else if (status === "published") {
     titleBgColor = "bg-lime-200";
   } else if (status === "ongoing") {
     titleBgColor = "bg-yellow-200";
