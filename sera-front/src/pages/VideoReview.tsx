@@ -206,13 +206,16 @@ export const VideoReview = () => {
             />
           </div>
         )}
-
-        {!editingIsLoading && editingIsSuccess && (
-          <ReviewActions
-            editingData={editingData}
-            setActiveVersion={setActiveVersion}
-            setOpenAddVideo={setOpenAddVideo}
-          />
+        {projectStepStatus !== "done" && (
+          <>
+            {!editingIsLoading && editingIsSuccess && (
+              <ReviewActions
+                editingData={editingData}
+                setActiveVersion={setActiveVersion}
+                setOpenAddVideo={setOpenAddVideo}
+              />
+            )}
+          </>
         )}
 
         {editingData[activeVersion] && editingData[activeVersion].video && (

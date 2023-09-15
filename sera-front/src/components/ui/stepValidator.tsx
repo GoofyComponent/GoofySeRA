@@ -1,4 +1,5 @@
 import { Check, CheckSquare, Loader2 } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
@@ -22,6 +23,16 @@ export const StepValidator = ({
   validateAvertissement?: string;
   buttonMessage: string;
 }) => {
+  const location = useLocation();
+  const currentURL = location.pathname;
+
+  let messageEdit = "";
+  if (currentURL.includes("transcript") || currentURL.includes("editing")) {
+    messageEdit = "You can't update the information";
+  } else if (currentURL.includes("capture") || currentURL.includes("prepare")) {
+    messageEdit = "You can still update the information";
+  }
+
   return (
     <div className="flex w-full flex-col">
       {isprojectStatusLoading && !isprojectStatusSuccess && (
@@ -67,9 +78,7 @@ export const StepValidator = ({
           <CheckSquare size={32} className="my-auto mr-4" />
           <div className="flex flex-col justify-center text-center">
             <p className="font-bold">This step has been validated.</p>
-            <p className="font-extralight italic">
-              You can still update the information
-            </p>
+            <p className="font-extralight italic">{messageEdit}</p>
           </div>
         </div>
       )}
