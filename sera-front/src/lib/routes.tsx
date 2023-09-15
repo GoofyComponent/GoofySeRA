@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ApiKey } from "@/pages/ApiKey";
 import App from "@/pages/App";
 import { Capture } from "@/pages/Capture";
+import { Editorial } from "@/pages/Editorial";
 import { Error404 } from "@/pages/Error404";
 import { Home } from "@/pages/Home";
 import { Knowledge } from "@/pages/Knowledge";
@@ -149,6 +150,10 @@ const paths = [
       {
         path: "projects/:ProjectId/editing",
         element: <VideoReview />,
+      },
+      {
+        path: "projects/:ProjectId/edito",
+        element: <Editorial />,
       },
       {
         path: "profile",

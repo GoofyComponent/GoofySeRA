@@ -47,7 +47,6 @@ export const Project = () => {
     queryKey: ["project", { id }],
     queryFn: async () => {
       const project = await axios.get(`/api/projects/${id}`);
-      console.log("project", project.data);
       return project.data;
     },
   });
@@ -86,8 +85,6 @@ export const Project = () => {
     const { isReady, msg } = isReadyToPublish(projectSteps);
     setMsgInfo(msg);
     setPublishIsPossible(isReady);
-    console.log("isReady", isReady);
-    console.log("publishIsPossible", publishIsPossible);
   }, [projectSteps]);
 
   useEffect(() => {
