@@ -232,6 +232,8 @@ class ProjectSeeder extends Seeder
         $project->steps->{'Transcription'}->status = 'done';
         $project->steps->{'Subtitling'}->status = 'ongoing';
         $project->steps->{'Editorial'}->status = 'ongoing';
+        $project->steps->{'Editorial'}->have_edito = true;
+
         $project->steps = json_encode($project->steps);
         $project->save();
 

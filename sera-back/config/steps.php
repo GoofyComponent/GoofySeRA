@@ -38,5 +38,6 @@ return [
         "status" => "not_started",
         "start_date" => null,
         "end_date" => null,
+        "have_edito" => false,
     ]
 ];
