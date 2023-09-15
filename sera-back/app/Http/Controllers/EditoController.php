@@ -206,6 +206,11 @@ class EditoController extends Controller
 
         $edito->save();
 
+        $steps = json_decode($project->steps);
+        $steps->{'Editorial'}->have_edito = true;
+        $project->steps = json_encode($steps);
+
+
         return response()->json($edito, 201);
     }
 
@@ -383,6 +388,11 @@ class EditoController extends Controller
                 'message' => 'Edito not found'
             ], 404);
         }
+        $project = Project::find($edito->project_id);
+        $steps = json_decode($project->steps);
+        $steps->{'Editorial'}->have_edito = false;
+        $project->steps = json_encode($steps);
+        $project->save();
 
         $edito->delete();
 
