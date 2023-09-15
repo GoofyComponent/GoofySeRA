@@ -77,7 +77,6 @@ export const Tickets = () => {
 
   useEffect(() => {
     if (!accessManager("project_requests", undefined)) {
-      console.log("access denied");
       return navigate("/dashboard");
     }
   }, []);

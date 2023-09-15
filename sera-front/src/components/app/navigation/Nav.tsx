@@ -4,6 +4,7 @@ import {
   DoorOpen,
   FolderOpen,
   Home,
+  KeyRound,
   Ticket,
   User,
   WalletCards,
@@ -144,6 +145,24 @@ export const Nav = () => {
             Projects
           </p>
         </Link>
+
+        {accessManager("api", undefined) && (
+          <Link
+            to="/dashboard/api"
+            className={clsx(
+              "mx-2 my-2 h-14 rounded-lg px-1 transition-all",
+              "flex   text-sera-jet",
+              pathname.pathname.match(/^\/dashboard\/api/) &&
+                "bg-sera-jet text-sera-periwinkle",
+              "hover:cursor-pointer hover:bg-sera-jet hover:text-sera-periwinkle"
+            )}
+          >
+            <KeyRound size={32} className="my-auto mr-2" />
+            <p className="my-auto hidden text-2xl font-semibold lg:block">
+              API Keys
+            </p>
+          </Link>
+        )}
       </ul>
     </nav>
   );

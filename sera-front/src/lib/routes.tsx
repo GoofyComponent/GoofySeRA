@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
+import { ApiKey } from "@/pages/ApiKey";
 import App from "@/pages/App";
 import { Capture } from "@/pages/Capture";
 import { Error404 } from "@/pages/Error404";
@@ -27,6 +28,16 @@ const paths = [
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "api",
+        element: <ApiKey />,
+        children: [
+          {
+            path: ":keyId",
+            element: <ApiKey />,
+          },
+        ],
       },
       {
         path: "rooms",

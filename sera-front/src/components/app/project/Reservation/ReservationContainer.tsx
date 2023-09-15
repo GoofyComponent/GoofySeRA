@@ -3,7 +3,6 @@ import clsx from "clsx";
 import {
   ArrowLeft,
   ArrowRight,
-  CalendarIcon,
   Clapperboard,
   PenBox,
   Plus,
@@ -13,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { DatePicker } from "@/components/ui/datePicker";
 import {
   Dialog,
   DialogContent,
@@ -24,20 +23,9 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { axios } from "@/lib/axios";
-import {
-  accessManager,
-  cn,
-  convertDate,
-  convertDateFromDateType,
-  selectRoleDisplay,
-} from "@/lib/utils";
+import { accessManager, convertDate, selectRoleDisplay } from "@/lib/utils";
 import { BigLoader } from "@/pages/skeletons/BigLoader";
 
 export const ReservationContainer = ({
@@ -514,32 +502,5 @@ const SearchRoomDialog = ({
         </article>
       </DialogContent>
     </Dialog>
-  );
-};
-
-const DatePicker = ({ date, setDate }: any) => {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? convertDateFromDateType(date) : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
   );
 };
