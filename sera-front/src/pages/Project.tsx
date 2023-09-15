@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -23,6 +23,7 @@ import {
   setLastSeenProjectName,
 } from "@/helpers/slices/AppSlice";
 import { axios } from "@/lib/axios";
+import { isReadyToPublish } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -33,18 +34,61 @@ export const Project = () => {
   const { ProjectId: id } = useParams<{ ProjectId: string }>();
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [msgInfo, setMsgInfo] = useState("");
+  const [publishIsPossible, setPublishIsPossible] = useState(false);
+  const [type, setType] = useState<"publish" | "unpublish" | "">("");
 
   const {
     data: projectData,
     isLoading,
     isSuccess,
+    refetch: projectRefetch,
   } = useQuery({
     queryKey: ["project", { id }],
     queryFn: async () => {
       const project = await axios.get(`/api/projects/${id}`);
+      console.log("project", project.data);
       return project.data;
     },
   });
+
+  const { data: projectSteps, isLoading: ProjectStepLoading } = useQuery({
+    queryKey: ["project-steps", { id }],
+    queryFn: async () => {
+      const project = await axios.get(`/api/projects/${id}/steps`);
+      return project.data;
+    },
+  });
+
+  const publishProject = useMutation({
+    mutationFn: async () => {
+      const project = await axios.post(`/api/projects/${id}/publish`);
+      return project.data;
+    },
+    onSuccess: () => {
+      projectRefetch();
+    },
+  });
+
+  const unPublishProject = useMutation({
+    mutationFn: async () => {
+      const project = await axios.post(`/api/projects/${id}/unpublish`);
+      return project.data;
+    },
+    onSuccess: () => {
+      projectRefetch();
+    },
+  });
+
+  useEffect(() => {
+    if (!projectSteps) return;
+
+    const { isReady, msg } = isReadyToPublish(projectSteps);
+    setMsgInfo(msg);
+    setPublishIsPossible(isReady);
+    console.log("isReady", isReady);
+    console.log("publishIsPossible", publishIsPossible);
+  }, [projectSteps]);
 
   useEffect(() => {
     if (!searchParams.get("section")) {
@@ -59,7 +103,7 @@ export const Project = () => {
     }
   }, [isSuccess, id, projectData]);
 
-  if (isLoading)
+  if (isLoading || ProjectStepLoading)
     return (
       <BigLoader loaderSize={42} bgColor="transparent" textColor="sera-jet" />
     );
@@ -129,7 +173,7 @@ export const Project = () => {
 
               <div>
                 <h3 className="text-3xl font-semibold">What&apos;s next ?</h3>
-                <p className="text-normal mt-2">---------------------</p>
+                <p className="text-normal mt-2">{msgInfo}</p>
               </div>
               <div>
                 <h3 className="text-3xl font-semibold">
@@ -139,14 +183,30 @@ export const Project = () => {
                   All the steps are correct and your ready to distribute this
                   course ?
                 </p>
-                <Button
-                  className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                  onClick={() => {
-                    setDialogOpen(true);
-                  }}
-                >
-                  Publish this course ?
-                </Button>
+                {projectData.status === "ongoing" && (
+                  <Button
+                    className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                    onClick={() => {
+                      setType("publish");
+                      setDialogOpen(true);
+                    }}
+                    disabled={!publishIsPossible}
+                  >
+                    Publish this course
+                  </Button>
+                )}
+                {projectData.status === "published" && (
+                  <Button
+                    className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                    onClick={() => {
+                      setType("unpublish");
+                      setDialogOpen(true);
+                    }}
+                    disabled={!publishIsPossible}
+                  >
+                    Unpublish this course
+                  </Button>
+                )}
               </div>
             </div>
           </TabsContent>
@@ -169,19 +229,56 @@ export const Project = () => {
         }}
         open={dialogOpen}
       >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Publish this course ?</DialogTitle>
-            <DialogDescription>
-              You course will be accessible in the catalog.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
-              I understand, publish this course.
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+        {type === "publish" && (
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Publish this course ?</DialogTitle>
+              <DialogDescription>
+                You course will be accessible in the catalog.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                onClick={() => {
+                  publishProject.mutate();
+                  setDialogOpen(false);
+                  setType("");
+                }}
+                disabled={publishProject.isLoading}
+              >
+                {publishProject.isLoading
+                  ? "Publishing..."
+                  : "I understand, publish this course."}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        )}
+        {type === "unpublish" && (
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Unpublish this course ?</DialogTitle>
+              <DialogDescription>
+                You course will be no longer accessible in the catalog.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                onClick={() => {
+                  unPublishProject.mutate();
+                  setDialogOpen(false);
+                  setType("");
+                }}
+                disabled={unPublishProject.isLoading}
+              >
+                {unPublishProject.isLoading
+                  ? "Unpublishing..."
+                  : "I understand, unpublish this course."}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        )}
       </Dialog>
     </>
   );

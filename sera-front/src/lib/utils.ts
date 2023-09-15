@@ -243,6 +243,42 @@ export const checkLastSeenProject = (
   return isLastSeen;
 };
 
+export const isReadyToPublish = (steps: any) => {
+  let msg = "";
+  let isReady = true;
+  if (!steps) return { isReady, msg };
+
+  if (steps[5].status === "ongoing" || steps[5].status === "not_started") {
+    msg =
+      "The editorial team must prepare the editorial section for publishing the project.";
+    isReady = false;
+  }
+
+  if (steps[3].status === "ongoing" || steps[3].status === "not_started") {
+    msg =
+      "The transcription team must submit a transcription file and have it validated.";
+    isReady = false;
+  }
+
+  if (steps[2].status === "ongoing" || steps[2].status === "not_started") {
+    msg = "The video editing team must submit an edit and have it validated.";
+    isReady = false;
+  }
+
+  if (steps[1].status === "ongoing" || steps[1].status === "not_started") {
+    msg =
+      "The video team and the teacher must submit their documents (rush videos mandatory).";
+    isReady = false;
+  }
+
+  if (steps[0].status === "ongoing" || steps[0].status === "not_started") {
+    msg = "The project manager need to set up a team and/or a reservation.";
+    isReady = false;
+  }
+
+  return { isReady, msg };
+};
+
 export const accessManager = (page?: string, action?: string) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
