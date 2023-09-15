@@ -22,7 +22,7 @@ import { BigLoader } from "./skeletons/BigLoader";
 
 export const Projects = () => {
   const [page, setPage] = useState(1);
-  const [status, setStatus] = useState("0");
+  const [status, setStatus] = useState("ongoing");
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -74,10 +74,8 @@ export const Projects = () => {
                     </SelectTrigger>
                   </TooltipTrigger>
                   <SelectContent>
-                    <SelectItem value="0">All</SelectItem>
                     <SelectItem value="ongoing">Ongoing</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
                   </SelectContent>
                 </Select>
                 <TooltipContent className="rounded bg-popover ">
