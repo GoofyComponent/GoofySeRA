@@ -83,6 +83,7 @@ export const Project = () => {
     if (!projectSteps) return;
 
     const { isReady, msg } = isReadyToPublish(projectSteps);
+    console.log(isReady, msg);
     setMsgInfo(msg);
     setPublishIsPossible(isReady);
   }, [projectSteps]);
@@ -187,7 +188,7 @@ export const Project = () => {
                       setType("publish");
                       setDialogOpen(true);
                     }}
-                    disabled={!publishIsPossible}
+                    disabled={publishIsPossible}
                   >
                     Publish this course
                   </Button>
