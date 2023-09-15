@@ -170,7 +170,17 @@ export const Project = () => {
 
               <div>
                 <h3 className="text-3xl font-semibold">What&apos;s next ?</h3>
-                <p className="text-normal mt-2">{msgInfo}</p>
+                {console.log("publishIsPossible", publishIsPossible)}
+                {projectData.status === "published" && (
+                  <p className="text-normal mt-2">
+                    There is nothing to do left you project is currently
+                    distributed !
+                  </p>
+                )}
+
+                {projectData.status === "ongoing" && (
+                  <p className="text-normal mt-2">{msgInfo}</p>
+                )}
               </div>
               <div>
                 <h3 className="text-3xl font-semibold">
@@ -187,7 +197,7 @@ export const Project = () => {
                       setType("publish");
                       setDialogOpen(true);
                     }}
-                    disabled={publishIsPossible}
+                    disabled={!publishIsPossible}
                   >
                     Publish this course
                   </Button>
@@ -199,7 +209,7 @@ export const Project = () => {
                       setType("unpublish");
                       setDialogOpen(true);
                     }}
-                    disabled={publishIsPossible}
+                    disabled={!publishIsPossible}
                   >
                     Unpublish this course
                   </Button>

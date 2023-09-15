@@ -248,7 +248,15 @@ export const isReadyToPublish = (steps: any) => {
   let isReady = true;
   if (!steps) return { isReady, msg };
 
-  if (steps[5].status === "ongoing" || steps[5].status === "not_started") {
+  console.log("steps", steps);
+
+  if (steps[5].status === "ongoing" && steps[5].have_edito) {
+    msg =
+      "You can now publish this course to make it accessible in the catalog.";
+    isReady = true;
+  }
+
+  if (steps[5].status === "ongoing" && !steps[5].have_edito) {
     msg =
       "The editorial team must prepare the editorial section for publishing the project.";
     isReady = false;
