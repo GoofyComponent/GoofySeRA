@@ -193,22 +193,27 @@ class EditoController extends Controller
         $edito->description = $validatedData['description'];
         $edito->project_id = $project_id;
         $imageArray = [];
-        foreach ($request->file('images') as $image) {
-            $imagePath = "ressources/edito/" . $project_id;
-            // le name est le timestamp + l'extension
-            $name = time() . '.' . $image->getClientOriginalExtension();
+        if ($request->has('images')) {
 
-            Storage::disk('s3')->put($imagePath . '/' . $name, file_get_contents($image));
-            $imageArray[] = $imagePath . '/' . $name;
+            foreach ($request->file('images') as $image) {
+                $imagePath = "ressources/edito/" . $project_id;
+                // le name est le timestamp + l'extension
+                $name = time() . '.' . $image->getClientOriginalExtension();
+
+                Storage::disk('s3')->put($imagePath . '/' . $name, file_get_contents($image));
+                $imageArray[] = $imagePath . '/' . $name;
+            }
+
+            $edito->images = json_encode($imageArray);
         }
-
-        $edito->images = json_encode($imageArray);
 
         $edito->save();
 
         $steps = json_decode($project->steps);
         $steps->{'Editorial'}->have_edito = true;
         $project->steps = json_encode($steps);
+
+        $project->save();
 
 
         return response()->json($edito, 201);
