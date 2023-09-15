@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
@@ -7,6 +7,15 @@ import { HeaderTitle } from "@/components/app/navigation/HeaderTitle";
 import { MembersContainer } from "@/components/app/project/Members/MembersContainer";
 import { SharedContainer } from "@/components/app/project/SharedRessources/SharedContainer";
 import { StepsIndicatorContainer } from "@/components/app/project/StepsIndicator/StepsIndicatorContainer";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -22,6 +31,8 @@ export const Project = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { ProjectId: id } = useParams<{ ProjectId: string }>();
+
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const {
     data: projectData,
@@ -102,19 +113,41 @@ export const Project = () => {
 
           <Separator className="mb-2 h-0.5 w-full bg-sera-jet"></Separator>
 
-          <TabsContent value="resume" className="text-sera-jet">
-            <h3 className="mb-4 text-4xl font-medium text-sera-jet">
-              Resume :
-            </h3>
-            <div className="flex justify-start">
-              <h3 className="text-xl font-semibold">Project name :</h3>
-              <p className="mt-auto">{projectData.title}</p>
-            </div>
-            <h3 className="text-xl font-semibold">Description :</h3>
-            <p className="text-normal mt-2">{projectData.description}</p>
-            <div>
-              <h3 className="text-xl font-semibold">What&apos;s next ?</h3>
-              <p className="text-normal mt-2">---------------------</p>
+          <TabsContent value="resume" className=" h-full text-sera-jet">
+            <div className="flex h-full flex-col justify-around">
+              <div className="flex justify-between">
+                <div className="mr-2 flex w-1/2 flex-col">
+                  <h3 className="text-3xl font-semibold">Project name :</h3>
+                  <p className="text-normal mt-2">{projectData.title}</p>
+                </div>
+                <Separator className="h-[13em] w-0.5 bg-sera-jet" />
+                <div className="ml-2 flex w-1/2 flex-col">
+                  <h3 className="text-3xl font-semibold">Description :</h3>
+                  <p className="text-normal mt-2">{projectData.description}</p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-3xl font-semibold">What&apos;s next ?</h3>
+                <p className="text-normal mt-2">---------------------</p>
+              </div>
+              <div>
+                <h3 className="text-3xl font-semibold">
+                  Your project is ready ?
+                </h3>
+                <p className="text-normal mt-2">
+                  All the steps are correct and your ready to distribute this
+                  course ?
+                </p>
+                <Button
+                  className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                  onClick={() => {
+                    setDialogOpen(true);
+                  }}
+                >
+                  Publish this course ?
+                </Button>
+              </div>
             </div>
           </TabsContent>
           <TabsContent value="ressources">
@@ -129,6 +162,27 @@ export const Project = () => {
 
         <StepsIndicatorContainer />
       </div>
+      <Dialog
+        onOpenChange={(value) => {
+          if (value) return;
+          setDialogOpen(false);
+        }}
+        open={dialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Publish this course ?</DialogTitle>
+            <DialogDescription>
+              You course will be accessible in the catalog.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
+              I understand, publish this course.
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

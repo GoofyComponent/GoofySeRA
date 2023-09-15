@@ -21,14 +21,14 @@ export const StepsIndicatorContainer = () => {
 
   if (isLoading)
     return (
-      <div className="mx-2 flex w-4/12 justify-start text-sera-jet">
+      <div className="mx-2 flex h-[45em] w-4/12 justify-start text-sera-jet">
         <Separator orientation="vertical" className="w-0.5 bg-sera-jet/50" />
         <BigLoader bgColor="#FFFFFF" textColor="sera-jet" />
       </div>
     );
 
   return (
-    <div className="mx-2 flex min-h-full w-4/12 justify-start text-sera-jet">
+    <div className="mx-2 flex h-[45em] w-4/12 justify-start text-sera-jet">
       <Separator orientation="vertical" className="w-0.5 bg-sera-jet/50" />
       <aside className="w-full rounded-sm px-2">
         <h3 className="mb-2 text-2xl font-semibold">Steps - Quick access</h3>
