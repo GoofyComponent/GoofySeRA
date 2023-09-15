@@ -122,7 +122,6 @@ const Row = ({
               console.log("add knowledge");
             }}
           />
-          {id}
         </div>
       </TableCell>
     </TableRow>

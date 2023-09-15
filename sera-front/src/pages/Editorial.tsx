@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Slider from "react-slick";
 
@@ -46,6 +47,9 @@ export const Editorial = () => {
   const [imgUpdateSlide, setImgUpdateSlide] = useState<any>([]);
   const plyrRef = useRef(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const lastSeenProjectName = useSelector(
+    (state: any) => state.app.lastSeenProjectName
+  );
 
   //slider settings
   const sliderRef = useRef<Slider | null>(null);
@@ -102,7 +106,7 @@ export const Editorial = () => {
 
   useEffect(() => {
     if (getEditorialIsSuccess && getEditorial) {
-      console.log("getEditorial", getEditorial);
+      console.log("usefect edito", getEditorial);
       setAddUpdateEditorialData({
         displayName: getEditorial.title,
         description: getEditorial.description,
@@ -169,25 +173,6 @@ export const Editorial = () => {
     },
   });
 
-  const deleteEditorial = useMutation({
-    mutationFn: async () => {
-      const editorial = await axios.delete(`/api/projects/${ProjectId}/edito`);
-      return editorial;
-    },
-    onSuccess: () => {
-      getEditorialRefetch();
-      editorialRefetch();
-      setAddProjectData({
-        title: "",
-        description: "",
-        images: [],
-      });
-    },
-    onError: () => {
-      return console.log("error");
-    },
-  });
-
   useEffect(() => {
     setAddProjectData({
       ...addProjectData,
@@ -204,7 +189,11 @@ export const Editorial = () => {
 
   return (
     <>
-      <HeaderTitle title="Editorial" previousTitle={"Projet"} />
+      <HeaderTitle
+        title="Editorial"
+        previousTitle={lastSeenProjectName}
+        linkPath={`/dashboard/projects/${ProjectId}`}
+      />
       {editorialsIsLoading && (
         <BigLoader loaderSize={42} bgColor="transparent" textColor="sera-jet" />
       )}
@@ -376,7 +365,7 @@ export const Editorial = () => {
                   </div>
                   <div className=" flex w-full flex-col space-y-2">
                     <Label className="mr-2 align-middle text-lg">
-                      Knowladge
+                      Knowledge
                     </Label>
                     <Button
                       className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
@@ -410,8 +399,9 @@ export const Editorial = () => {
           <div className="flex w-full flex-row justify-evenly ">
             <div className="  flex w-[45%] flex-col ">
               <div className="flex justify-between">
-                <h3 className="text-2xl font-semibold">Update Editorial</h3>{" "}
-                <Button onClick={() => deleteEditorial.mutate()}>delete</Button>
+                <h3 className="text-2xl font-semibold text-sera-jet">
+                  Update Editorial
+                </h3>
               </div>
               <div className="flex flex-col justify-start space-y-4 rounded-lg drop-shadow-2xl">
                 <div>
@@ -420,7 +410,7 @@ export const Editorial = () => {
                   </Label>
                   <Input
                     type="text"
-                    placeholder="Display Name"
+                    placeholder={getEditorial.title}
                     id="displayName"
                     value={addUpdateEditorialData.displayName}
                     onChange={(e) =>
@@ -437,7 +427,7 @@ export const Editorial = () => {
                   </Label>
                   <Textarea
                     className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="Description"
+                    placeholder={getEditorial.description}
                     id="description"
                     value={addUpdateEditorialData.description}
                     onChange={(e) =>
@@ -557,7 +547,7 @@ export const Editorial = () => {
                       className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
                       onClick={() => onSubmitUpdateEditorialForm()}
                     >
-                      Save
+                      Update
                     </Button>
                   </div>
                 </div>
@@ -580,7 +570,7 @@ export const Editorial = () => {
                   </div>
                   <div className=" flex w-full flex-col space-y-2">
                     <Label className="mr-2 align-middle text-lg">
-                      Knowladge
+                      Knowledge
                     </Label>
                     <Dialog>
                       <DialogTrigger>
@@ -609,7 +599,7 @@ export const Editorial = () => {
                         />
                       ) : (
                         <p className="text-center text-lg font-semibold">
-                          No knowladge
+                          No Knowledge
                         </p>
                       )}
                     </div>
