@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 
 import { Addknowledge } from "@/components/app/edito/Addknowledge";
@@ -24,12 +24,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
 import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
 export const Editorial = () => {
+  const navigate = useNavigate();
   const [addProjectData, setAddProjectData] = useState<any>({
     displayName: "",
     description: "",
@@ -67,6 +69,25 @@ export const Editorial = () => {
   const goToPrevious = () => {
     sliderRef.current?.slickPrev();
   };
+
+  const projectStep = useQuery({
+    queryKey: ["project-step-status", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(
+        `/api/projects/${ProjectId}/steps?step=Editorial`
+      );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The capture step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
+      return project.data[0];
+    },
+  });
 
   // get last video validated
   const {
@@ -176,6 +197,11 @@ export const Editorial = () => {
       images: imgUpdate,
     });
   }, [imgUpdate]);
+
+  if (projectStep.isLoading)
+    return (
+      <BigLoader loaderSize={42} bgColor="transparent" textColor="sera-jet" />
+    );
 
   return (
     <>
