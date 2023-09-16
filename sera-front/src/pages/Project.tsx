@@ -23,7 +23,7 @@ import {
   setLastSeenProjectName,
 } from "@/helpers/slices/AppSlice";
 import { axios } from "@/lib/axios";
-import { isReadyToPublish } from "@/lib/utils";
+import { accessManager, isReadyToPublish } from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -170,41 +170,52 @@ export const Project = () => {
 
               <div>
                 <h3 className="text-3xl font-semibold">What&apos;s next ?</h3>
-                <p className="text-normal mt-2">{msgInfo}</p>
-              </div>
-              <div>
-                <h3 className="text-3xl font-semibold">
-                  Your project is ready ?
-                </h3>
-                <p className="text-normal mt-2">
-                  All the steps are correct and your ready to distribute this
-                  course ?
-                </p>
-                {projectData.status === "ongoing" && (
-                  <Button
-                    className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                    onClick={() => {
-                      setType("publish");
-                      setDialogOpen(true);
-                    }}
-                    disabled={!publishIsPossible}
-                  >
-                    Publish this course
-                  </Button>
-                )}
                 {projectData.status === "published" && (
-                  <Button
-                    className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                    onClick={() => {
-                      setType("unpublish");
-                      setDialogOpen(true);
-                    }}
-                    disabled={!publishIsPossible}
-                  >
-                    Unpublish this course
-                  </Button>
+                  <p className="text-normal mt-2">
+                    There is nothing to do left you project is currently
+                    distributed !
+                  </p>
+                )}
+
+                {projectData.status === "ongoing" && (
+                  <p className="text-normal mt-2">{msgInfo}</p>
                 )}
               </div>
+              {accessManager(undefined, "add_knowledge_to_edito") && (
+                <div>
+                  <h3 className="text-3xl font-semibold">
+                    Your project is ready ?
+                  </h3>
+                  <p className="text-normal mt-2">
+                    All the steps are correct and your ready to distribute this
+                    course ?
+                  </p>
+                  {projectData.status === "ongoing" && (
+                    <Button
+                      className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                      onClick={() => {
+                        setType("publish");
+                        setDialogOpen(true);
+                      }}
+                      disabled={!publishIsPossible}
+                    >
+                      Publish this course
+                    </Button>
+                  )}
+                  {projectData.status === "published" && (
+                    <Button
+                      className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                      onClick={() => {
+                        setType("unpublish");
+                        setDialogOpen(true);
+                      }}
+                      disabled={!publishIsPossible}
+                    >
+                      Unpublish this course
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
           </TabsContent>
           <TabsContent value="ressources">

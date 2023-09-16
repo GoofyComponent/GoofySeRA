@@ -248,7 +248,15 @@ export const isReadyToPublish = (steps: any) => {
   let isReady = true;
   if (!steps) return { isReady, msg };
 
-  if (steps[5].status === "ongoing" || steps[5].status === "not_started") {
+  console.log("steps", steps);
+
+  if (steps[5].status === "ongoing" && steps[5].have_edito) {
+    msg =
+      "You can now publish this course to make it accessible in the catalog.";
+    isReady = true;
+  }
+
+  if (steps[5].status === "ongoing" && !steps[5].have_edito) {
     msg =
       "The editorial team must prepare the editorial section for publishing the project.";
     isReady = false;
@@ -315,6 +323,10 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_video_version") return false;
     if (action === "add_transcript_file") return false;
     if (action === "add_subs") return false;
+    if (action === "save_edito") return false;
+    if (action === "add_knowledge_to_edito") return false;
+
+    if (action === "manage_project_state") return false;
 
     //Ajouter pr l'edito et les subs
   }
@@ -335,6 +347,10 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_video_version") return false;
     if (action === "add_transcript") return false;
     if (action === "add_subs") return false;
+    if (action === "save_edito") return false;
+    if (action === "add_knowledge_to_edito") return false;
+
+    if (action === "manage_project_state") return false;
 
     //Ajouter pr l'edito et les subs
   }
@@ -355,6 +371,10 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_professor_notes") return false;
     if (action === "add_transcript") return false;
     if (action === "add_subs") return false;
+    if (action === "save_edito") return false;
+    if (action === "add_knowledge_to_edito") return false;
+
+    if (action === "manage_project_state") return false;
 
     //Ajouter pr l'edito et les subs
   }
@@ -375,6 +395,10 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_professor_notes") return false;
     if (action === "add_video_version") return false;
     if (action === "add_subs") return false;
+    if (action === "save_edito") return false;
+    if (action === "add_knowledge_to_edito") return false;
+
+    if (action === "manage_project_state") return false;
   }
 
   if (role === "traduction_team") {
@@ -393,6 +417,10 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_professor_notes") return false;
     if (action === "add_video_version") return false;
     if (action === "add_transcript") return false;
+    if (action === "save_edito") return false;
+    if (action === "add_knowledge_to_edito") return false;
+
+    if (action === "manage_project_state") return false;
   }
 
   if (role === "editorial_team") {
@@ -412,6 +440,8 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_video_version") return false;
     if (action === "add_transcript") return false;
     if (action === "add_subs") return false;
+
+    if (action === "manage_project_state") return false;
   }
 
   return true;

@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
 
 import { Addknowledge } from "@/components/app/edito/Addknowledge";
@@ -24,12 +24,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
-import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+import {
+  accessManager,
+  SERA_JET_HEXA,
+  SERA_PERIWINKLE_HEXA,
+} from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
 export const Editorial = () => {
+  const navigate = useNavigate();
   const [addProjectData, setAddProjectData] = useState<any>({
     displayName: "",
     description: "",
@@ -67,6 +73,25 @@ export const Editorial = () => {
   const goToPrevious = () => {
     sliderRef.current?.slickPrev();
   };
+
+  const projectStep = useQuery({
+    queryKey: ["project-step-status", { ProjectId }],
+    queryFn: async () => {
+      const project = await axios.get(
+        `/api/projects/${ProjectId}/steps?step=Editorial`
+      );
+
+      if (project.data[0].status === "not_started") {
+        toast({
+          title: "This step is no available for the moment !",
+          description: `The capture step is not accessible a the moment. Please try again later.`,
+        });
+        return navigate(`/dashboard/projects/${ProjectId}`);
+      }
+
+      return project.data[0];
+    },
+  });
 
   // get last video validated
   const {
@@ -177,6 +202,11 @@ export const Editorial = () => {
     });
   }, [imgUpdate]);
 
+  if (projectStep.isLoading)
+    return (
+      <BigLoader loaderSize={42} bgColor="transparent" textColor="sera-jet" />
+    );
+
   return (
     <>
       <HeaderTitle
@@ -191,10 +221,15 @@ export const Editorial = () => {
         <>
           <div className="flex w-full flex-row justify-evenly ">
             <div className="  flex w-[45%] flex-col ">
-              <h3 className="text-2xl font-semibold">Add Editorial</h3>
+              <h3 className="text-2xl font-semibold text-sera-jet">
+                Add Editorial
+              </h3>
               <div className="flex flex-col justify-start space-y-4 rounded-lg drop-shadow-2xl">
                 <div>
-                  <Label className="text-lg" htmlFor="displayName">
+                  <Label
+                    className="text-lg text-sera-jet"
+                    htmlFor="displayName"
+                  >
                     Display Name
                   </Label>
                   <Input
@@ -211,7 +246,10 @@ export const Editorial = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-lg" htmlFor="description">
+                  <Label
+                    className="text-lg text-sera-jet"
+                    htmlFor="description"
+                  >
                     Description
                   </Label>
                   <Textarea
@@ -230,7 +268,7 @@ export const Editorial = () => {
               </div>
               <div className=" flex w-full flex-col justify-end  space-y-6">
                 <div className="py-2">
-                  <Label className="text-lg" htmlFor="image">
+                  <Label className="text-lg text-sera-jet" htmlFor="image">
                     Image
                   </Label>
                   <div className="flex">
@@ -256,6 +294,7 @@ export const Editorial = () => {
                       <>
                         {imgSlide.length > 3 && (
                           <button
+                            title="button"
                             className="previous absolute right-full top-1/2 cursor-pointer"
                             onClick={goToPrevious}
                           >
@@ -279,6 +318,7 @@ export const Editorial = () => {
                                     />
 
                                     <button
+                                      title="button"
                                       className="absolute right-0 top-0 cursor-pointer"
                                       onClick={() => {
                                         setImgSlide(
@@ -311,6 +351,7 @@ export const Editorial = () => {
                         </Slider>
                         {imgSlide.length > 3 && (
                           <button
+                            title="button"
                             className="next absolute left-full top-1/2 cursor-pointer"
                             onClick={goToNext}
                           >
@@ -326,15 +367,17 @@ export const Editorial = () => {
                       </>
                     )}
                   </div>
-                  <div className=" flex w-full flex-col space-y-2">
-                    <Button
-                      type="submit"
-                      className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                      onClick={() => onSubmitAddEditorialForm()}
-                    >
-                      Save
-                    </Button>
-                  </div>
+                  {accessManager(undefined, "save_edito") && (
+                    <div className=" flex w-full flex-col space-y-2">
+                      <Button
+                        type="submit"
+                        className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                        onClick={() => onSubmitAddEditorialForm()}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -357,14 +400,18 @@ export const Editorial = () => {
                     <Label className="mr-2 align-middle text-lg">
                       Knowledge
                     </Label>
-                    <Button
-                      className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                      disabled={
-                        getEditorial && Object.values(getEditorial).length === 0
-                      }
-                    >
-                      Add Knowlage
-                    </Button>
+                    {accessManager(undefined, "add_knowledge_to_edito") && (
+                      <Button
+                        className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                        disabled={
+                          getEditorial &&
+                          Object.values(getEditorial).length === 0
+                        }
+                        onClick={() => setOpenDialog(true)}
+                      >
+                        Add Knowlage
+                      </Button>
+                    )}
                     <Dialog
                       open={openDialog}
                       onOpenChange={(open) => setOpenDialog(open)}
@@ -395,7 +442,10 @@ export const Editorial = () => {
               </div>
               <div className="flex flex-col justify-start space-y-4 rounded-lg drop-shadow-2xl">
                 <div>
-                  <Label className="text-lg" htmlFor="displayName">
+                  <Label
+                    className="text-lg text-sera-jet"
+                    htmlFor="displayName"
+                  >
                     Display Name
                   </Label>
                   <Input
@@ -412,7 +462,10 @@ export const Editorial = () => {
                   />
                 </div>
                 <div>
-                  <Label className="text-lg" htmlFor="description">
+                  <Label
+                    className="text-lg text-sera-jet"
+                    htmlFor="description"
+                  >
                     Description
                   </Label>
                   <Textarea
@@ -431,7 +484,7 @@ export const Editorial = () => {
               </div>
               <div className=" flex w-full flex-col justify-end  space-y-6">
                 <div className="py-2">
-                  <Label className="text-lg" htmlFor="image">
+                  <Label className="text-lg text-sera-jet" htmlFor="image">
                     Image
                   </Label>
                   <div className="flex">
@@ -460,6 +513,7 @@ export const Editorial = () => {
                       <>
                         {imgUpdateSlide && imgUpdateSlide.length > 3 && (
                           <button
+                            title="button"
                             className="previous absolute right-full top-1/2 cursor-pointer"
                             onClick={goToPrevious}
                           >
@@ -484,6 +538,7 @@ export const Editorial = () => {
                                       />
 
                                       <button
+                                        title="button"
                                         className="absolute right-0 top-0 cursor-pointer"
                                         onClick={() => {
                                           setImgUpdateSlide(
@@ -516,6 +571,7 @@ export const Editorial = () => {
                         </Slider>
                         {imgUpdateSlide && imgUpdateSlide.length > 3 && (
                           <button
+                            title="button"
                             className="next absolute left-full top-1/2 cursor-pointer"
                             onClick={goToNext}
                           >
@@ -531,15 +587,17 @@ export const Editorial = () => {
                       </>
                     )}
                   </div>
-                  <div className=" flex w-full flex-col space-y-2">
-                    <Button
-                      type="submit"
-                      className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                      onClick={() => onSubmitUpdateEditorialForm()}
-                    >
-                      Update
-                    </Button>
-                  </div>
+                  {accessManager(undefined, "save_edito") && (
+                    <div className=" flex w-full flex-col space-y-2">
+                      <Button
+                        type="submit"
+                        className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                        onClick={() => onSubmitUpdateEditorialForm()}
+                      >
+                        Update
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -562,17 +620,25 @@ export const Editorial = () => {
                     <Label className="mr-2 align-middle text-lg">
                       Knowledge
                     </Label>
-                    <Dialog>
-                      <DialogTrigger>
-                        <div>
-                          <Button className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
-                            Add Knowlage
-                          </Button>
-                        </div>
-                      </DialogTrigger>
+                    {accessManager(undefined, "add_knowledge_to_edito") && (
+                      <Button
+                        className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                        disabled={
+                          getEditorial &&
+                          Object.values(getEditorial).length === 0
+                        }
+                        onClick={() => setOpenDialog(true)}
+                      >
+                        Add Knowlage
+                      </Button>
+                    )}
+                    <Dialog
+                      open={openDialog}
+                      onOpenChange={(open) => setOpenDialog(open)}
+                    >
                       <DialogContent className="!max-w-3xl">
                         <DialogHeader>
-                          <DialogTitle>Add Knowlage</DialogTitle>
+                          <DialogTitle>Add Knowledge</DialogTitle>
                           <DialogDescription>
                             <Addknowledge ProjectId={ProjectId} />
                           </DialogDescription>
