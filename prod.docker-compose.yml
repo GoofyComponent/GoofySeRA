@@ -6,6 +6,7 @@ services:
     image: destcom/sera-web
     ports:
       - "6663:80"
+    restart: on-failure
     networks:
       - sail
       - monolith
@@ -18,17 +19,20 @@ services:
     user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
     ports:
       - "6664:80"
+    restart: on-failure
     networks:
       - sail
       - monolith
       - hosted
     depends_on:
       - minio
-      - mariadb
+      - mariadb:
+          condition: service_healthy
       - soketi
   mariadb:
     container_name: sera-mariadb
     image: "mariadb:10"
+    restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_ROOT_HOST: "%"
@@ -49,6 +53,7 @@ services:
   soketi:
     container_name: sera-soketi
     image: "quay.io/soketi/soketi:latest-16-alpine"
+    restart: on-failure
     environment:
       SOKETI_DEBUG: "${SOKETI_DEBUG:-1}"
       SOKETI_METRICS_SERVER_PORT: "9601"
@@ -61,6 +66,7 @@ services:
   minio:
     container_name: sera-minio
     image: docker.io/bitnami/minio:2023
+    restart: on-failure
     environment:
       MINIO_ROOT_USER: "${MINIO_ROOT_USER:-user}"
       MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:-password}"
@@ -68,7 +74,8 @@ services:
       - monolith
       - hosted
     depends_on:
-      - mariadb
+      - mariadb:
+          condition: service_healthy
 
 networks:
   sail:
@@ -77,8 +84,3 @@ networks:
     driver: bridge
   hosted:
     external: true
-#volumes:
-#sail-mariadb:
-#driver: local
-#sail-minio:
-#driver: local
