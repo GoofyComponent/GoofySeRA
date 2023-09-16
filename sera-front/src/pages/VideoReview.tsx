@@ -47,6 +47,7 @@ export const VideoReview = () => {
     refetch: editingRefetch,
   } = useQuery({
     queryKey: ["editing", { ProjectId }],
+    refetchInterval: 180000,
     queryFn: async () => {
       const project = await axios.get(`/api/projects/${ProjectId}/videos`);
       setActiveVersion(searchParams.get("version") || "0");
