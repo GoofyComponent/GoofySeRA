@@ -37,6 +37,12 @@ jobs:
         run: |
           docker exec sera-server sh -c 'echo "${{ secrets.PROD_ENV_FILE }}" > .env'
 
+      - name: Wait for the database to be ready
+        run: |
+          docker exec -u root sera-server apt-get update
+          docker exec -u root sera-server apt-get install -y netcat-openbsd
+          docker exec sera-server sh -c 'until nc -z -v -w30 sera-mariadb 3306; do echo "Waiting for database connection..."; sleep 5; done'
+
       - name: Execute laravel configs
         run: |
           docker exec sera-server php artisan cache:clear 
