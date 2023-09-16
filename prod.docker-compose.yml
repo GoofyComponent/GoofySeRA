@@ -7,6 +7,7 @@ services:
     ports:
       - "6663:80"
     networks:
+      - sail
       - monolith
       - hosted
     depends_on:
@@ -22,6 +23,7 @@ services:
       - monolith
       - hosted
     depends_on:
+      - minio
       - mariadb
       - soketi
   mariadb:
@@ -65,6 +67,8 @@ services:
     networks:
       - monolith
       - hosted
+    depends_on:
+      - mariadb
 
 networks:
   sail:
