@@ -469,10 +469,10 @@ class UserController extends Controller
     {
         // même si s3_credentials est caché, il est quand même retourné par la requête
         $user = Auth::user()->makeVisible('s3_credentials');
-        $user->s3_credentials = json_decode($user->s3_credentials);
+        //$user->s3_credentials = json_decode($user->s3_credentials);
         // on enlève les hash des credentials dans accesskey et secretkey
-        $user->s3_credentials->accesskey = Crypt::decrypt($user->s3_credentials->accesskey);
-        $user->s3_credentials->secretkey = Crypt::decrypt($user->s3_credentials->secretkey);
+        //$user->s3_credentials->accesskey = Crypt::decrypt($user->s3_credentials->accesskey);
+        //$user->s3_credentials->secretkey = Crypt::decrypt($user->s3_credentials->secretkey);
 
         return response()->json($user);
     }
