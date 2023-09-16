@@ -7,7 +7,6 @@ use Intervention\Image\ImageManager;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
-use App\Services\CreateMinioUser;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;

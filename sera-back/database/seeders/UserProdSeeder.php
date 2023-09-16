@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
-use App\Services\CreateMinioUser;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -21,10 +20,6 @@ class UserProdSeeder extends Seeder
             return;
         }
 
-        $s3_credentials = (new CreateMinioUser())->create();
-        $s3_credentials['secretkey'] = Crypt::encrypt($s3_credentials['secretkey']);
-        $s3_credentials['accesskey'] = Crypt::encrypt($s3_credentials['accesskey']);
-
         // adapted for production and use only model and not factory
         $user = \App\Models\User::firstOrCreate([
             'email' => 'admin@sera.com',
@@ -35,7 +30,7 @@ class UserProdSeeder extends Seeder
             'lastname' => 'Istrator',
             'role' => 'cursus_director',
             'avatar_filename' => 'lulu',
-            's3_credentials' => json_encode($s3_credentials),
+            's3_credentials' => json_encode([]),
         ]);
 
     }
