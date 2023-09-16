@@ -104,6 +104,7 @@ Route::group(['middleware' => ['App\Http\Middleware\CheckRoleAccess']], function
         /***** Notification *****/
 
         Route::resource('notifications', 'App\Http\Controllers\NotificationController');
+        Route::delete('notifications/{id}', 'App\Http\Controllers\NotificationController@autoDestroy')->name('notifications.autoDestroy');
 
         /************************/
 
