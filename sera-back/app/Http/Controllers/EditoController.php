@@ -171,7 +171,7 @@ class EditoController extends Controller
         $validatedData = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg'],
         ]);
 
         $project = Project::find($project_id);
@@ -193,22 +193,27 @@ class EditoController extends Controller
         $edito->description = $validatedData['description'];
         $edito->project_id = $project_id;
         $imageArray = [];
-        foreach ($request->file('images') as $image) {
-            $imagePath = "ressources/edito/" . $project_id;
-            // le name est le timestamp + l'extension
-            $name = time() . '.' . $image->getClientOriginalExtension();
+        if ($request->has('images')) {
 
-            Storage::disk('s3')->put($imagePath . '/' . $name, file_get_contents($image));
-            $imageArray[] = $imagePath . '/' . $name;
+            foreach ($request->file('images') as $image) {
+                $imagePath = "ressources/edito/" . $project_id;
+                // le name est le timestamp + l'extension
+                $name = time() . '.' . $image->getClientOriginalExtension();
+
+                Storage::disk('s3')->put($imagePath . '/' . $name, file_get_contents($image));
+                $imageArray[] = $imagePath . '/' . $name;
+            }
+
+            $edito->images = json_encode($imageArray);
         }
-
-        $edito->images = json_encode($imageArray);
 
         $edito->save();
 
         $steps = json_decode($project->steps);
         $steps->{'Editorial'}->have_edito = true;
         $project->steps = json_encode($steps);
+
+        $project->save();
 
 
         return response()->json($edito, 201);
@@ -301,7 +306,7 @@ class EditoController extends Controller
         $validatedData = $request->validate([
             'title' => ['string', 'max:255'],
             'description' => ['string'],
-            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,svg'],
         ]);
 
         $project = Project::find($project_id);
@@ -381,17 +386,29 @@ class EditoController extends Controller
     */
     public function destroy($id)
     {
-        $edito = Edito::find($id);
+
+        $project = Project::find($id);
+
+        if (!$project) {
+            return response()->json([
+                'message' => 'Project not found'
+            ], 404);
+        }
+
+        $edito = Edito::where('project_id', $id)->first();
 
         if (!$edito) {
             return response()->json([
                 'message' => 'Edito not found'
             ], 404);
         }
-        $project = Project::find($edito->project_id);
+
         $steps = json_decode($project->steps);
+
         $steps->{'Editorial'}->have_edito = false;
+
         $project->steps = json_encode($steps);
+
         $project->save();
 
         $edito->delete();
@@ -399,6 +416,7 @@ class EditoController extends Controller
         return response()->json([
             'message' => 'Edito deleted'
         ], 200);
+
     }
 
     /**

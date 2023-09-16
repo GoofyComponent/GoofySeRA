@@ -582,10 +582,12 @@ class UserController extends Controller
 
         $filename = $user->id . '_' . time() . '.' . $request->file('image')->getClientOriginalExtension();
 
-        // Si la photo excede 720 par 720, on la redimensionne
         $image = $request->file('image');
         $manager = new ImageManager(['driver' => 'imagick']);
-        $image_resize = $manager->make($image->getRealPath())->resize(720, 720);
+
+        $image_resize = $manager->make($image->getRealPath())->resize(300, 300, function ($constraint) {
+            $constraint->aspectRatio();
+        });
         $image_resize->stream();
 
         Storage::disk('s3')->put("/avatar/".$filename, $image_resize);

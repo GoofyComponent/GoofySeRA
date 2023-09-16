@@ -1,4 +1,4 @@
-import { Edit, Trash, Info } from "lucide-react";
+import { Edit, Info, Trash } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 

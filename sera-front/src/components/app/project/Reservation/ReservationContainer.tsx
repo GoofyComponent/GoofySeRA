@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import {
   ArrowLeft,
@@ -362,6 +362,13 @@ const SearchRoomDialog = ({
 
     setCalculatedDuration(duration.toString());
   }, [startTimeInput, endTimeInput]);
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (roomSearchModal === true)
+      queryClient.invalidateQueries(["projectMembers", { ProjectId }]);
+  }, [roomSearchModal]);
 
   return (
     <Dialog
