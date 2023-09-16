@@ -26,7 +26,11 @@ import { RaptorPlyr } from "@/components/ui/plyrSection";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { axios } from "@/lib/axios";
-import { SERA_JET_HEXA, SERA_PERIWINKLE_HEXA } from "@/lib/utils";
+import {
+  accessManager,
+  SERA_JET_HEXA,
+  SERA_PERIWINKLE_HEXA,
+} from "@/lib/utils";
 
 import { BigLoader } from "./skeletons/BigLoader";
 
@@ -363,15 +367,17 @@ export const Editorial = () => {
                       </>
                     )}
                   </div>
-                  <div className=" flex w-full flex-col space-y-2">
-                    <Button
-                      type="submit"
-                      className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                      onClick={() => onSubmitAddEditorialForm()}
-                    >
-                      Save
-                    </Button>
-                  </div>
+                  {accessManager(undefined, "save_edito") && (
+                    <div className=" flex w-full flex-col space-y-2">
+                      <Button
+                        type="submit"
+                        className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                        onClick={() => onSubmitAddEditorialForm()}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -394,14 +400,18 @@ export const Editorial = () => {
                     <Label className="mr-2 align-middle text-lg">
                       Knowledge
                     </Label>
-                    <Button
-                      className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                      disabled={
-                        getEditorial && Object.values(getEditorial).length === 0
-                      }
-                    >
-                      Add Knowlage
-                    </Button>
+                    {accessManager(undefined, "add_knowledge_to_edito") && (
+                      <Button
+                        className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                        disabled={
+                          getEditorial &&
+                          Object.values(getEditorial).length === 0
+                        }
+                        onClick={() => setOpenDialog(true)}
+                      >
+                        Add Knowlage
+                      </Button>
+                    )}
                     <Dialog
                       open={openDialog}
                       onOpenChange={(open) => setOpenDialog(open)}
@@ -577,15 +587,17 @@ export const Editorial = () => {
                       </>
                     )}
                   </div>
-                  <div className=" flex w-full flex-col space-y-2">
-                    <Button
-                      type="submit"
-                      className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
-                      onClick={() => onSubmitUpdateEditorialForm()}
-                    >
-                      Update
-                    </Button>
-                  </div>
+                  {accessManager(undefined, "save_edito") && (
+                    <div className=" flex w-full flex-col space-y-2">
+                      <Button
+                        type="submit"
+                        className="w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                        onClick={() => onSubmitUpdateEditorialForm()}
+                      >
+                        Update
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -608,17 +620,25 @@ export const Editorial = () => {
                     <Label className="mr-2 align-middle text-lg">
                       Knowledge
                     </Label>
-                    <Dialog>
-                      <DialogTrigger>
-                        <div>
-                          <Button className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50">
-                            Add Knowlage
-                          </Button>
-                        </div>
-                      </DialogTrigger>
+                    {accessManager(undefined, "add_knowledge_to_edito") && (
+                      <Button
+                        className="mt-0 w-full bg-sera-jet text-sera-periwinkle hover:bg-sera-jet/50 hover:text-sera-periwinkle/50"
+                        disabled={
+                          getEditorial &&
+                          Object.values(getEditorial).length === 0
+                        }
+                        onClick={() => setOpenDialog(true)}
+                      >
+                        Add Knowlage
+                      </Button>
+                    )}
+                    <Dialog
+                      open={openDialog}
+                      onOpenChange={(open) => setOpenDialog(open)}
+                    >
                       <DialogContent className="!max-w-3xl">
                         <DialogHeader>
-                          <DialogTitle>Add Knowlage</DialogTitle>
+                          <DialogTitle>Add Knowledge</DialogTitle>
                           <DialogDescription>
                             <Addknowledge ProjectId={ProjectId} />
                           </DialogDescription>
