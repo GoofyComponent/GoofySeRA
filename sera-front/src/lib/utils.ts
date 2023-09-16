@@ -326,6 +326,8 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "save_edito") return false;
     if (action === "add_knowledge_to_edito") return false;
 
+    if (action === "manage_project_state") return false;
+
     //Ajouter pr l'edito et les subs
   }
 
@@ -347,6 +349,8 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_subs") return false;
     if (action === "save_edito") return false;
     if (action === "add_knowledge_to_edito") return false;
+
+    if (action === "manage_project_state") return false;
 
     //Ajouter pr l'edito et les subs
   }
@@ -370,6 +374,8 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "save_edito") return false;
     if (action === "add_knowledge_to_edito") return false;
 
+    if (action === "manage_project_state") return false;
+
     //Ajouter pr l'edito et les subs
   }
 
@@ -391,6 +397,8 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_subs") return false;
     if (action === "save_edito") return false;
     if (action === "add_knowledge_to_edito") return false;
+
+    if (action === "manage_project_state") return false;
   }
 
   if (role === "traduction_team") {
@@ -411,6 +419,8 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_transcript") return false;
     if (action === "save_edito") return false;
     if (action === "add_knowledge_to_edito") return false;
+
+    if (action === "manage_project_state") return false;
   }
 
   if (role === "editorial_team") {
@@ -430,6 +440,8 @@ export const accessManager = (page?: string, action?: string) => {
     if (action === "add_video_version") return false;
     if (action === "add_transcript") return false;
     if (action === "add_subs") return false;
+
+    if (action === "manage_project_state") return false;
   }
 
   return true;
