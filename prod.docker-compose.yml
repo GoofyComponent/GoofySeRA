@@ -26,8 +26,7 @@ services:
       - hosted
     depends_on:
       - minio
-      - mariadb:
-          condition: service_healthy
+      - mariadb
       - soketi
   mariadb:
     container_name: sera-mariadb
@@ -75,8 +74,7 @@ services:
       - monolith
       - hosted
     depends_on:
-      - mariadb:
-          condition: service_healthy
+      - mariadb
 
 networks:
   sail:
