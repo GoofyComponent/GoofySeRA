@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Support\Str;
-use App\Services\CreateMinioUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Crypt;
@@ -23,10 +22,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $roles = array_keys(config('roles'));
-        $s3_credentials = (new CreateMinioUser())->create();
-        // hash secret
-        $s3_credentials['secretkey'] = Crypt::encrypt($s3_credentials['secretkey']);
-        $s3_credentials['accesskey'] = Crypt::encrypt($s3_credentials['accesskey']);
+
         return [
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -36,7 +32,7 @@ class UserFactory extends Factory
             'lastname' => fake()->lastName(),
             'role' => $roles[array_rand($roles)],
             'avatar_filename' => fake()->boolean(50) ? '/template.jpeg' : null,
-            's3_credentials' => json_encode($s3_credentials),
+            's3_credentials' => json_encode([]),
         ];
     }
 

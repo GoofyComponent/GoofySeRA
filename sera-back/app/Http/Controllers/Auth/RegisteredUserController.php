@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rules;
-use App\Services\CreateMinioUser;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -31,17 +31,13 @@ class RegisteredUserController extends Controller
             'role' => 'required|string|in:' . implode(',', array_keys(config('roles'))),
         ]);
 
-        $s3_credentials = (new CreateMinioUser())->create();
-        $s3_credentials['secretkey'] = Crypt::encrypt($s3_credentials['secretkey']);
-        $s3_credentials['accesskey'] = Crypt::encrypt($s3_credentials['accesskey']);
-
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'role' => $request->role,
-            's3_credentials' => json_encode($s3_credentials),
+            's3_credentials' => json_encode([]),
         ]);
 
         event(new Registered($user));
